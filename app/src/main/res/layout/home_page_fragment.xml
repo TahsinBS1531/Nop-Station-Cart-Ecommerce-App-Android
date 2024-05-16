@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@drawable/top_bar_banner"
+            android:paddingTop="20dp"
+            app:navigationIcon="@drawable/baseline_menu_24">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="78dp"
+                    android:layout_height="76dp"
+                    android:background="@drawable/top_logo"
+                    android:paddingTop="20dp"
+                    android:textAlignment="gravity"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.364"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/cart_btn"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:src="@drawable/checkout"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.942"
+                    app:layout_constraintStart_toEndOf="@+id/imageView2"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:background="@drawable/badge"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="@id/cart_btn"
+                    app:layout_constraintStart_toEndOf="@id/cart_btn"
+                    app:layout_constraintTop_toTopOf="@id/cart_btn" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <!-- Your existing content after the AppBarLayout -->
+
+            <com.denzcoskun.imageslider.ImageSlider
+                android:id="@+id/image_slider"
+                android:layout_width="wrap_content"
+                android:layout_height="216dp"
+                app:iss_error_image="@drawable/home_bg3"
+                app:iss_auto_cycle="true"
+                app:iss_delay="3000"
+                app:iss_period="1000"
+                app:iss_placeholder="@drawable/home_background"
+                app:iss_text_align="CENTER" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="210dp"
+                android:orientation="vertical"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:background="#E8E9F2">
+
+                <!-- Your existing content after the ImageSlider -->
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="OUR CATEGORIES"
+                    android:textColor="#2B2E43"
+                    android:textSize="22sp"
+                    android:lineHeight="33sp"
+                    android:fontFamily="@font/khand"
+                    android:textFontWeight="600" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/categoryrecycleView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp">
+
+                <!-- Your existing content after the ImageSlider -->
+
+                <TextView
+                    android:id="@+id/bestSelling"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="BEST SELLING"
+                    android:textColor="#2B2E43"
+                    android:textSize="22sp"
+                    android:lineHeight="33sp"
+                    android:fontFamily="@font/khand"
+                    android:textFontWeight="600" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/bestSellingrecycleView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp">
+
+                <!-- Your existing content after the ImageSlider -->
+
+                <TextView
+                    android:id="@+id/featuredProductsText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="FEATURED PRODUCTS"
+                    android:textColor="#2B2E43"
+                    android:textSize="22sp"
+                    android:lineHeight="33sp"
+                    android:fontFamily="@font/khand"
+                    android:textFontWeight="600" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/featuredRecycle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp">
+
+                <!-- Your existing content after the ImageSlider -->
+
+                <TextView
+                    android:id="@+id/women_heel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="WOMEN HEEL"
+                    android:textColor="#2B2E43"
+                    android:textSize="22sp"
+                    android:lineHeight="33sp"
+                    android:fontFamily="@font/khand"
+                    android:textFontWeight="600" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/women_heel_recycle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <!-- Add more content here if needed -->
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

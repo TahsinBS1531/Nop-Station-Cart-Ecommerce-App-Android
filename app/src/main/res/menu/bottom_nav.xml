@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Home"
+        android:icon="@drawable/bottom_nav_home"
+        android:id="@+id/bottomHome"/>
+
+    <item android:title="Categories"
+        android:icon="@drawable/bottom_nav_category"
+        android:id="@+id/bottomCategories"/>
+
+    <item android:title="Search"
+        android:icon="@drawable/bottom_nav_search"
+        android:id="@+id/bottomSearch"/>
+
+    <item android:title="Account"
+        android:icon="@drawable/bottom_nav_account"
+        android:id="@+id/bottomAccount"/>
+
+    <item android:title="More"
+        android:icon="@drawable/bottom_nav_more"
+        android:id="@+id/bottomMore"/>
+</menu>
