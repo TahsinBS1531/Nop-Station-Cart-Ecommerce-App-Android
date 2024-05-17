@@ -31,4 +31,9 @@
             android:id="@+id/action_home_Page_to_login_main"
             app:destination="@id/login_main" />
     </fragment>
+    <fragment
+        android:id="@+id/category_Fragment"
+        android:name="com.example.nopstationcart.view.Category_PAge.Category_Fragment"
+        android:label="fragment_category_"
+        tools:layout="@layout/fragment_category_" />
 </navigation>

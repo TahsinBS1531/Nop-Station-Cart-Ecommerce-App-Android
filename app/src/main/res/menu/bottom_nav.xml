@@ -6,7 +6,7 @@
 
     <item android:title="Categories"
         android:icon="@drawable/bottom_nav_category"
-        android:id="@+id/bottomCategories"/>
+        android:id="@+id/category_Fragment"/>
 
     <item android:title="Search"
         android:icon="@drawable/bottom_nav_search"
