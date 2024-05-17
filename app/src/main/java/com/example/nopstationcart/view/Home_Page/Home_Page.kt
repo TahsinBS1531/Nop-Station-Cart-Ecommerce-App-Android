@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.denzcoskun.imageslider.ImageSlider
@@ -31,11 +33,17 @@ class Home_Page : Fragment() {
     lateinit var myRecyclerView2: RecyclerView
     lateinit var myRecyclerView3: RecyclerView
     lateinit var myRecyclerView4: RecyclerView
+    //lateinit var navController:NavController
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //navController = Navigation.findNavController(view)
     }
 
     override fun onCreateView(
@@ -50,7 +58,7 @@ class Home_Page : Fragment() {
         featuredRecycleView(view)
         womenHeelRecycleView(view)
 
-        (activity as? MainActivity)?.setBottomNavigationVisibility(true)
+        //(activity as? MainActivity)?.setBottomNavigationVisibility(true)
 
         return view
     }
@@ -110,6 +118,9 @@ class Home_Page : Fragment() {
                 fragment.arguments = bundle
 
                 //on Clicking each item on the recycle view
+
+                //navController.navigate(R.id.action_home_Page_to_home_page_Category)
+
                 val transaction = requireActivity().supportFragmentManager.beginTransaction()
                 transaction.replace(R.id.fragmentContainer,fragment)
                 //transaction.addToBackStack(null)

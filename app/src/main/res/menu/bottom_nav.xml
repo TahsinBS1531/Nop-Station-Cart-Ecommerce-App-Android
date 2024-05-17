@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:title="Home"
         android:icon="@drawable/bottom_nav_home"
-        android:id="@+id/bottomHome"/>
+        android:id="@+id/home_Page"/>
 
     <item android:title="Categories"
         android:icon="@drawable/bottom_nav_category"
@@ -14,7 +14,7 @@
 
     <item android:title="Account"
         android:icon="@drawable/bottom_nav_account"
-        android:id="@+id/bottomAccount"/>
+        android:id="@+id/login_main"/>
 
     <item android:title="More"
         android:icon="@drawable/bottom_nav_more"
