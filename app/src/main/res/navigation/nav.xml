@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav"
+    app:startDestination="@id/login_main">
+
+    <fragment
+        android:id="@+id/login_main"
+        android:name="com.example.nopstationcart.view.Login_Page.login_main"
+        android:label="fragment_login_main"
+        tools:layout="@layout/fragment_login_main" >
+        <action
+            android:id="@+id/action_login_main_to_home_Page"
+            app:destination="@id/home_Page" />
+    </fragment>
+    <fragment
+        android:id="@+id/home_page_Category"
+        android:name="com.example.nopstationcart.view.Single_Category_Page.Home_page_Category"
+        android:label="fragment_home_page__category"
+        tools:layout="@layout/fragment_home_page__category" />
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.nopstationcart.view.MainActivity"
+        android:label="activity_main"
+        tools:layout="@layout/activity_main" />
+    <fragment
+        android:id="@+id/home_Page"
+        android:name="com.example.nopstationcart.view.Home_Page.Home_Page"
+        android:label="Home_Page" >
+        <action
+            android:id="@+id/action_home_Page_to_home_page_Category"
+            app:destination="@id/home_page_Category" />
+        <action
+            android:id="@+id/action_home_Page_to_login_main"
+            app:destination="@id/login_main" />
+    </fragment>
+</navigation>
