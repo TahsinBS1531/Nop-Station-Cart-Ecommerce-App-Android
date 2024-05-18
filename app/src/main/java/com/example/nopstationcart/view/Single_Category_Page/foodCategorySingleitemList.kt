@@ -2,10 +2,11 @@ package com.example.nopstationcart.view.Single_Category_Page
 
 import com.example.nopstationcart.R
 import com.example.nopstationcart.model.data.CategoryItem
+import com.example.nopstationcart.model.data.categoryDetailsItem
 
 
 class foodCategorySingleitemList {
-    public fun getProducts(): ArrayList<CategoryItem> {
+    public fun getProducts(): ArrayList<categoryDetailsItem> {
         val categoryImage = arrayOf(
             R.drawable.fruits1,
             R.drawable.furniture,
@@ -23,10 +24,10 @@ class foodCategorySingleitemList {
         )
 
 
-        var categoryList = arrayListOf<CategoryItem>()
+        var categoryList = arrayListOf<categoryDetailsItem>()
 
         for (index in categoryImage.indices){
-            val item = CategoryItem(categoryImage[index],categoryText[index])
+            val item = categoryDetailsItem(categoryText[index],categoryImage[index])
             categoryList.add(item)
         }
 

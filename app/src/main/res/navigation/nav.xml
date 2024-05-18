@@ -18,7 +18,18 @@
         android:id="@+id/home_page_Category"
         android:name="com.example.nopstationcart.view.Single_Category_Page.Home_page_Category"
         android:label="fragment_home_page__category"
-        tools:layout="@layout/fragment_home_page__category" />
+        tools:layout="@layout/fragment_home_page__category" >
+        <argument
+            android:name="product_tittle"
+            app:argType="string"
+            android:defaultValue="Tittle" />
+        <argument
+            android:name="product_image"
+            app:argType="integer" />
+        <argument
+            android:name="product_list"
+            app:argType="com.example.nopstationcart.model.data.categoryDetailsItem[]" />
+    </fragment>
 
     <fragment
         android:id="@+id/home_Page"

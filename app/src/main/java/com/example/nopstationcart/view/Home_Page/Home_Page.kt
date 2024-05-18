@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.denzcoskun.imageslider.ImageSlider
@@ -62,7 +63,6 @@ class Home_Page : Fragment() {
 
         return view
     }
-
     private fun womenHeelRecycleView(view: View?) {
         if (view != null) {
             myRecyclerView4 = view.findViewById(R.id.women_heel_recycle)
@@ -106,25 +106,28 @@ class Home_Page : Fragment() {
 
         myAdapter.setOnItemClickListener(object :onItemClickListener{
             override fun onItemClick(position: Int) {
-                val fragment = Home_page_Category()
+//                val fragment = Home_page_Category()
+//                val bundle = Bundle()
+//                bundle.putString("Tittle",categoryList[position].text)
+//                bundle.putInt("Img",categoryList[position].imageResId)
 
-                val bundle = Bundle()
-                bundle.putString("Tittle",categoryList[position].text)
-                bundle.putInt("Img",categoryList[position].imageResId)
                 if(categoryList[position].text=="Food"){
                     val foodItems = foodCategorySingleitemList()
-                    bundle.putParcelableArrayList("List",foodItems.getProducts())
+                    val items = foodItems.getProducts()
+                    val action = Home_PageDirections.actionHomePageToHomePageCategory(categoryList[position].imageResId,items.toTypedArray(),categoryList[position].text)
+                    findNavController().navigate(action)
+                    //bundle.putParcelableArrayList("List",foodItems.getProducts())
                 }
-                fragment.arguments = bundle
+                //fragment.arguments = bundle
 
                 //on Clicking each item on the recycle view
 
                 //navController.navigate(R.id.action_home_Page_to_home_page_Category)
 
-                val transaction = requireActivity().supportFragmentManager.beginTransaction()
-                transaction.replace(R.id.fragmentContainer,fragment)
+                //val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                //transaction.replace(R.id.fragmentContainer,fragment)
                 //transaction.addToBackStack(null)
-                transaction.commit()
+                //  transaction.commit()
 
             }
 

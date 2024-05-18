@@ -15,7 +15,7 @@ class categoryList {
         )
 
         val categoryText = arrayOf(
-            "Item 1",
+            "Food",
             "furniture",
             "Phone",
             "Watch",

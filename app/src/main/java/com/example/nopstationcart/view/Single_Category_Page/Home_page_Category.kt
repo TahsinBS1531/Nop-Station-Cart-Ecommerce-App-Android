@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nopstationcart.R
 import com.example.nopstationcart.model.data.CategoryItem
+import com.example.nopstationcart.model.data.categoryDetailsItem
 
 
 class Home_page_Category : Fragment() {
@@ -28,9 +30,14 @@ class Home_page_Category : Fragment() {
         val bundle = arguments
         if (bundle != null) {
             // Extract data from bundle
-            val title = bundle.getString("Tittle")
-            val imageResId = bundle.getInt("Img")
-            val list = bundle.getParcelableArrayList<CategoryItem>("List")
+//            val title = bundle.getString("Tittle")
+//            val imageResId = bundle.getInt("Img")
+//            val list = bundle.getParcelableArrayList<CategoryItem>("List")
+
+            val args = Home_page_CategoryArgs.fromBundle(requireArguments())
+            val imageResId = args.productImage
+            val items: List<categoryDetailsItem> = args.productList.toList()
+            val title = args.productTittle
 
 
             val textView = view.findViewById<TextView>(R.id.singleCategoryTittle)
@@ -41,6 +48,9 @@ class Home_page_Category : Fragment() {
             imageView.setImageResource(imageResId)
 
             val recycle = view.findViewById<RecyclerView>(R.id.singleCategoryRecycle)
+            recycle.layoutManager = GridLayoutManager(requireContext(),2)
+            val adapter = CategoryDetailsAdapter(items)
+            recycle.adapter = adapter
 
         }
 
