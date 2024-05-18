@@ -1,13 +1,10 @@
 package com.example.nopstationcart.view.Home_Page
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,15 +14,11 @@ import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.nopstationcart.view.Adapters.CategoryAdapter
 import com.example.nopstationcart.R
-import com.example.nopstationcart.model.data.CategoryItem
-import com.example.nopstationcart.model.data.bestSellingItem
 import com.example.nopstationcart.model.interfaces.onItemClickListener
 import com.example.nopstationcart.view.Adapters.bestSellingAdapters
 import com.example.nopstationcart.view.Adapters.featuredProductsAdapter
 import com.example.nopstationcart.view.Adapters.womenHeelAdapter
-import com.example.nopstationcart.view.MainActivity
-import com.example.nopstationcart.view.Single_Category_Page.Home_page_Category
-import com.example.nopstationcart.view.Single_Category_Page.foodCategorySingleitemList
+import com.example.nopstationcart.view.Single_Category_Page.dummyProductsList
 
 
 class Home_Page : Fragment() {
@@ -106,28 +99,34 @@ class Home_Page : Fragment() {
 
         myAdapter.setOnItemClickListener(object :onItemClickListener{
             override fun onItemClick(position: Int) {
-//                val fragment = Home_page_Category()
-//                val bundle = Bundle()
-//                bundle.putString("Tittle",categoryList[position].text)
-//                bundle.putInt("Img",categoryList[position].imageResId)
 
                 if(categoryList[position].text=="Food"){
-                    val foodItems = foodCategorySingleitemList()
-                    val items = foodItems.getProducts()
+                    val foodItems = dummyProductsList()
+                    val items = foodItems.getProducts("Food")
                     val action = Home_PageDirections.actionHomePageToHomePageCategory(categoryList[position].imageResId,items.toTypedArray(),categoryList[position].text)
                     findNavController().navigate(action)
-                    //bundle.putParcelableArrayList("List",foodItems.getProducts())
                 }
-                //fragment.arguments = bundle
 
-                //on Clicking each item on the recycle view
+                if(categoryList[position].text=="Furniture"){
+                    val furnitureItems = dummyProductsList()
+                    val items = furnitureItems.getProducts("Furniture")
+                    val action = Home_PageDirections.actionHomePageToHomePageCategory(categoryList[position].imageResId,items.toTypedArray(),categoryList[position].text)
+                    findNavController().navigate(action)
+                }
 
-                //navController.navigate(R.id.action_home_Page_to_home_page_Category)
+                if(categoryList[position].text=="Phone"){
+                    val phoneItems = dummyProductsList()
+                    val items = phoneItems.getProducts("Phone")
+                    val action = Home_PageDirections.actionHomePageToHomePageCategory(categoryList[position].imageResId,items.toTypedArray(),categoryList[position].text)
+                    findNavController().navigate(action)
+                }
 
-                //val transaction = requireActivity().supportFragmentManager.beginTransaction()
-                //transaction.replace(R.id.fragmentContainer,fragment)
-                //transaction.addToBackStack(null)
-                //  transaction.commit()
+                if(categoryList[position].text=="Watch"){
+                    val phoneItems = dummyProductsList()
+                    val items = phoneItems.getProducts("Watch")
+                    val action = Home_PageDirections.actionHomePageToHomePageCategory(categoryList[position].imageResId,items.toTypedArray(),categoryList[position].text)
+                    findNavController().navigate(action)
+                }
 
             }
 
