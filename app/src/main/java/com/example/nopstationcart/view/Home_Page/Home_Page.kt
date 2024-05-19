@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,18 +17,21 @@ import com.denzcoskun.imageslider.models.SlideModel
 import com.example.nopstationcart.view.Adapters.CategoryAdapter
 import com.example.nopstationcart.R
 import com.example.nopstationcart.model.interfaces.onItemClickListener
+import com.example.nopstationcart.model.interfaces.womenHeelOnItemClickListener
 import com.example.nopstationcart.view.Adapters.bestSellingAdapters
 import com.example.nopstationcart.view.Adapters.featuredProductsAdapter
 import com.example.nopstationcart.view.Adapters.womenHeelAdapter
 import com.example.nopstationcart.view.Single_Category_Page.dummyProductsList
 
 
-class Home_Page : Fragment() {
+class Home_Page : Fragment(){
 
     lateinit var myRecycleView:RecyclerView
     lateinit var myRecyclerView2: RecyclerView
     lateinit var myRecyclerView3: RecyclerView
     lateinit var myRecyclerView4: RecyclerView
+    lateinit var addToCartBtn:TextView
+    var cartCount =0;
     //lateinit var navController:NavController
 
 
@@ -46,6 +51,7 @@ class Home_Page : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.home_page_fragment, container, false)
+        addToCartBtn = view.findViewById(R.id.home_page_cartBtn)
         initializeImageSlider(view)
         categoryListRecycleView(view)
         bestSellingRecycleView(view)
@@ -56,14 +62,37 @@ class Home_Page : Fragment() {
 
         return view
     }
-    private fun womenHeelRecycleView(view: View?) {
+    private fun womenHeelRecycleView(view: View?){
+
         if (view != null) {
             myRecyclerView4 = view.findViewById(R.id.women_heel_recycle)
         }
         myRecyclerView4.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
         val womenHeel = womenHeelProducts()
         val womenHeelArrayList = womenHeel.getProducts()
-        myRecyclerView4.adapter = womenHeelAdapter(womenHeelArrayList)
+        val adapter = womenHeelAdapter(womenHeelArrayList)
+        myRecyclerView4.adapter = adapter
+
+        adapter.setOnItemClick(object :womenHeelOnItemClickListener{
+            override fun onItemClick(position: Int) {
+                val itemTittle = womenHeelArrayList[position].tittle
+                Toast.makeText(requireContext(),"This is a $itemTittle",Toast.LENGTH_LONG).show()
+            }
+
+            override fun onCartBtnClick(position: Int) {
+                val itemTittle = womenHeelArrayList[position].tittle
+                val itemPrice = womenHeelArrayList[position].price
+                val itemImg = womenHeelArrayList[position].imgRes
+
+                cartCount += 1
+                addToCartBtn.text = cartCount.toString()
+                Toast.makeText(requireContext(),"You clicked on a $itemTittle cart button",Toast.LENGTH_LONG).show()
+//                val action = Home_PageDirections.actionHomePageToProductCartMain(itemTittle,itemPrice,itemImg)
+//                findNavController().navigate(action)
+            }
+
+        })
+
     }
 
     private fun bestSellingRecycleView(view: View?) {

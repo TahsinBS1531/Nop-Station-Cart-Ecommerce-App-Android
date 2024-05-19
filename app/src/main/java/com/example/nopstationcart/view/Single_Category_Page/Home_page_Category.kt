@@ -29,10 +29,6 @@ class Home_page_Category : Fragment() {
         // Retrieve arguments bundle
         val bundle = arguments
         if (bundle != null) {
-            // Extract data from bundle
-//            val title = bundle.getString("Tittle")
-//            val imageResId = bundle.getInt("Img")
-//            val list = bundle.getParcelableArrayList<CategoryItem>("List")
 
             val args = Home_page_CategoryArgs.fromBundle(requireArguments())
             val imageResId = args.productImage
