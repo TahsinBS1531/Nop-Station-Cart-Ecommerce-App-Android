@@ -3,6 +3,7 @@ package com.example.nopstationcart.view.Adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
@@ -10,14 +11,23 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.nopstationcart.R
 import com.example.nopstationcart.model.data.featuredProductsItem
 import com.example.nopstationcart.model.data.womenHeelItems
+import com.example.nopstationcart.model.interfaces.onItemClickListener
+import com.example.nopstationcart.model.interfaces.womenHeelOnItemClickListener
 
 class womenHeelAdapter(var womenHeelArrayList:ArrayList<womenHeelItems>):RecyclerView.Adapter<womenHeelAdapter.MyViewHolder>() {
+
+    lateinit var myListener:womenHeelOnItemClickListener
+
+    fun setOnItemClick(listener:womenHeelOnItemClickListener){
+        myListener = listener
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): womenHeelAdapter.MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.women_heel_single_item,parent,false)
-        return womenHeelAdapter.MyViewHolder(itemView)
+        return womenHeelAdapter.MyViewHolder(itemView, myListener)
     }
 
     override fun onBindViewHolder(holder: womenHeelAdapter.MyViewHolder, position: Int) {
@@ -32,11 +42,23 @@ class womenHeelAdapter(var womenHeelArrayList:ArrayList<womenHeelItems>):Recycle
         return womenHeelArrayList.size
     }
 
-    class MyViewHolder(itemview:View):RecyclerView.ViewHolder(itemview){
+    class MyViewHolder(itemview:View,listener: womenHeelOnItemClickListener):RecyclerView.ViewHolder(itemview){
         val tittle = itemview.findViewById<TextView>(R.id.womenHeeltitle)
         val img = itemview.findViewById<ImageView>(R.id.womenHeelImg)
         val price = itemview.findViewById<TextView>(R.id.womenHeelPrice)
         val ratting = itemview.findViewById<RatingBar>(R.id.womenheelRating)
+        val cartBtn = itemView.findViewById<ImageButton>(R.id.women_heel_cartBtn)
+
+        init {
+            itemview.setOnClickListener {
+                listener.onItemClick(adapterPosition)
+            }
+            cartBtn.setOnClickListener {
+                listener.onCartBtnClick(adapterPosition)
+            }
+        }
+
+
     }
 
 }

@@ -26,6 +26,7 @@
 
         <ImageButton
             android:layout_width="35dp"
+            android:id="@+id/women_heel_cartBtn"
             android:layout_height="35dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/add_to_cart_bg"
