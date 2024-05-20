@@ -29,7 +29,6 @@ class Home_page_Category : Fragment() {
         // Retrieve arguments bundle
         val bundle = arguments
         if (bundle != null) {
-
             val args = Home_page_CategoryArgs.fromBundle(requireArguments())
             val imageResId = args.productImage
             val items: List<categoryDetailsItem> = args.productList.toList()

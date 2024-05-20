@@ -1,5 +1,7 @@
 package com.example.nopstationcart.view.Home_Page
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -22,6 +24,7 @@ import com.example.nopstationcart.view.Adapters.bestSellingAdapters
 import com.example.nopstationcart.view.Adapters.featuredProductsAdapter
 import com.example.nopstationcart.view.Adapters.womenHeelAdapter
 import com.example.nopstationcart.view.Single_Category_Page.dummyProductsList
+import com.example.nopstationcart.view.logOut.logOutHandler
 
 
 class Home_Page : Fragment(){
@@ -31,6 +34,7 @@ class Home_Page : Fragment(){
     lateinit var myRecyclerView3: RecyclerView
     lateinit var myRecyclerView4: RecyclerView
     lateinit var addToCartBtn:TextView
+    lateinit var logOutBtn:TextView
     var cartCount =0;
     //lateinit var navController:NavController
 
@@ -58,9 +62,21 @@ class Home_Page : Fragment(){
         featuredRecycleView(view)
         womenHeelRecycleView(view)
 
+        handleLogOut(view)
+
         //(activity as? MainActivity)?.setBottomNavigationVisibility(true)
 
         return view
+    }
+    fun handleLogOut(view: View?){
+
+        if (view != null) {
+            logOutBtn = view.findViewById(R.id.logOutBtn)
+        }
+        logOutBtn.setOnClickListener {
+            //val handler = logOutHandler(requireContext())
+            //handler.getLogOut()
+        }
     }
     private fun womenHeelRecycleView(view: View?){
 
