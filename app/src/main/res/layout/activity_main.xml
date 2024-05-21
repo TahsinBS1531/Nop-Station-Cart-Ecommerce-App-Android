@@ -39,9 +39,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
-            app:itemIconTint="#AFB0C0"
+            app:itemIconTint="@color/nav_item_color"
             app:itemIconSize="25dp"
-            app:itemTextColor="#AFB0C0"
+            app:itemTextColor="@color/nav_item_color"
             app:menu="@menu/bottom_nav"
             app:labelVisibilityMode="labeled"/>
     </androidx.cardview.widget.CardView>

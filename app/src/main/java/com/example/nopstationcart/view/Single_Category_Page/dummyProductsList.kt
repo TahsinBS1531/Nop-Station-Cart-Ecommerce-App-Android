@@ -19,16 +19,24 @@ class dummyProductsList {
                 )
 
                 val categoryText = arrayOf(
-                    "Item 1",
-                    "furniture",
-                    "Phone",
-                    "Watch",
-                    "Furniture"
+                    "Food Item 1",
+                    "Food Item 2",
+                    "Food Item 3",
+                    "Food Item 4",
+                    "Food Item 5"
+                )
+
+                val categoryPrice = arrayOf(
+                    "20.00$",
+                    "60.00$",
+                    "30.00$",
+                    "40.00$",
+                    "50.00$"
                 )
 
 
                 for (index in categoryImage.indices){
-                    val item = categoryDetailsItem(categoryText[index],categoryImage[index])
+                    val item = categoryDetailsItem(categoryText[index],categoryImage[index],categoryPrice[index])
                     categoryList.add(item)
                 }
 
@@ -44,16 +52,24 @@ class dummyProductsList {
                 )
 
                 val categoryText = arrayOf(
-                    "Item 1",
-                    "furniture",
-                    "Phone",
-                    "Watch",
-                    "Furniture"
+                    "Furniture Item 1",
+                    "Furniture Item 2",
+                    "Furniture Item 3",
+                    "Furniture Item 4",
+                    "Furniture Item 5"
+                )
+
+                val categoryPrice = arrayOf(
+                    "20.00$",
+                    "60.00$",
+                    "30.00$",
+                    "40.00$",
+                    "50.00$"
                 )
 
 
                 for (index in categoryImage.indices){
-                    val item = categoryDetailsItem(categoryText[index],categoryImage[index])
+                    val item = categoryDetailsItem(categoryText[index],categoryImage[index],categoryPrice[index])
                     categoryList.add(item)
                 }
 
@@ -69,16 +85,24 @@ class dummyProductsList {
                 )
 
                 val categoryText = arrayOf(
-                    "Item 1",
-                    "furniture",
-                    "Phone",
-                    "Watch",
-                    "Furniture"
+                    "Phone Item 1",
+                    "Phone Item 2",
+                    "Phone Item 3",
+                    "Phone Item 4",
+                    "Phone Item 5"
+                )
+
+                val categoryPrice = arrayOf(
+                    "20.00$",
+                    "60.00$",
+                    "30.00$",
+                    "40.00$",
+                    "50.00$"
                 )
 
 
                 for (index in categoryImage.indices){
-                    val item = categoryDetailsItem(categoryText[index],categoryImage[index])
+                    val item = categoryDetailsItem(categoryText[index],categoryImage[index],categoryPrice[index])
                     categoryList.add(item)
                 }
 
@@ -94,16 +118,24 @@ class dummyProductsList {
                 )
 
                 val categoryText = arrayOf(
-                    "Item 1",
-                    "furniture",
-                    "Phone",
-                    "Watch",
-                    "Furniture"
+                    "Watch Item 1",
+                    "Watch Item 2",
+                    "Watch Item 3",
+                    "Watch Item 4",
+                    "Watch Item 5"
+                )
+
+                val categoryPrice = arrayOf(
+                    "20.00$",
+                    "60.00$",
+                    "30.00$",
+                    "40.00$",
+                    "50.00$"
                 )
 
 
                 for (index in categoryImage.indices){
-                    val item = categoryDetailsItem(categoryText[index],categoryImage[index])
+                    val item = categoryDetailsItem(categoryText[index],categoryImage[index],categoryPrice[index])
                     categoryList.add(item)
                 }
 

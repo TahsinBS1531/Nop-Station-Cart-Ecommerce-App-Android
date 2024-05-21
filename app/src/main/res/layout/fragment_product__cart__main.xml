@@ -83,7 +83,7 @@
         app:layout_constraintTop_toBottomOf="@+id/cart_appBar">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             >
             <LinearLayout
@@ -126,10 +126,11 @@
                 android:paddingTop="20dp"
                 android:paddingEnd="10dp"
                 tools:listitem="@layout/single_item_product_cart"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:paddingBottom="20dp"/>
 
             <com.google.android.material.divider.MaterialDivider
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="60dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
             <LinearLayout
@@ -148,6 +149,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
+                    android:textColor="#10CB3C"
+                    android:fontFamily="@font/lato_bold"
+                    android:textSize="16sp"
                     android:layout_marginStart="60dp"
                     android:text="$550.02"/>
 
@@ -173,6 +177,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
+                    android:textColor="#10CB3C"
+                    android:fontFamily="@font/lato_bold"
+                    android:textSize="16sp"
                     android:layout_marginStart="60dp"
                     android:text="$5.00"/>
 
@@ -198,6 +205,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
+                    android:textColor="#10CB3C"
+                    android:fontFamily="@font/lato_bold"
+                    android:textSize="16sp"
                     android:layout_marginStart="60dp"
                     android:text="$5.00"/>
 
