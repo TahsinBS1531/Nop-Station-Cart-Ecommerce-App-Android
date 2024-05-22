@@ -5,5 +5,5 @@ import androidx.versionedparcelable.VersionedParcelize
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class categoryDetailsItem(var tittle:String,var imageResID:Int):Parcelable
+data class categoryDetailsItem(var tittle:String,var imageResID:Int, var itemPrice:String):Parcelable
 

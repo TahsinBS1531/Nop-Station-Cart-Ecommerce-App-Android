@@ -1,5 +1,7 @@
 package com.example.nopstationcart.view.Home_Page
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -16,12 +18,15 @@ import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.nopstationcart.view.Adapters.CategoryAdapter
 import com.example.nopstationcart.R
+import com.example.nopstationcart.model.interfaces.bestSellingProductsItemClick
+import com.example.nopstationcart.model.interfaces.featuredProductsItemClickListener
 import com.example.nopstationcart.model.interfaces.onItemClickListener
 import com.example.nopstationcart.model.interfaces.womenHeelOnItemClickListener
 import com.example.nopstationcart.view.Adapters.bestSellingAdapters
 import com.example.nopstationcart.view.Adapters.featuredProductsAdapter
 import com.example.nopstationcart.view.Adapters.womenHeelAdapter
 import com.example.nopstationcart.view.Single_Category_Page.dummyProductsList
+import com.example.nopstationcart.view.logOut.logOutHandler
 
 
 class Home_Page : Fragment(){
@@ -31,8 +36,8 @@ class Home_Page : Fragment(){
     lateinit var myRecyclerView3: RecyclerView
     lateinit var myRecyclerView4: RecyclerView
     lateinit var addToCartBtn:TextView
+    lateinit var logOutBtn:TextView
     var cartCount =0;
-    //lateinit var navController:NavController
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,14 +47,12 @@ class Home_Page : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //navController = Navigation.findNavController(view)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.home_page_fragment, container, false)
         addToCartBtn = view.findViewById(R.id.home_page_cartBtn)
         initializeImageSlider(view)
@@ -58,9 +61,19 @@ class Home_Page : Fragment(){
         featuredRecycleView(view)
         womenHeelRecycleView(view)
 
-        //(activity as? MainActivity)?.setBottomNavigationVisibility(true)
+        handleLogOut(view)
 
         return view
+    }
+    fun handleLogOut(view: View?){
+
+        if (view != null) {
+            logOutBtn = view.findViewById(R.id.logOutBtn)
+        }
+        logOutBtn.setOnClickListener {
+            //val handler = logOutHandler(requireContext())
+            //handler.getLogOut()
+        }
     }
     private fun womenHeelRecycleView(view: View?){
 
@@ -75,8 +88,13 @@ class Home_Page : Fragment(){
 
         adapter.setOnItemClick(object :womenHeelOnItemClickListener{
             override fun onItemClick(position: Int) {
-                val itemTittle = womenHeelArrayList[position].tittle
+                val itemTittle = womenHeelArrayList[position].tittle.toString()
+                val itemImg = womenHeelArrayList[position].imgRes
+                val itemPrice = womenHeelArrayList[position].price.toString()
                 Toast.makeText(requireContext(),"This is a $itemTittle",Toast.LENGTH_LONG).show()
+
+                val action = Home_PageDirections.actionHomePageToProductDeatils(itemTittle,itemImg,itemPrice)
+                findNavController().navigate(action)
             }
 
             override fun onCartBtnClick(position: Int) {
@@ -102,7 +120,26 @@ class Home_Page : Fragment(){
         myRecyclerView2.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
         val ob = bestSellingProducts()
         val bestSellingArrayList = ob.getProducts()
-        myRecyclerView2.adapter = bestSellingAdapters(bestSellingArrayList)
+        val adapter = bestSellingAdapters(bestSellingArrayList)
+        myRecyclerView2.adapter = adapter
+        adapter.setOnItemClick(object : bestSellingProductsItemClick{
+            override fun onItemClick(position: Int) {
+                val currentItem = bestSellingArrayList[position]
+                val itemImg = currentItem.imageRes
+                val itemTitle = currentItem.tittle
+                val itemPrice = currentItem.price
+
+                val action = Home_PageDirections.actionHomePageToProductDeatils(itemTitle,itemImg,itemPrice)
+                findNavController().navigate(action)
+            }
+
+            override fun onCartBtnClick(position: Int) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+
     }
 
     private fun featuredRecycleView(view: View?) {
@@ -112,7 +149,25 @@ class Home_Page : Fragment(){
         myRecyclerView3.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
         val featured = featuredProducts()
         val featuredArrayList = featured.getProducts()
-        myRecyclerView3.adapter = featuredProductsAdapter(featuredArrayList)
+        val adapter = featuredProductsAdapter(featuredArrayList)
+        myRecyclerView3.adapter = adapter
+
+        adapter.setOnItemClick(object:featuredProductsItemClickListener{
+            override fun onItemClick(position: Int) {
+                val itemTittle = featuredArrayList[position].tittle.toString()
+                val itemImg = featuredArrayList[position].imgRes
+                val itemPrice = featuredArrayList[position].price.toString()
+                Toast.makeText(requireContext(),"This is a $itemTittle",Toast.LENGTH_LONG).show()
+                val action = Home_PageDirections.actionHomePageToProductDeatils(itemTittle,itemImg,itemPrice)
+                findNavController().navigate(action)
+
+            }
+
+            override fun onCartBtnClick(position: Int) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     private fun categoryListRecycleView(view: View?) {

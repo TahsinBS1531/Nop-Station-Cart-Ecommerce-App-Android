@@ -9,14 +9,24 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nopstationcart.R
 import com.example.nopstationcart.model.data.featuredProductsItem
+import com.example.nopstationcart.model.interfaces.featuredProductsItemClickListener
+import com.example.nopstationcart.model.interfaces.womenHeelOnItemClickListener
 
 class featuredProductsAdapter(var featuredProducts:ArrayList<featuredProductsItem>):RecyclerView.Adapter<featuredProductsAdapter.MyViewHolder>() {
+
+
+    lateinit var myListener: featuredProductsItemClickListener
+
+    fun setOnItemClick(listener: featuredProductsItemClickListener){
+        myListener = listener
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): featuredProductsAdapter.MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.featured_products_single_item,parent,false)
-        return featuredProductsAdapter.MyViewHolder(itemView)
+        return featuredProductsAdapter.MyViewHolder(itemView,myListener)
     }
 
     override fun onBindViewHolder(holder: featuredProductsAdapter.MyViewHolder, position: Int) {
@@ -31,11 +41,17 @@ class featuredProductsAdapter(var featuredProducts:ArrayList<featuredProductsIte
         return featuredProducts.size
     }
 
-    class MyViewHolder(itemview:View):RecyclerView.ViewHolder(itemview){
+    class MyViewHolder(itemview:View, listener:featuredProductsItemClickListener):RecyclerView.ViewHolder(itemview){
         val tittle = itemview.findViewById<TextView>(R.id.featuredTittle)
         val img = itemview.findViewById<ImageView>(R.id.featuredImg)
         val price = itemview.findViewById<TextView>(R.id.featuredPrice)
         val ratting = itemview.findViewById<RatingBar>(R.id.featuredRatingBar)
+
+        init {
+            itemview.setOnClickListener {
+                listener.onItemClick(adapterPosition)
+            }
+        }
     }
 
 }

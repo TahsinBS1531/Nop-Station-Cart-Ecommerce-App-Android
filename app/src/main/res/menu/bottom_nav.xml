@@ -5,7 +5,7 @@
         android:id="@+id/home_Page"/>
 
     <item android:title="Categories"
-        android:icon="@drawable/bottom_nav_category"
+        android:icon="@drawable/categories_main"
         android:id="@+id/category_Fragment"/>
 
     <item android:title="Search"
@@ -13,10 +13,10 @@
         android:id="@+id/product_Cart_Main"/>
 
     <item android:title="Account"
-        android:icon="@drawable/bottom_nav_account"
+        android:icon="@drawable/menu_account"
         android:id="@+id/login_main"/>
 
     <item android:title="More"
-        android:icon="@drawable/bottom_nav_more"
+        android:icon="@drawable/menu_more_btn"
         android:id="@+id/product_Deatils"/>
 </menu>

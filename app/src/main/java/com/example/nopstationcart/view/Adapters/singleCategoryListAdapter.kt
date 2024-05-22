@@ -11,11 +11,15 @@ import com.example.nopstationcart.model.data.singleCategoryItem
 
 class singleCategoryListAdapter(var categoryArrayList: ArrayList<singleCategoryItem>) :
     RecyclerView.Adapter<singleCategoryListAdapter.MyViewHolder>(){
+        lateinit var myListener: onItemClickListener
+        fun OnItemClick(listener: onItemClickListener){
+            myListener = listener
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.category_single_item,parent,false)
-        return MyViewHolder(itemView)
+        return MyViewHolder(itemView,myListener)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
@@ -28,9 +32,14 @@ class singleCategoryListAdapter(var categoryArrayList: ArrayList<singleCategoryI
         return categoryArrayList.size
     }
 
-    class MyViewHolder(itemview:View):RecyclerView.ViewHolder(itemview){
+    class MyViewHolder(itemview:View, listener: onItemClickListener):RecyclerView.ViewHolder(itemview){
         val tittle = itemview.findViewById<TextView>(R.id.singleCategoryTittle2)
         val img = itemview.findViewById<ImageView>(R.id.singleCategoryImg2)
+        init {
+            itemview.setOnClickListener {
+                listener.onItemClick(adapterPosition)
+            }
+        }
     }
 
 }

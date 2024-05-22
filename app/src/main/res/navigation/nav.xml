@@ -18,7 +18,7 @@
         android:id="@+id/home_page_Category"
         android:name="com.example.nopstationcart.view.Single_Category_Page.Home_page_Category"
         android:label="fragment_home_page__category"
-        tools:layout="@layout/fragment_home_page__category" >
+        tools:layout="@layout/single_category_page" >
         <argument
             android:name="product_tittle"
             app:argType="string"
@@ -29,6 +29,9 @@
         <argument
             android:name="product_list"
             app:argType="com.example.nopstationcart.model.data.categoryDetailsItem[]" />
+        <action
+            android:id="@+id/action_home_page_Category_to_product_Deatils"
+            app:destination="@id/product_Deatils" />
     </fragment>
 
     <fragment
@@ -44,17 +47,34 @@
         <action
             android:id="@+id/action_home_Page_to_product_Cart_Main"
             app:destination="@id/product_Cart_Main" />
+        <action
+            android:id="@+id/action_home_Page_to_product_Deatils"
+            app:destination="@id/product_Deatils" />
     </fragment>
     <fragment
         android:id="@+id/category_Fragment"
         android:name="com.example.nopstationcart.view.Category_PAge.Category_Fragment"
         android:label="fragment_category_"
-        tools:layout="@layout/fragment_category_" />
+        tools:layout="@layout/fragment_category_" >
+        <action
+            android:id="@+id/action_category_Fragment_to_home_page_Category"
+            app:destination="@id/home_page_Category" />
+    </fragment>
     <fragment
         android:id="@+id/product_Deatils"
         android:name="com.example.nopstationcart.view.Single_Product_Page.Product_Deatils"
         android:label="fragment_product__deatils"
-        tools:layout="@layout/fragment_product__deatils" />
+        tools:layout="@layout/fragment_product__deatils" >
+        <argument
+            android:name="product_tittile"
+            app:argType="string" />
+        <argument
+            android:name="product_image"
+            app:argType="integer" />
+        <argument
+            android:name="product_price"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/product_Cart_Main"
         android:name="com.example.nopstationcart.view.Product_Shopping_Cart.Product_Cart_Main"
