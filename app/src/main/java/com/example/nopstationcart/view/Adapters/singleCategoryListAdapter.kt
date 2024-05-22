@@ -7,9 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nopstationcart.R
-import com.example.nopstationcart.model.data.CategoryItem
 import com.example.nopstationcart.model.data.singleCategoryItem
-import com.example.nopstationcart.model.interfaces.onItemClickListener
 
 class singleCategoryListAdapter(var categoryArrayList: ArrayList<singleCategoryItem>) :
     RecyclerView.Adapter<singleCategoryListAdapter.MyViewHolder>(){

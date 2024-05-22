@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nopstationcart.R
-import com.example.nopstationcart.model.data.CategoryItem
 import com.example.nopstationcart.model.data.categoryDetailsItem
 
 

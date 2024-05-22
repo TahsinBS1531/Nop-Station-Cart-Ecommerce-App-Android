@@ -1,7 +1,6 @@
 package com.example.nopstationcart.view.Category_PAge
 
 import com.example.nopstationcart.R
-import com.example.nopstationcart.model.data.CategoryItem
 import com.example.nopstationcart.model.data.singleCategoryItem
 
 class singleCategoryList {

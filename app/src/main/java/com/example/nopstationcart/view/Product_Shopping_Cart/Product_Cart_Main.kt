@@ -5,17 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nopstationcart.R
-import com.example.nopstationcart.model.data.categoryDetailsItem
 import com.example.nopstationcart.model.data.productCartItems
 import com.example.nopstationcart.view.Adapters.productCartAdapter
-import com.example.nopstationcart.view.Single_Category_Page.CategoryDetailsAdapter
-import com.example.nopstationcart.view.Single_Category_Page.Home_page_CategoryArgs
 
 
 class Product_Cart_Main : Fragment() {

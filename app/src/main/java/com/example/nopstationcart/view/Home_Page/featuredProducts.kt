@@ -1,7 +1,6 @@
 package com.example.nopstationcart.view.Home_Page
 
 import com.example.nopstationcart.R
-import com.example.nopstationcart.model.data.bestSellingItem
 import com.example.nopstationcart.model.data.featuredProductsItem
 
 class featuredProducts {
