@@ -38,5 +38,6 @@ fun login(username:String, password:String){
         val editor = sharedPreferences.edit()
         editor.putString("TOKEN", token)
         editor.apply()
+        println("Token : $token")
     }
 }

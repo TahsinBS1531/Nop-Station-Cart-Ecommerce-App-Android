@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,10 +26,16 @@ import com.example.nopstationcart.Services.Interfaces.bestSellingProductsItemCli
 import com.example.nopstationcart.Services.Interfaces.featuredProductsItemClickListener
 import com.example.nopstationcart.Services.Interfaces.onItemClickListener
 import com.example.nopstationcart.Services.Interfaces.womenHeelOnItemClickListener
+import com.example.nopstationcart.Services.Model.Home_Page.Featured_Products.featuredProductsItem2
+import com.example.nopstationcart.Services.Model.featuredProductsItem
 import com.example.nopstationcart.view.Adapters.bestSellingAdapters
 import com.example.nopstationcart.view.Adapters.featuredProductsAdapter
 import com.example.nopstationcart.view.Adapters.womenHeelAdapter
 import com.example.nopstationcart.dummyData.dummyProductsList
+import com.example.nopstationcart.viewmodel.CategoryListViewModel
+import com.example.nopstationcart.viewmodel.FeaturedProductsViewModel
+import com.example.nopstationcart.viewmodel.LoginViewModel
+import com.example.nopstationcart.viewmodel.SliderViewModel
 
 
 class Home_Page : Fragment(){
@@ -39,6 +47,9 @@ class Home_Page : Fragment(){
     lateinit var addToCartBtn:TextView
     lateinit var logOutBtn:TextView
     var cartCount =0;
+    private val sliderViewModel: SliderViewModel by viewModels()
+    private val featuredViewModel: FeaturedProductsViewModel by viewModels()
+    private val categoryListViewModel: CategoryListViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -150,8 +161,36 @@ class Home_Page : Fragment(){
         myRecyclerView3.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
         val featured = featuredProducts()
         val featuredArrayList = featured.getProducts()
-        val adapter = featuredProductsAdapter(featuredArrayList)
-        myRecyclerView3.adapter = adapter
+//        val adapter = featuredProductsAdapter(featuredArrayList)
+//        myRecyclerView3.adapter = adapter
+
+        featuredViewModel.getFeaturedProducts()
+        var featuredList = arrayListOf<featuredProductsItem2>()
+        val adapter = featuredProductsAdapter(featuredList)
+        featuredViewModel.result.observe(viewLifecycleOwner){ it ->
+            it.onSuccess {response ->
+                response.Data.forEach {
+                    val name = it.Name
+                    val price = it.ProductPrice.Price.toString()
+                    val image = it.PictureModels[0].ImageUrl
+                    var rating = 0f
+                    if(it.ReviewOverviewModel.TotalReviews !=0){
+                        rating = (it.ReviewOverviewModel.RatingSum/it.ReviewOverviewModel.TotalReviews).toFloat()
+                    }
+                    val data = featuredProductsItem2(name,price, image = image,rating)
+                    featuredList.add(data)
+                }
+
+                //val adapter = featuredProductsAdapter(featuredList)
+                myRecyclerView3.adapter = adapter
+
+            }.onFailure {
+                Toast.makeText(requireContext(),"Image data Api call failed",Toast.LENGTH_LONG).show()
+            }
+        }
+
+
+
 
         adapter.setOnItemClick(object: featuredProductsItemClickListener {
             override fun onItemClick(position: Int) {
@@ -180,6 +219,20 @@ class Home_Page : Fragment(){
         val categoryList = category.getProducts()
         val myAdapter = CategoryAdapter(categoryList)
         myRecycleView.adapter = myAdapter
+        categoryListViewModel.getCategoryList()
+        categoryListViewModel.result.observe(viewLifecycleOwner){result->
+            result.onSuccess {
+                it.Data.forEach {
+                    val name = it.Name
+                    //val image = it
+                    //I will work from here tommorrow
+                }
+            }.onFailure {
+
+            }
+        }
+
+
 
 
         myAdapter.setOnItemClickListener(object : onItemClickListener {
@@ -220,17 +273,21 @@ class Home_Page : Fragment(){
 
     private fun initializeImageSlider(view: View?) {
         val imageList = ArrayList<SlideModel>() // Create image list
-
-        imageList.add(SlideModel(R.drawable.home_background, ScaleTypes.FIT))
-        imageList.add(SlideModel(R.drawable.home_bg2, ScaleTypes.FIT))
-        imageList.add(SlideModel(R.drawable.home_bg3, ScaleTypes.FIT))
-
-        val imageSlider = view?.findViewById<ImageSlider>(R.id.image_slider)
-
-        if (imageSlider != null) {
-            imageSlider.setImageList(imageList)
-            imageSlider.setSlideAnimation(AnimationTypes.ZOOM_OUT)
+        sliderViewModel.getSlider()
+        sliderViewModel.sliderResult.observe(viewLifecycleOwner){
+            it.onSuccess {response ->
+                response.Data.Sliders.forEach {slider->
+                    imageList.add(SlideModel(slider.ImageUrl,ScaleTypes.FIT))
+                }
+                view?.findViewById<ImageSlider>(R.id.image_slider)?.apply {
+                    setImageList(imageList)
+                    setSlideAnimation(AnimationTypes.ZOOM_OUT)
+                }
+            }.onFailure {
+                Toast.makeText(requireContext(),"Failed to load images", Toast.LENGTH_LONG).show()
+            }
         }
+
     }
 
 

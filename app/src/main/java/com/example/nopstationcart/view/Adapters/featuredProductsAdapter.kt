@@ -7,11 +7,13 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Model.featuredProductsItem
 import com.example.nopstationcart.Services.Interfaces.featuredProductsItemClickListener
+import com.example.nopstationcart.Services.Model.Home_Page.Featured_Products.featuredProductsItem2
 
-class featuredProductsAdapter(var featuredProducts:ArrayList<featuredProductsItem>):RecyclerView.Adapter<featuredProductsAdapter.MyViewHolder>() {
+class featuredProductsAdapter(var featuredProducts:ArrayList<featuredProductsItem2>):RecyclerView.Adapter<featuredProductsAdapter.MyViewHolder>() {
 
 
     lateinit var myListener: featuredProductsItemClickListener
@@ -30,10 +32,13 @@ class featuredProductsAdapter(var featuredProducts:ArrayList<featuredProductsIte
 
     override fun onBindViewHolder(holder: featuredProductsAdapter.MyViewHolder, position: Int) {
         val currentItem = featuredProducts[position]
-        holder.img.setImageResource(currentItem.imgRes)
+       //holder.img.setImageURI(currentItem.image)
         holder.price.text = currentItem.price
-        holder.ratting.rating = currentItem.rating
         holder.tittle.text = currentItem.tittle
+        holder.ratting.rating = currentItem.rating
+        Glide.with(holder.itemView.context)
+            .load(currentItem.image)
+            .into(holder.img)
     }
 
     override fun getItemCount(): Int {

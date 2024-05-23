@@ -1,0 +1,3 @@
+package com.example.nopstationcart.Services.Model.Home_Page.Featured_Products
+
+class CustomProperties
