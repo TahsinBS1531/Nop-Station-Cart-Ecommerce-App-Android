@@ -40,12 +40,12 @@ class MainActivity : AppCompatActivity() {
         val token = sharedPreferences.getString("TOKEN", null)
         //Home_Page().handleLogOut(token)
 
-        if(token!=null){
-            Toast.makeText(this,"User already Logged In",Toast.LENGTH_LONG).show()
-            navController.navigate(R.id.home_Page)
-        }else{
-            navController.navigate(R.id.login_main)
-        }
+//        if(token!=null){
+//            Toast.makeText(this,"User already Logged In",Toast.LENGTH_LONG).show()
+//            navController.navigate(R.id.home_Page)
+//        }else{
+//            navController.navigate(R.id.login_main)
+//        }
 
 
         navController.addOnDestinationChangedListener { _, destination, _ ->

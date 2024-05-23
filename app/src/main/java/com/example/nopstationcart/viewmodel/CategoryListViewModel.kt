@@ -1,7 +1,6 @@
 package com.example.nopstationcart.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.nopstationcart.model.data.CategoryItem
 
 class CategoryListViewModel(private val drawableResId:Int) : ViewModel() {
 

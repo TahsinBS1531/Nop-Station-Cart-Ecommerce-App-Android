@@ -28,7 +28,7 @@
             app:argType="integer" />
         <argument
             android:name="product_list"
-            app:argType="com.example.nopstationcart.model.data.categoryDetailsItem[]" />
+            app:argType="com.example.nopstationcart.Services.Model.categoryDetailsItem[]" />
         <action
             android:id="@+id/action_home_page_Category_to_product_Deatils"
             app:destination="@id/product_Deatils" />

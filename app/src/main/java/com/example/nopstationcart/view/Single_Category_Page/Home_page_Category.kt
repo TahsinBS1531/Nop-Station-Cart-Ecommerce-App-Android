@@ -12,9 +12,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nopstationcart.R
-import com.example.nopstationcart.model.data.CategoryItem
-import com.example.nopstationcart.model.data.categoryDetailsItem
-import com.example.nopstationcart.model.interfaces.categoryDetailsOnClicklistener
+import com.example.nopstationcart.Services.Model.categoryDetailsItem
+import com.example.nopstationcart.Services.Interfaces.categoryDetailsOnClicklistener
 
 
 class Home_page_Category : Fragment() {
@@ -49,7 +48,7 @@ class Home_page_Category : Fragment() {
             val adapter = CategoryDetailsAdapter(items)
             recycle.adapter = adapter
 
-            adapter.setOnItemClick(object : categoryDetailsOnClicklistener{
+            adapter.setOnItemClick(object : categoryDetailsOnClicklistener {
                 override fun onItemClick(position: Int) {
                     val currentItem = items[position]
                     val title = currentItem.tittle

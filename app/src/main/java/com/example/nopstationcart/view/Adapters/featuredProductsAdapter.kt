@@ -8,9 +8,8 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nopstationcart.R
-import com.example.nopstationcart.model.data.featuredProductsItem
-import com.example.nopstationcart.model.interfaces.featuredProductsItemClickListener
-import com.example.nopstationcart.model.interfaces.womenHeelOnItemClickListener
+import com.example.nopstationcart.Services.Model.featuredProductsItem
+import com.example.nopstationcart.Services.Interfaces.featuredProductsItemClickListener
 
 class featuredProductsAdapter(var featuredProducts:ArrayList<featuredProductsItem>):RecyclerView.Adapter<featuredProductsAdapter.MyViewHolder>() {
 
@@ -41,7 +40,7 @@ class featuredProductsAdapter(var featuredProducts:ArrayList<featuredProductsIte
         return featuredProducts.size
     }
 
-    class MyViewHolder(itemview:View, listener:featuredProductsItemClickListener):RecyclerView.ViewHolder(itemview){
+    class MyViewHolder(itemview:View, listener: featuredProductsItemClickListener):RecyclerView.ViewHolder(itemview){
         val tittle = itemview.findViewById<TextView>(R.id.featuredTittle)
         val img = itemview.findViewById<ImageView>(R.id.featuredImg)
         val price = itemview.findViewById<TextView>(R.id.featuredPrice)

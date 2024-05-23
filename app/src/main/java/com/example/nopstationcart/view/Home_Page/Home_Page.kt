@@ -1,7 +1,5 @@
 package com.example.nopstationcart.view.Home_Page
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,15 +16,18 @@ import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.nopstationcart.view.Adapters.CategoryAdapter
 import com.example.nopstationcart.R
-import com.example.nopstationcart.model.interfaces.bestSellingProductsItemClick
-import com.example.nopstationcart.model.interfaces.featuredProductsItemClickListener
-import com.example.nopstationcart.model.interfaces.onItemClickListener
-import com.example.nopstationcart.model.interfaces.womenHeelOnItemClickListener
+import com.example.nopstationcart.dummyData.bestSellingProducts
+import com.example.nopstationcart.dummyData.categoryList
+import com.example.nopstationcart.dummyData.featuredProducts
+import com.example.nopstationcart.dummyData.womenHeelProducts
+import com.example.nopstationcart.Services.Interfaces.bestSellingProductsItemClick
+import com.example.nopstationcart.Services.Interfaces.featuredProductsItemClickListener
+import com.example.nopstationcart.Services.Interfaces.onItemClickListener
+import com.example.nopstationcart.Services.Interfaces.womenHeelOnItemClickListener
 import com.example.nopstationcart.view.Adapters.bestSellingAdapters
 import com.example.nopstationcart.view.Adapters.featuredProductsAdapter
 import com.example.nopstationcart.view.Adapters.womenHeelAdapter
-import com.example.nopstationcart.view.Single_Category_Page.dummyProductsList
-import com.example.nopstationcart.view.logOut.logOutHandler
+import com.example.nopstationcart.dummyData.dummyProductsList
 
 
 class Home_Page : Fragment(){
@@ -86,7 +87,7 @@ class Home_Page : Fragment(){
         val adapter = womenHeelAdapter(womenHeelArrayList)
         myRecyclerView4.adapter = adapter
 
-        adapter.setOnItemClick(object :womenHeelOnItemClickListener{
+        adapter.setOnItemClick(object : womenHeelOnItemClickListener {
             override fun onItemClick(position: Int) {
                 val itemTittle = womenHeelArrayList[position].tittle.toString()
                 val itemImg = womenHeelArrayList[position].imgRes
@@ -122,7 +123,7 @@ class Home_Page : Fragment(){
         val bestSellingArrayList = ob.getProducts()
         val adapter = bestSellingAdapters(bestSellingArrayList)
         myRecyclerView2.adapter = adapter
-        adapter.setOnItemClick(object : bestSellingProductsItemClick{
+        adapter.setOnItemClick(object : bestSellingProductsItemClick {
             override fun onItemClick(position: Int) {
                 val currentItem = bestSellingArrayList[position]
                 val itemImg = currentItem.imageRes
@@ -152,7 +153,7 @@ class Home_Page : Fragment(){
         val adapter = featuredProductsAdapter(featuredArrayList)
         myRecyclerView3.adapter = adapter
 
-        adapter.setOnItemClick(object:featuredProductsItemClickListener{
+        adapter.setOnItemClick(object: featuredProductsItemClickListener {
             override fun onItemClick(position: Int) {
                 val itemTittle = featuredArrayList[position].tittle.toString()
                 val itemImg = featuredArrayList[position].imgRes
@@ -181,7 +182,7 @@ class Home_Page : Fragment(){
         myRecycleView.adapter = myAdapter
 
 
-        myAdapter.setOnItemClickListener(object :onItemClickListener{
+        myAdapter.setOnItemClickListener(object : onItemClickListener {
             override fun onItemClick(position: Int) {
 
                 if(categoryList[position].text=="Food"){

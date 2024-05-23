@@ -7,15 +7,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nopstationcart.R
-import com.example.nopstationcart.model.data.categoryDetailsItem
-import com.example.nopstationcart.model.interfaces.categoryDetailsOnClicklistener
+import com.example.nopstationcart.Services.Model.categoryDetailsItem
+import com.example.nopstationcart.Services.Interfaces.categoryDetailsOnClicklistener
 
 class CategoryDetailsAdapter(
     private val itemList: List<categoryDetailsItem>
 ) : RecyclerView.Adapter<CategoryDetailsAdapter.ViewHolder>() {
 
     lateinit var myListener: categoryDetailsOnClicklistener
-    fun setOnItemClick(listener:categoryDetailsOnClicklistener){
+    fun setOnItemClick(listener: categoryDetailsOnClicklistener){
         myListener = listener
     }
 

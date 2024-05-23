@@ -9,11 +9,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nopstationcart.R
-import com.example.nopstationcart.model.data.categoryDetailsItem
-import com.example.nopstationcart.model.interfaces.onItemClickListener
+import com.example.nopstationcart.dummyData.singleCategoryList
+import com.example.nopstationcart.Services.Model.categoryDetailsItem
+import com.example.nopstationcart.Services.Interfaces.onItemClickListener
 import com.example.nopstationcart.view.Adapters.singleCategoryListAdapter
-import com.example.nopstationcart.view.Home_Page.Home_PageDirections
-import com.example.nopstationcart.view.Single_Category_Page.dummyProductsList
+import com.example.nopstationcart.dummyData.dummyProductsList
 
 
 class Category_Fragment : Fragment() {
@@ -70,7 +70,7 @@ class Category_Fragment : Fragment() {
         return view
     }
 
-    fun getTitles(title:String, items:dummyProductsList): ArrayList<categoryDetailsItem> {
+    fun getTitles(title:String, items: dummyProductsList): ArrayList<categoryDetailsItem> {
         val itemsList = items.getProducts(title)
         return itemsList
 
