@@ -106,7 +106,7 @@ class Home_Page : Fragment(){
                 val itemPrice = womenHeelArrayList[position].price.toString()
                 Toast.makeText(requireContext(),"This is a $itemTittle",Toast.LENGTH_LONG).show()
 
-                val action = Home_PageDirections.actionHomePageToProductDeatils(itemTittle,itemImg,itemPrice)
+                val action = Home_PageDirections.actionHomePageToProductDeatils(itemTittle,"https://images.pexels.com/photos/24280095/pexels-photo-24280095/free-photo-of-an-armchair-and-a-basket-of-flowers-standing-in-a-garden.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",itemPrice,"Dummy Data for now", "Dummy Data for now","20.00$")
                 findNavController().navigate(action)
             }
 
@@ -142,7 +142,7 @@ class Home_Page : Fragment(){
                 val itemTitle = currentItem.tittle
                 val itemPrice = currentItem.price
 
-                val action = Home_PageDirections.actionHomePageToProductDeatils(itemTitle,itemImg,itemPrice)
+                val action = Home_PageDirections.actionHomePageToProductDeatils(itemTitle,"https://images.pexels.com/photos/24280095/pexels-photo-24280095/free-photo-of-an-armchair-and-a-basket-of-flowers-standing-in-a-garden.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",itemPrice,"Dummy Data for now", "Dummy Data for now","20.00$")
                 findNavController().navigate(action)
             }
 
@@ -199,7 +199,7 @@ class Home_Page : Fragment(){
                 val itemImg = featuredArrayList[position].imgRes
                 val itemPrice = featuredArrayList[position].price.toString()
                 Toast.makeText(requireContext(),"This is a $itemTittle",Toast.LENGTH_LONG).show()
-                val action = Home_PageDirections.actionHomePageToProductDeatils(itemTittle,itemImg,itemPrice)
+                val action = Home_PageDirections.actionHomePageToProductDeatils(itemTittle,"https://images.pexels.com/photos/24280095/pexels-photo-24280095/free-photo-of-an-armchair-and-a-basket-of-flowers-standing-in-a-garden.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",itemPrice,"Dummy Data for now", "Dummy Data for now","20.00$")
                 findNavController().navigate(action)
 
             }

@@ -10,14 +10,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.nopstationcart.R
 import com.example.nopstationcart.databinding.FragmentProductDeatilsBinding
 
 class Product_Deatils : Fragment() {
-    lateinit var Title: TextView
-    lateinit var img:ImageView
-    lateinit var price:TextView
-    lateinit var backBtn : Toolbar
     lateinit var binding : FragmentProductDeatilsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,14 +26,12 @@ class Product_Deatils : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_product__deatils, container, false)
-
-        val textView: TextView = view.findViewById(R.id.strikeThroughText)
-        textView.paintFlags = textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-
+        binding = FragmentProductDeatilsBinding.bind(view)
+        binding.productPageOldPrice.paintFlags = binding.productPageOldPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
         getProductsDetails(view)
         handleBackBtn(view)
 
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,19 +44,24 @@ class Product_Deatils : Fragment() {
         val imageResId = args.productImage
         val itemTitle = args.productTittile
         val itemPrice = args.productPrice
+        val oldPrice = args.oldPrice
+        val shortDes = args.shortDescription
+        val longDes = args.fullDescription
 
-        Title = view.findViewById(R.id.productPageTitle)
-        img = view.findViewById(R.id.productPageImg)
-        price = view.findViewById(R.id.productPagePrice)
+        binding.productPageTitle.text = itemTitle
+        binding.productPageOldPrice.text = oldPrice
+        binding.productPagePrice.text = itemPrice
+        binding.productPageShortDes.text = shortDes
+        binding.productPageLongDes.text = longDes
 
-        Title.text = itemTitle
-        img.setImageResource(imageResId)
-        price.text = itemPrice
+        Glide.with(this)
+            .load(imageResId)
+            .into(binding.productPageImg)
+
     }
 
     fun handleBackBtn(view:View){
-        backBtn = view.findViewById(R.id.product_details_back_btn)
-        backBtn.setOnClickListener {
+        binding.productDetailsBackBtn.setOnClickListener{
             findNavController().popBackStack()
         }
     }

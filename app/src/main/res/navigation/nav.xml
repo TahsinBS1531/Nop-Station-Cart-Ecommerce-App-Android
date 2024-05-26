@@ -70,9 +70,18 @@
             app:argType="string" />
         <argument
             android:name="product_image"
-            app:argType="integer" />
+            app:argType="string" />
         <argument
             android:name="product_price"
+            app:argType="string" />
+        <argument
+            android:name="short_description"
+            app:argType="string" />
+        <argument
+            android:name="full_description"
+            app:argType="string" />
+        <argument
+            android:name="old_price"
             app:argType="string" />
     </fragment>
     <fragment

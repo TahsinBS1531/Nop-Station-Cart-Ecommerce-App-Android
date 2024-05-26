@@ -53,21 +53,25 @@ class Home_page_Category : Fragment() {
             val adapter = CategoryDetailsAdapter(items)
             recycle.adapter = adapter
 
-//            adapter.setOnItemClick(object : categoryDetailsOnClicklistener {
-//                override fun onItemClick(position: Int) {
-//                    val currentItem = items[position]
-//                    val title = currentItem.tittle
-//                    val imageResId = currentItem.imageResID
-//                    val itemPrice = currentItem.itemPrice
-//                    val action = Home_page_CategoryDirections.actionHomePageCategoryToProductDeatils(title,imageResId,itemPrice)
-//                    findNavController().navigate(action)
-//                }
-//
-//                override fun onCartBtnClick(position: Int) {
-//                    TODO("Not yet implemented")
-//                }
-//
-//            })
+            adapter.setOnItemClick(object : categoryDetailsOnClicklistener {
+                override fun onItemClick(position: Int) {
+                    val currentItem = items[position]
+                    val title = currentItem.Name ?: "No Title"
+                    val imageResId = currentItem.PictureModels.getOrNull(0)?.FullSizeImageUrl ?: ""
+                    val itemPrice = currentItem.ProductPrice.Price ?: "0.0"
+                    val oldPrice = currentItem.ProductPrice.OldPrice ?: "0.0"
+                    val shortDescription = currentItem.ShortDescription ?: "No short description available"
+                    val longDes = currentItem.FullDescription ?: "No full description available"
+
+                    val action = Home_page_CategoryDirections.actionHomePageCategoryToProductDeatils(productTittile = title, productImage = imageResId, productPrice = itemPrice,oldPrice= oldPrice, shortDescription = shortDescription, fullDescription = longDes)
+                    findNavController().navigate(action)
+                }
+
+                override fun onCartBtnClick(position: Int) {
+                    TODO("Not yet implemented")
+                }
+
+            })
 
 
             handleBackBtn(view)
