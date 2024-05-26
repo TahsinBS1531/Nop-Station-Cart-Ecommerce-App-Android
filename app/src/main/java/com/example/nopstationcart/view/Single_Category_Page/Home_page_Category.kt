@@ -11,9 +11,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.nopstationcart.R
-import com.example.nopstationcart.model.data.categoryDetailsItem
-import com.example.nopstationcart.model.interfaces.categoryDetailsOnClicklistener
+import com.example.nopstationcart.Services.Interfaces.categoryDetailsOnClicklistener
+import com.example.nopstationcart.Services.Model.CategoryList.Product
 
 
 class Home_page_Category : Fragment() {
@@ -33,7 +34,7 @@ class Home_page_Category : Fragment() {
         if (bundle != null) {
             val args = Home_page_CategoryArgs.fromBundle(requireArguments())
             val imageResId = args.productImage
-            val items: List<categoryDetailsItem> = args.productList.toList()
+            val items: List<Product> = args.productListItem.toList()
             val title = args.productTittle
 
 
@@ -41,28 +42,32 @@ class Home_page_Category : Fragment() {
             textView.text = title
 
             val imageView = view.findViewById<ImageView>(R.id.singleCategoryImg)
-            imageView.setImageResource(imageResId)
+
+            Glide.with(this)
+                .load(imageResId)
+                .into(imageView)
+
 
             val recycle = view.findViewById<RecyclerView>(R.id.singleCategoryRecycle)
             recycle.layoutManager = GridLayoutManager(requireContext(),2)
             val adapter = CategoryDetailsAdapter(items)
             recycle.adapter = adapter
 
-            adapter.setOnItemClick(object : categoryDetailsOnClicklistener{
-                override fun onItemClick(position: Int) {
-                    val currentItem = items[position]
-                    val title = currentItem.tittle
-                    val imageResId = currentItem.imageResID
-                    val itemPrice = currentItem.itemPrice
-                    val action = Home_page_CategoryDirections.actionHomePageCategoryToProductDeatils(title,imageResId,itemPrice)
-                    findNavController().navigate(action)
-                }
-
-                override fun onCartBtnClick(position: Int) {
-                    TODO("Not yet implemented")
-                }
-
-            })
+//            adapter.setOnItemClick(object : categoryDetailsOnClicklistener {
+//                override fun onItemClick(position: Int) {
+//                    val currentItem = items[position]
+//                    val title = currentItem.tittle
+//                    val imageResId = currentItem.imageResID
+//                    val itemPrice = currentItem.itemPrice
+//                    val action = Home_page_CategoryDirections.actionHomePageCategoryToProductDeatils(title,imageResId,itemPrice)
+//                    findNavController().navigate(action)
+//                }
+//
+//                override fun onCartBtnClick(position: Int) {
+//                    TODO("Not yet implemented")
+//                }
+//
+//            })
 
 
             handleBackBtn(view)

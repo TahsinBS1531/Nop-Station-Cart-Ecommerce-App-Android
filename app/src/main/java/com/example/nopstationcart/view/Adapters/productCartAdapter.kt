@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nopstationcart.R
-import com.example.nopstationcart.model.data.productCartItems
+import com.example.nopstationcart.Services.Model.productCartItems
 
 class productCartAdapter(private val itemList: List<productCartItems> ): RecyclerView.Adapter<productCartAdapter.MyViewHolder>() {
 

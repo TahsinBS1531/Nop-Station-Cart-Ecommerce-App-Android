@@ -38,25 +38,28 @@ class MainActivity : AppCompatActivity() {
 
         sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("TOKEN", null)
+        println("Token : $token")
         //Home_Page().handleLogOut(token)
 
         if(token!=null){
-            Toast.makeText(this,"User already Logged In",Toast.LENGTH_LONG).show()
             navController.navigate(R.id.home_Page)
-        }else{
-            navController.navigate(R.id.login_main)
+            Toast.makeText(this,"User already Logged In",Toast.LENGTH_LONG).show()
         }
-
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.home_Page -> bottomNav.visibility = View.VISIBLE
-                R.id.login_main -> bottomNav.visibility = View.GONE
+                R.id.login_main -> {
+                    bottomNav.visibility = View.GONE
+                    if(token!=null){
+                        Toast.makeText(this,"User Already Logged in ",Toast.LENGTH_LONG).show()
+                        navController.navigate(R.id.home_Page)
+                    }
+                }
                 R.id.home_page_Category ->bottomNav.visibility = View.GONE
                 else -> bottomNav.visibility = View.VISIBLE
             }
         }
-
 
     }
 

@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nopstationcart.R
-import com.example.nopstationcart.model.data.productCartItems
+import com.example.nopstationcart.Services.Model.productCartItems
 import com.example.nopstationcart.view.Adapters.productCartAdapter
 
 

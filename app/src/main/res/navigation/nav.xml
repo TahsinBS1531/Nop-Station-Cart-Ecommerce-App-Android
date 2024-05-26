@@ -25,10 +25,10 @@
             android:defaultValue="Tittle" />
         <argument
             android:name="product_image"
-            app:argType="integer" />
+            app:argType="string" />
         <argument
-            android:name="product_list"
-            app:argType="com.example.nopstationcart.model.data.categoryDetailsItem[]" />
+            android:name="product_list_Item"
+            app:argType="com.example.nopstationcart.Services.Model.CategoryList.Product[]" />
         <action
             android:id="@+id/action_home_page_Category_to_product_Deatils"
             app:destination="@id/product_Deatils" />
