@@ -11,7 +11,7 @@ data class ProductPrice(
     val DisplayTaxShippingInfo: Boolean,
     val ForceRedirectionAfterAddingToCart: Boolean,
     val IsRental: Boolean,
-    val OldPrice: Any,
+    val OldPrice: String,
     val OldPriceValue: Any,
     val PreOrderAvailabilityStartDateTimeUtc: Any,
     val Price: String,

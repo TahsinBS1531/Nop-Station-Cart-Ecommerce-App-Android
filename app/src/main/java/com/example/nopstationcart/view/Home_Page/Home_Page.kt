@@ -172,13 +172,16 @@ class Home_Page : Fragment(){
             it.onSuccess {response ->
                 response.Data.forEach {
                     val name = it.Name
-                    val price = it.ProductPrice.Price.toString()
-                    val image = it.PictureModels[0].ImageUrl
+                    val price = it.ProductPrice.Price.toString()?:"0.0"
+                    val image = it.PictureModels[0].ImageUrl?:"No Image Found"
                     var rating = 0f
+                    val shortDes = it.ShortDescription
+                    val longDes = it.FullDescription
+                    val oldPrice = it.ProductPrice.OldPrice?:"0.0"
                     if(it.ReviewOverviewModel.TotalReviews !=0){
                         rating = (it.ReviewOverviewModel.RatingSum/it.ReviewOverviewModel.TotalReviews).toFloat()
                     }
-                    val data = featuredProductsItem2(name,price, image = image,rating)
+                    val data = featuredProductsItem2(name,price, image = image,rating,shortDes,longDes,oldPrice)
                     featuredList.add(data)
                 }
 
@@ -191,15 +194,18 @@ class Home_Page : Fragment(){
         }
 
 
-
-
         adapter.setOnItemClick(object: featuredProductsItemClickListener {
             override fun onItemClick(position: Int) {
-                val itemTittle = featuredArrayList[position].tittle.toString()
-                val itemImg = featuredArrayList[position].imgRes
-                val itemPrice = featuredArrayList[position].price.toString()
-                Toast.makeText(requireContext(),"This is a $itemTittle",Toast.LENGTH_LONG).show()
-                val action = Home_PageDirections.actionHomePageToProductDeatils(itemTittle,"https://images.pexels.com/photos/24280095/pexels-photo-24280095/free-photo-of-an-armchair-and-a-basket-of-flowers-standing-in-a-garden.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",itemPrice,"Dummy Data for now", "Dummy Data for now","20.00$")
+                val currentItem = featuredList[position]
+                val image = currentItem.image
+                val title = currentItem.tittle
+                val shortDes = currentItem.shortDes
+                val longDes = currentItem.longDes
+                val price = currentItem.price
+                val oldPrice = currentItem.oldPrice
+
+                Toast.makeText(requireContext(),"This is a $title",Toast.LENGTH_LONG).show()
+                val action = Home_PageDirections.actionHomePageToProductDeatils(title,image,price,shortDes, longDes,oldPrice)
                 findNavController().navigate(action)
 
             }
@@ -216,9 +222,6 @@ class Home_Page : Fragment(){
             myRecycleView = view.findViewById(R.id.categoryrecycleView)
         }
         myRecycleView.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
-//        val categoryListApi = ArrayList<CategorySingleItem>()
-//        val myAdapter = CategoryAdapter(categoryListApi)
-
 
         val categoryListApi = ArrayList<CategorySingleItem>()
 
@@ -231,6 +234,7 @@ class Home_Page : Fragment(){
 
         categoryListViewModel.getCategoryList()
         categoryListViewModel.result.observe(viewLifecycleOwner){result->
+            categoryListApi.clear()
             result.onSuccess {
                 it.Data.forEach {
                     val name = it.Name.toString()
@@ -240,49 +244,13 @@ class Home_Page : Fragment(){
                     val data = CategorySingleItem(id,name,image,products)
                     categoryListApi.add(data)
                 }
+                myAdapter.notifyDataSetChanged()
             }.onFailure {
                 Toast.makeText(requireContext(),"Category List Api call failed",Toast.LENGTH_LONG).show()
             }
             myRecycleView.adapter = myAdapter
         }
 
-
-
-
-//        myAdapter.setOnItemClickListener(object : onItemClickListener {
-//            override fun onItemClick(position: Int) {
-
-//                if(categoryList[position].text=="Food"){
-//                    val foodItems = dummyProductsList()
-//                    val items = foodItems.getProducts("Food")
-//                    val action = Home_PageDirections.actionHomePageToHomePageCategory(categoryList[position].imageResId,items.toTypedArray(),categoryList[position].text)
-//                    findNavController().navigate(action)
-//                }
-//
-//                if(categoryList[position].text=="Furniture"){
-//                    val furnitureItems = dummyProductsList()
-//                    val items = furnitureItems.getProducts("Furniture")
-//                    val action = Home_PageDirections.actionHomePageToHomePageCategory(categoryList[position].imageResId,items.toTypedArray(),categoryList[position].text)
-//                    findNavController().navigate(action)
-//                }
-//
-//                if(categoryList[position].text=="Phone"){
-//                    val phoneItems = dummyProductsList()
-//                    val items = phoneItems.getProducts("Phone")
-//                    val action = Home_PageDirections.actionHomePageToHomePageCategory(categoryList[position].imageResId,items.toTypedArray(),categoryList[position].text)
-//                    findNavController().navigate(action)
-//                }
-//
-//                if(categoryList[position].text=="Watch"){
-//                    val phoneItems = dummyProductsList()
-//                    val items = phoneItems.getProducts("Watch")
-//                    val action = Home_PageDirections.actionHomePageToHomePageCategory(categoryList[position].imageResId,items.toTypedArray(),categoryList[position].text)
-//                    findNavController().navigate(action)
-//                }
-
-//            }
-//
-//        })
     }
 
     private fun initializeImageSlider(view: View?) {

@@ -2,6 +2,7 @@ package com.example.nopstationcart.view.Single_Product_Page
 
 import android.graphics.Paint
 import android.os.Bundle
+import android.text.Html
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -34,10 +35,6 @@ class Product_Deatils : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding = FragmentProductDeatilsBinding.bind(view)
-        super.onViewCreated(view, savedInstanceState)
-    }
 
     fun getProductsDetails(view:View){
         val args = Product_DeatilsArgs.fromBundle(requireArguments())
@@ -48,11 +45,13 @@ class Product_Deatils : Fragment() {
         val shortDes = args.shortDescription
         val longDes = args.fullDescription
 
+
         binding.productPageTitle.text = itemTitle
         binding.productPageOldPrice.text = oldPrice
         binding.productPagePrice.text = itemPrice
-        binding.productPageShortDes.text = shortDes
-        binding.productPageLongDes.text = longDes
+
+        binding.productPageShortDes.text = Html.fromHtml(binding.productPageShortDes.text.toString(), Html.FROM_HTML_MODE_LEGACY)
+        binding.productPageLongDes.text = Html.fromHtml(binding.productPageLongDes.text.toString(), Html.FROM_HTML_MODE_LEGACY)
 
         Glide.with(this)
             .load(imageResId)
