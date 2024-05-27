@@ -117,9 +117,10 @@ class Home_Page : Fragment(){
                 val itemTittle = womenHeelArrayList[position].tittle.toString()
                 val itemImg = womenHeelArrayList[position].imgRes
                 val itemPrice = womenHeelArrayList[position].price.toString()
+                val productId = 1
                 Toast.makeText(requireContext(),"This is a $itemTittle",Toast.LENGTH_LONG).show()
 
-                val action = Home_PageDirections.actionHomePageToProductDeatils(itemTittle,"https://images.pexels.com/photos/24280095/pexels-photo-24280095/free-photo-of-an-armchair-and-a-basket-of-flowers-standing-in-a-garden.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",itemPrice,"Dummy Data for now", "Dummy Data for now","20.00$")
+                val action = Home_PageDirections.actionHomePageToProductDeatils(itemTittle,"https://images.pexels.com/photos/24280095/pexels-photo-24280095/free-photo-of-an-armchair-and-a-basket-of-flowers-standing-in-a-garden.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",itemPrice,"Dummy Data for now", "Dummy Data for now","20.00$", productId = productId.toString())
                 findNavController().navigate(action)
             }
 
@@ -155,7 +156,7 @@ class Home_Page : Fragment(){
                 val itemTitle = currentItem.tittle
                 val itemPrice = currentItem.price
 
-                val action = Home_PageDirections.actionHomePageToProductDeatils(itemTitle,"https://images.pexels.com/photos/24280095/pexels-photo-24280095/free-photo-of-an-armchair-and-a-basket-of-flowers-standing-in-a-garden.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",itemPrice,"Dummy Data for now", "Dummy Data for now","20.00$")
+                val action = Home_PageDirections.actionHomePageToProductDeatils(itemTitle,"https://images.pexels.com/photos/24280095/pexels-photo-24280095/free-photo-of-an-armchair-and-a-basket-of-flowers-standing-in-a-garden.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",itemPrice,"Dummy Data for now", "Dummy Data for now","20.00$","1")
                 findNavController().navigate(action)
             }
 
@@ -215,9 +216,10 @@ class Home_Page : Fragment(){
                 val longDes = currentItem.longDes
                 val price = currentItem.price
                 val oldPrice = currentItem.oldPrice
+                val productId = currentItem.id
 
                 Toast.makeText(requireContext(),"This is a $title",Toast.LENGTH_LONG).show()
-                val action = Home_PageDirections.actionHomePageToProductDeatils(title,image,price,shortDes, longDes,oldPrice)
+                val action = Home_PageDirections.actionHomePageToProductDeatils(title,image,price,shortDes, longDes,oldPrice,productId.toString())
                 findNavController().navigate(action)
 
             }

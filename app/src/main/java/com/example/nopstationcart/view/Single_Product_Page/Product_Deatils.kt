@@ -9,14 +9,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.nopstationcart.R
 import com.example.nopstationcart.databinding.FragmentProductDeatilsBinding
+import com.example.nopstationcart.viewmodel.CartViewModel
 
 class Product_Deatils : Fragment() {
     lateinit var binding : FragmentProductDeatilsBinding
+    private val cartPageViewModel:CartViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +46,7 @@ class Product_Deatils : Fragment() {
         val itemTitle = args.productTittile
         val itemPrice = args.productPrice
         val oldPrice = args.oldPrice
+        val productId = args.productId
 
         binding.productPageTitle.text = itemTitle
         binding.productPageOldPrice.text = oldPrice
@@ -54,11 +59,26 @@ class Product_Deatils : Fragment() {
             .load(imageResId)
             .into(binding.productPageImg)
 
+        handleCartBtn(productId)
+
     }
 
     fun handleBackBtn(view:View){
         binding.productDetailsBackBtn.setOnClickListener{
             findNavController().popBackStack()
+        }
+    }
+    fun handleCartBtn(id:String){
+        binding.ProductDetailsAddToCart.setOnClickListener {
+            cartPageViewModel.getCartResponse(id.toInt())
+            cartPageViewModel.result.observe(viewLifecycleOwner){response->
+                response.onSuccess {
+                    Toast.makeText(requireContext(),"${it.Message}", Toast.LENGTH_LONG).show()
+                }.onFailure {
+                    Toast.makeText(requireContext(),"${it.cause?.cause}",Toast.LENGTH_LONG).show()
+                    println(it.cause?.message)
+                }
+            }
         }
     }
 

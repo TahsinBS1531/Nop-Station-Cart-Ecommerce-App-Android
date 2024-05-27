@@ -62,8 +62,9 @@ class Home_page_Category : Fragment() {
                     val oldPrice = currentItem.ProductPrice.OldPrice ?: "0.0"
                     val shortDescription = currentItem.ShortDescription ?: "No short description available"
                     val longDes = currentItem.FullDescription ?: "No full description available"
+                    val productId = currentItem.Id
 
-                    val action = Home_page_CategoryDirections.actionHomePageCategoryToProductDeatils(productTittile = title, productImage = imageResId, productPrice = itemPrice,oldPrice= oldPrice, shortDescription = shortDescription, fullDescription = longDes)
+                    val action = Home_page_CategoryDirections.actionHomePageCategoryToProductDeatils(productTittile = title, productImage = imageResId, productPrice = itemPrice,oldPrice= oldPrice, shortDescription = shortDescription, fullDescription = longDes, productId = productId.toString())
                     findNavController().navigate(action)
                 }
 

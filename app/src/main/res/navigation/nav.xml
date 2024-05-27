@@ -83,6 +83,9 @@
         <argument
             android:name="old_price"
             app:argType="string" />
+        <argument
+            android:name="product_Id"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/product_Cart_Main"
