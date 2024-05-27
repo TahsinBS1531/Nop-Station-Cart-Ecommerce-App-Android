@@ -2,23 +2,25 @@ package com.example.nopstationcart.view.Single_Product_Page
 
 import android.graphics.Paint
 import android.os.Bundle
+import android.text.Html
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.nopstationcart.R
 import com.example.nopstationcart.databinding.FragmentProductDeatilsBinding
+import com.example.nopstationcart.viewmodel.CartViewModel
 
 class Product_Deatils : Fragment() {
-    lateinit var Title: TextView
-    lateinit var img:ImageView
-    lateinit var price:TextView
-    lateinit var backBtn : Toolbar
     lateinit var binding : FragmentProductDeatilsBinding
+    private val cartPageViewModel:CartViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,40 +31,54 @@ class Product_Deatils : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_product__deatils, container, false)
-
-        val textView: TextView = view.findViewById(R.id.strikeThroughText)
-        textView.paintFlags = textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-
+        binding = FragmentProductDeatilsBinding.bind(view)
+        binding.productPageOldPrice.paintFlags = binding.productPageOldPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
         getProductsDetails(view)
         handleBackBtn(view)
 
-        return view
+        return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding = FragmentProductDeatilsBinding.bind(view)
-        super.onViewCreated(view, savedInstanceState)
-    }
 
     fun getProductsDetails(view:View){
         val args = Product_DeatilsArgs.fromBundle(requireArguments())
         val imageResId = args.productImage
         val itemTitle = args.productTittile
         val itemPrice = args.productPrice
+        val oldPrice = args.oldPrice
+        val productId = args.productId
 
-        Title = view.findViewById(R.id.productPageTitle)
-        img = view.findViewById(R.id.productPageImg)
-        price = view.findViewById(R.id.productPagePrice)
+        binding.productPageTitle.text = itemTitle
+        binding.productPageOldPrice.text = oldPrice
+        binding.productPagePrice.text = itemPrice
 
-        Title.text = itemTitle
-        img.setImageResource(imageResId)
-        price.text = itemPrice
+        binding.productPageShortDes.text = Html.fromHtml(binding.productPageShortDes.text.toString(), Html.FROM_HTML_MODE_LEGACY)
+        binding.productPageLongDes.text = Html.fromHtml(binding.productPageLongDes.text.toString(), Html.FROM_HTML_MODE_LEGACY)
+
+        Glide.with(this)
+            .load(imageResId)
+            .into(binding.productPageImg)
+
+        handleCartBtn(productId)
+
     }
 
     fun handleBackBtn(view:View){
-        backBtn = view.findViewById(R.id.product_details_back_btn)
-        backBtn.setOnClickListener {
+        binding.productDetailsBackBtn.setOnClickListener{
             findNavController().popBackStack()
+        }
+    }
+    fun handleCartBtn(id:String){
+        binding.ProductDetailsAddToCart.setOnClickListener {
+            cartPageViewModel.getCartResponse(id.toInt())
+            cartPageViewModel.result.observe(viewLifecycleOwner){response->
+                response.onSuccess {
+                    Toast.makeText(requireContext(),"${it.Message}", Toast.LENGTH_LONG).show()
+                }.onFailure {
+                    Toast.makeText(requireContext(),"${it.cause?.cause}",Toast.LENGTH_LONG).show()
+                    println(it.cause?.message)
+                }
+            }
         }
     }
 

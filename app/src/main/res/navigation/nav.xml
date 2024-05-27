@@ -25,10 +25,10 @@
             android:defaultValue="Tittle" />
         <argument
             android:name="product_image"
-            app:argType="integer" />
+            app:argType="string" />
         <argument
-            android:name="product_list"
-            app:argType="com.example.nopstationcart.model.data.categoryDetailsItem[]" />
+            android:name="product_list_Item"
+            app:argType="com.example.nopstationcart.Services.Model.CategoryList.Product[]" />
         <action
             android:id="@+id/action_home_page_Category_to_product_Deatils"
             app:destination="@id/product_Deatils" />
@@ -70,9 +70,21 @@
             app:argType="string" />
         <argument
             android:name="product_image"
-            app:argType="integer" />
+            app:argType="string" />
         <argument
             android:name="product_price"
+            app:argType="string" />
+        <argument
+            android:name="short_description"
+            app:argType="string" />
+        <argument
+            android:name="full_description"
+            app:argType="string" />
+        <argument
+            android:name="old_price"
+            app:argType="string" />
+        <argument
+            android:name="product_Id"
             app:argType="string" />
     </fragment>
     <fragment
@@ -80,14 +92,5 @@
         android:name="com.example.nopstationcart.view.Product_Shopping_Cart.Product_Cart_Main"
         android:label="fragment_product__cart__main"
         tools:layout="@layout/fragment_product__cart__main" >
-        <argument
-            android:name="tittle"
-            app:argType="string" />
-        <argument
-            android:name="price"
-            app:argType="string" />
-        <argument
-            android:name="image"
-            app:argType="integer" />
     </fragment>
 </navigation>

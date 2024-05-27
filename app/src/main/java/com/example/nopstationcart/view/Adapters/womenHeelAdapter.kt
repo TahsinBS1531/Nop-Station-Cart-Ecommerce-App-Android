@@ -9,16 +9,14 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nopstationcart.R
-import com.example.nopstationcart.model.data.featuredProductsItem
-import com.example.nopstationcart.model.data.womenHeelItems
-import com.example.nopstationcart.model.interfaces.onItemClickListener
-import com.example.nopstationcart.model.interfaces.womenHeelOnItemClickListener
+import com.example.nopstationcart.Services.Model.womenHeelItems
+import com.example.nopstationcart.Services.Interfaces.womenHeelOnItemClickListener
 
 class womenHeelAdapter(var womenHeelArrayList:ArrayList<womenHeelItems>):RecyclerView.Adapter<womenHeelAdapter.MyViewHolder>() {
 
-    lateinit var myListener:womenHeelOnItemClickListener
+    lateinit var myListener: womenHeelOnItemClickListener
 
-    fun setOnItemClick(listener:womenHeelOnItemClickListener){
+    fun setOnItemClick(listener: womenHeelOnItemClickListener){
         myListener = listener
     }
 

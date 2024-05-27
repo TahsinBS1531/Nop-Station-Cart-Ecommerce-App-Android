@@ -5,19 +5,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
+import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.nopstationcart.R
-import com.example.nopstationcart.model.data.categoryDetailsItem
-import com.example.nopstationcart.model.interfaces.onItemClickListener
-import com.example.nopstationcart.view.Adapters.singleCategoryListAdapter
+import com.example.nopstationcart.Services.Model.CategoryList.CategorySingleItem
+import com.example.nopstationcart.Services.Model.CategoryTree.categoryDataClass
+import com.example.nopstationcart.databinding.FragmentCategoryBinding
+import com.example.nopstationcart.view.Adapters.CategoryAdapter
+import com.example.nopstationcart.view.Adapters.CategoryTreeAdapter
 import com.example.nopstationcart.view.Home_Page.Home_PageDirections
-import com.example.nopstationcart.view.Single_Category_Page.dummyProductsList
+import com.example.nopstationcart.viewmodel.CategoryListViewModel
 
 
 class Category_Fragment : Fragment() {
-    lateinit var recycleView:RecyclerView
+    lateinit var binding:FragmentCategoryBinding
+    private val categoryViewModels:CategoryListViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,49 +34,46 @@ class Category_Fragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_category_, container, false)
-        recycleView = view.findViewById(R.id.categoryPageRecycle)
-        recycleView.layoutManager = GridLayoutManager(requireContext(),2)
-        val categoryArrayList = singleCategoryList().getProducts()
-        val adapter = singleCategoryListAdapter(categoryArrayList)
-        recycleView.adapter = adapter
-        adapter.OnItemClick(object : onItemClickListener {
-            override fun onItemClick(position: Int) {
-                val currentItem = categoryArrayList[position]
-                val title = currentItem.text
-                val imageRes = currentItem.imageRes
-                val items = dummyProductsList()
-                var itemsList = ArrayList<categoryDetailsItem>()
-                when(title){
-                    "Food" ->  {
-                        itemsList = getTitles("Food",items)
-                    }
-                    "Furniture" -> {
-                        itemsList= getTitles("Furniture",items)
-                    }
-                    "Phone" -> {
-                        itemsList = getTitles("Phone",items)
-                    }
-                    "Watch" -> {
-                        itemsList = getTitles("Watch",items)
-                    }
-                    else -> itemsList = getTitles("Food",items)
-                }
+        binding = FragmentCategoryBinding.bind(view)
 
-                val action = Category_FragmentDirections.actionCategoryFragmentToHomePageCategory(imageRes,itemsList.toTypedArray(),title)
-                findNavController().navigate(action)
-
-            }
-
-        }
-        )
-
-
-        return view
+        categoryListRecycleView(view)
+        return binding.root
     }
 
-    fun getTitles(title:String, items:dummyProductsList): ArrayList<categoryDetailsItem> {
-        val itemsList = items.getProducts(title)
-        return itemsList
+    private fun categoryListRecycleView(view: View?) {
+
+        binding.categoryPageRecycle.layoutManager = GridLayoutManager(requireContext(),2)
+
+        val categoryListApi = ArrayList<CategorySingleItem>()
+
+        val myAdapter = CategoryTreeAdapter(categoryListApi, object : CategoryTreeAdapter.OnItemClickListener {
+            override fun onItemClick(category: CategorySingleItem) {
+                val action = Category_FragmentDirections.actionCategoryFragmentToHomePageCategory(category.imageRes,category.products.toTypedArray(),category.tittle)
+                //val action = Home_PageDirections.actionHomePageToHomePageCategory(category.imageRes,category.products.toTypedArray(),category.tittle)
+                view?.findNavController()?.navigate(action)
+            }
+
+
+        })
+
+        categoryViewModels.getCategoryList()
+        categoryViewModels.result.observe(viewLifecycleOwner){result->
+            categoryListApi.clear()
+            result.onSuccess {
+                it.Data.forEach {
+                    val name = it.Name.toString()
+                    val image = it.Products[0].PictureModels[0].FullSizeImageUrl
+                    val id = it.Id
+                    val products = it.Products
+                    val data = CategorySingleItem(id = id, tittle = name, imageRes = image, products = products)
+                    categoryListApi.add(data)
+                }
+                myAdapter.notifyDataSetChanged()
+            }.onFailure {
+                Toast.makeText(requireContext(),"Category List Api call failed", Toast.LENGTH_LONG).show()
+            }
+            binding.categoryPageRecycle.adapter = myAdapter
+        }
 
     }
 

@@ -1,18 +1,25 @@
 package com.example.nopstationcart.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.nopstationcart.model.data.CategoryItem
+import com.example.nopstationcart.Services.Model.CategoryList.CategoryListResponse
+import com.example.nopstationcart.Services.Model.CategoryList.Product
+import com.example.nopstationcart.Services.Model.Home_Page.Featured_Products.FeaturedProductsResponse
+import com.example.nopstationcart.Services.Repository.CategoryListRepository
+import com.example.nopstationcart.Services.Repository.FeaturedProductsRepository
 
-class CategoryListViewModel(private val drawableResId:Int) : ViewModel() {
+class CategoryListViewModel() : ViewModel() {
+    val repo = CategoryListRepository()
+    private val _result = MutableLiveData<Result<CategoryListResponse>>()
+    val result: LiveData<Result<CategoryListResponse>> = _result
 
-//    private val itemList = mutableListOf<categoryItem>()
-//
-//    fun fetchData(fruits1: Int) {
-//        itemList.clear()
-//        itemList.add(categoryItem(drawableResId,"Item 1"))
-//        itemList.add(categoryItem(drawableResId,"Item 2"))
-//        itemList.add(categoryItem(drawableResId,"Item 3"))
-//        itemList.add(categoryItem(drawableResId,"Item 4"))
-//        itemList.add(categoryItem(drawableResId,"Item 5"))
-//    }
+
+    fun getCategoryList(){
+        val result = repo.getData()
+        result.observeForever { _result.postValue(it) }
+    }
+
+
+
 }

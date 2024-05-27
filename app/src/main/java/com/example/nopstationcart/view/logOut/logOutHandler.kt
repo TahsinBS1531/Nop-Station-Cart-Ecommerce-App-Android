@@ -3,16 +3,13 @@ package com.example.nopstationcart.view.logOut
 import android.content.Context
 import android.content.SharedPreferences
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import com.example.nopstationcart.model.interfaces.logOutApiInterface
-import com.example.nopstationcart.view.Home_Page.Home_Page
+import com.example.nopstationcart.Services.Netwrok.logOutApiInterface
 import com.example.nopstationcart.view.MainActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 
 class logOutHandler(private val context:Context, private val sharedPreferences:SharedPreferences) {
 

@@ -6,16 +6,17 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.nopstationcart.R
-import com.example.nopstationcart.model.data.categoryDetailsItem
-import com.example.nopstationcart.model.interfaces.categoryDetailsOnClicklistener
+import com.example.nopstationcart.Services.Interfaces.categoryDetailsOnClicklistener
+import com.example.nopstationcart.Services.Model.CategoryList.Product
 
 class CategoryDetailsAdapter(
-    private val itemList: List<categoryDetailsItem>
+    private val itemList: List<Product>
 ) : RecyclerView.Adapter<CategoryDetailsAdapter.ViewHolder>() {
 
     lateinit var myListener: categoryDetailsOnClicklistener
-    fun setOnItemClick(listener:categoryDetailsOnClicklistener){
+    fun setOnItemClick(listener: categoryDetailsOnClicklistener){
         myListener = listener
     }
 
@@ -37,9 +38,11 @@ class CategoryDetailsAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = itemList[position]
-        holder.titleTextView.text = item.tittle
-        holder.imageView.setImageResource(item.imageResID)
-        holder.itemPrice.text = item.itemPrice
+        holder.titleTextView.text = item.Name
+        Glide.with(holder.itemView.context)
+            .load(item.PictureModels[0].FullSizeImageUrl)
+            .into(holder.imageView)
+        holder.itemPrice.text = item.ProductPrice.Price
     }
 
     override fun getItemCount(): Int = itemList.size

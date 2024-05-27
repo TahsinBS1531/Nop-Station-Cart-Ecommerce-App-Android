@@ -107,6 +107,7 @@
                 android:textSize="20sp"/>
 
             <TextView
+                android:id="@+id/productPageShortDes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="15dp"
@@ -134,7 +135,7 @@
                     app:layout_constraintVertical_bias="0.0" />
 
                 <TextView
-                    android:id="@+id/strikeThroughText"
+                    android:id="@+id/productPageOldPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
@@ -172,7 +173,7 @@
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/textView5"
-                    app:layout_constraintTop_toBottomOf="@+id/strikeThroughText" />
+                    app:layout_constraintTop_toBottomOf="@+id/productPageOldPrice" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -277,6 +278,7 @@
                 android:textColor="#2F2F2F"/>
 
             <TextView
+                android:id="@+id/productPageLongDes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
@@ -301,7 +303,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/appCompatButton"
+                        android:id="@+id/ProductDetailsAddToCart"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
