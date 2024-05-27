@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,6 +34,7 @@ import com.example.nopstationcart.view.Adapters.bestSellingAdapters
 import com.example.nopstationcart.view.Adapters.featuredProductsAdapter
 import com.example.nopstationcart.view.Adapters.womenHeelAdapter
 import com.example.nopstationcart.dummyData.dummyProductsList
+import com.example.nopstationcart.viewmodel.CartViewModel
 import com.example.nopstationcart.viewmodel.CategoryListViewModel
 import com.example.nopstationcart.viewmodel.FeaturedProductsViewModel
 import com.example.nopstationcart.viewmodel.LoginViewModel
@@ -51,6 +53,7 @@ class Home_Page : Fragment(){
     private val sliderViewModel: SliderViewModel by viewModels()
     private val featuredViewModel: FeaturedProductsViewModel by viewModels()
     private val categoryListViewModel: CategoryListViewModel by viewModels()
+    private val cartPageViewModel: CartViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -160,10 +163,6 @@ class Home_Page : Fragment(){
             myRecyclerView3 = view.findViewById(R.id.featuredRecycle)
         }
         myRecyclerView3.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
-        val featured = featuredProducts()
-        val featuredArrayList = featured.getProducts()
-//        val adapter = featuredProductsAdapter(featuredArrayList)
-//        myRecyclerView3.adapter = adapter
 
         featuredViewModel.getFeaturedProducts()
         var featuredList = arrayListOf<featuredProductsItem2>()
@@ -178,10 +177,11 @@ class Home_Page : Fragment(){
                     val shortDes = it.ShortDescription
                     val longDes = it.FullDescription
                     val oldPrice = it.ProductPrice.OldPrice?:"0.0"
+                    val id = it.Id
                     if(it.ReviewOverviewModel.TotalReviews !=0){
                         rating = (it.ReviewOverviewModel.RatingSum/it.ReviewOverviewModel.TotalReviews).toFloat()
                     }
-                    val data = featuredProductsItem2(name,price, image = image,rating,shortDes,longDes,oldPrice)
+                    val data = featuredProductsItem2(name,price, image = image,rating,shortDes,longDes,oldPrice, id = id)
                     featuredList.add(data)
                 }
 
@@ -211,7 +211,21 @@ class Home_Page : Fragment(){
             }
 
             override fun onCartBtnClick(position: Int) {
-                TODO("Not yet implemented")
+                val currentItem = featuredList[position]
+                val productId = currentItem.id
+                cartPageViewModel.getCartResponse(productId)
+                cartPageViewModel.result.observe(viewLifecycleOwner){
+                    it.onSuccess {response->
+                        Toast.makeText(requireContext(),"${response.Message}",Toast.LENGTH_LONG).show()
+                    }.onFailure {response->
+                        Toast.makeText(requireContext(),"${response.cause?.cause}",Toast.LENGTH_LONG).show()
+                        println(response.cause?.message)
+                    }
+                }
+                println(productId)
+                println(currentItem.tittle)
+
+
             }
 
         })

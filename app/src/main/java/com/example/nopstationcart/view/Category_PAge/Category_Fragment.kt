@@ -8,28 +8,20 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.nopstationcart.R
-import com.example.nopstationcart.dummyData.singleCategoryList
-import com.example.nopstationcart.Services.Model.categoryDetailsItem
-import com.example.nopstationcart.Services.Interfaces.onItemClickListener
 import com.example.nopstationcart.Services.Model.CategoryList.CategorySingleItem
 import com.example.nopstationcart.Services.Model.CategoryTree.categoryDataClass
 import com.example.nopstationcart.databinding.FragmentCategoryBinding
-import com.example.nopstationcart.view.Adapters.singleCategoryListAdapter
-import com.example.nopstationcart.dummyData.dummyProductsList
 import com.example.nopstationcart.view.Adapters.CategoryAdapter
 import com.example.nopstationcart.view.Adapters.CategoryTreeAdapter
 import com.example.nopstationcart.view.Home_Page.Home_PageDirections
-import com.example.nopstationcart.viewmodel.CategoryTreeViewModel
+import com.example.nopstationcart.viewmodel.CategoryListViewModel
 
 
 class Category_Fragment : Fragment() {
     lateinit var binding:FragmentCategoryBinding
-    private val categoryViewModels:CategoryTreeViewModel by viewModels()
+    private val categoryViewModels:CategoryListViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,13 +44,15 @@ class Category_Fragment : Fragment() {
 
         binding.categoryPageRecycle.layoutManager = GridLayoutManager(requireContext(),2)
 
-        val categoryListApi = ArrayList<categoryDataClass>()
+        val categoryListApi = ArrayList<CategorySingleItem>()
 
         val myAdapter = CategoryTreeAdapter(categoryListApi, object : CategoryTreeAdapter.OnItemClickListener {
-            override fun onItemClick(category: categoryDataClass) {
-//                val action = Home_PageDirections.actionHomePageToHomePageCategory(category.imageRes,category.products.toTypedArray(),category.tittle)
-//                view?.findNavController()?.navigate(action)
+            override fun onItemClick(category: CategorySingleItem) {
+                val action = Category_FragmentDirections.actionCategoryFragmentToHomePageCategory(category.imageRes,category.products.toTypedArray(),category.tittle)
+                //val action = Home_PageDirections.actionHomePageToHomePageCategory(category.imageRes,category.products.toTypedArray(),category.tittle)
+                view?.findNavController()?.navigate(action)
             }
+
 
         })
 
@@ -68,9 +62,10 @@ class Category_Fragment : Fragment() {
             result.onSuccess {
                 it.Data.forEach {
                     val name = it.Name.toString()
-                    val image = it.IconUrl
-                    val id = it.CategoryId
-                    val data = categoryDataClass(name,image,id)
+                    val image = it.Products[0].PictureModels[0].FullSizeImageUrl
+                    val id = it.Id
+                    val products = it.Products
+                    val data = CategorySingleItem(id = id, tittle = name, imageRes = image, products = products)
                     categoryListApi.add(data)
                 }
                 myAdapter.notifyDataSetChanged()

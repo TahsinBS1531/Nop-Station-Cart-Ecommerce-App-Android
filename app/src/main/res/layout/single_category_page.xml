@@ -89,6 +89,7 @@
                 android:id="@+id/singleCategoryImg"
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
+
                 android:background="@drawable/single_category_banner_img"
                 android:scaleType="centerCrop"
                 />

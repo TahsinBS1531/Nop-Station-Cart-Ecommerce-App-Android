@@ -42,9 +42,6 @@ class Product_Deatils : Fragment() {
         val itemTitle = args.productTittile
         val itemPrice = args.productPrice
         val oldPrice = args.oldPrice
-        val shortDes = args.shortDescription
-        val longDes = args.fullDescription
-
 
         binding.productPageTitle.text = itemTitle
         binding.productPageOldPrice.text = oldPrice

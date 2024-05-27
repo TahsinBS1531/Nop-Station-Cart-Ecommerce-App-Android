@@ -3,6 +3,7 @@ package com.example.nopstationcart.view.Adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
@@ -50,10 +51,14 @@ class featuredProductsAdapter(var featuredProducts:ArrayList<featuredProductsIte
         val img = itemview.findViewById<ImageView>(R.id.featuredImg)
         val price = itemview.findViewById<TextView>(R.id.featuredPrice)
         val ratting = itemview.findViewById<RatingBar>(R.id.featuredRatingBar)
+        val addToCart = itemview.findViewById<ImageButton>(R.id.featuredProductsAddToCart)
 
         init {
             itemview.setOnClickListener {
                 listener.onItemClick(adapterPosition)
+            }
+            addToCart.setOnClickListener{
+                listener.onCartBtnClick(adapterPosition)
             }
         }
     }

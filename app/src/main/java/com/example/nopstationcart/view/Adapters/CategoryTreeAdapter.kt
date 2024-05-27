@@ -8,18 +8,16 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.nopstationcart.R
-import com.example.nopstationcart.Services.Model.CategoryItem
-import com.example.nopstationcart.Services.Interfaces.onItemClickListener
 import com.example.nopstationcart.Services.Model.CategoryList.CategorySingleItem
 import com.example.nopstationcart.Services.Model.CategoryTree.categoryDataClass
 
 class CategoryTreeAdapter(
-    private val categoryList: List<categoryDataClass>,
+    private val categoryList: ArrayList<CategorySingleItem>,
     private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<CategoryTreeAdapter.CategoryViewHolder>() {
 
     interface OnItemClickListener {
-        fun onItemClick(category: categoryDataClass)
+        fun onItemClick(category: CategorySingleItem)
     }
 
     inner class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -40,7 +38,7 @@ class CategoryTreeAdapter(
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val category = categoryList[position]
-        holder.categoryName.text = category.title
+        holder.categoryName.text = category.tittle
         // Use an image loading library like Glide or Picasso
         Glide.with(holder.itemView.context)
             .load(category.imageRes)

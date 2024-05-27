@@ -68,7 +68,7 @@ class Home_page_Category : Fragment() {
                 }
 
                 override fun onCartBtnClick(position: Int) {
-                    TODO("Not yet implemented")
+                    val id = items[position].Id
                 }
 
             })
