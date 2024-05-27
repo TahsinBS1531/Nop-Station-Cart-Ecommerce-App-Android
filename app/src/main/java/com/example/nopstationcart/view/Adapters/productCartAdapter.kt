@@ -6,8 +6,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.nopstationcart.R
-import com.example.nopstationcart.Services.Model.productCartItems
+import com.example.nopstationcart.Services.Model.ShoppingCart.productCartItems
 
 class productCartAdapter(private val itemList: List<productCartItems> ): RecyclerView.Adapter<productCartAdapter.MyViewHolder>() {
 
@@ -15,6 +16,7 @@ class productCartAdapter(private val itemList: List<productCartItems> ): Recycle
         val title: TextView = itemView.findViewById(R.id.productCartTittle)
         val img: ImageView = itemView.findViewById(R.id.productCartImg)
         val price: TextView = itemView.findViewById(R.id.productCartPrice)
+        val quantity:TextView = itemView.findViewById(R.id.CartQuantity)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): productCartAdapter.MyViewHolder {
@@ -25,7 +27,10 @@ class productCartAdapter(private val itemList: List<productCartItems> ): Recycle
     override fun onBindViewHolder(holder: productCartAdapter.MyViewHolder, position: Int) {
         holder.title.text = itemList[position].tittle
         holder.price.text = itemList[position].price
-        holder.img.setImageResource(itemList[position].imageResID)
+        holder.quantity.text = itemList[position].quantity.toString()
+        Glide.with(holder.itemView.context)
+            .load(itemList[position].imageResID)
+            .into(holder.img)
 
     }
 

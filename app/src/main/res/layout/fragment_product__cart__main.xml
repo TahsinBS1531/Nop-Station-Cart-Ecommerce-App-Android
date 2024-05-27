@@ -3,10 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context=".view.Product_Shopping_Cart.Product_Cart_Main">
-
-    <!-- TODO: Update blank fragment layout -->
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/cart_appBar"
@@ -17,6 +15,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
+            android:id="@+id/backbtnAppBar"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:background="@drawable/top_bar_banner"
@@ -31,7 +30,6 @@
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:text="Back"
                     android:textColor="@color/white"
                     android:textSize="18sp"
@@ -70,30 +68,31 @@
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="@+id/cart_pageCartIcon" />
 
-
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cart_appBar">
+        app:layout_constraintTop_toBottomOf="@id/cart_appBar"
+        app:layout_constraintBottom_toBottomOf="parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:background="#E9EDF2"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
-                android:orientation="horizontal"
                 android:weightSum="10"
-                android:layout_height="wrap_content">
+                android:background="#E9EDF2">
 
                 <TextView
                     android:id="@+id/textView7"
@@ -120,112 +119,135 @@
                     android:text="5 ITEM(S)"
                     android:textSize="10sp" />
             </LinearLayout>
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/productCartRecycle"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:paddingTop="20dp"
-                android:paddingEnd="10dp"
-                tools:listitem="@layout/single_item_product_cart"
-                android:layout_height="wrap_content"
-                android:paddingBottom="20dp"/>
+                android:layout_height="wrap_content">
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/productCartRecycle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:foregroundGravity="center"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.52"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:listitem="@layout/single_item_product_cart" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <com.google.android.material.divider.MaterialDivider
-                android:layout_marginTop="60dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="10">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="10dp"
-                    android:paddingTop="10dp"
-                    android:layout_weight="9"
-                    android:text="Sub-Total"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:textColor="#10CB3C"
-                    android:fontFamily="@font/lato_bold"
-                    android:textSize="16sp"
-                    android:layout_marginStart="60dp"
-                    android:text="$550.02"/>
-
-            </LinearLayout>
-            <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="60dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="10">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="9"
                     android:paddingStart="10dp"
                     android:paddingTop="10dp"
-                    android:layout_weight="9"
-                    android:text="Shipping"/>
+                    android:text="Sub-Total" />
+
                 <TextView
+                    android:id="@+id/CartPageSubTotal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:textColor="#10CB3C"
-                    android:fontFamily="@font/lato_bold"
-                    android:textSize="16sp"
                     android:layout_marginStart="60dp"
-                    android:text="$5.00"/>
-
+                    android:paddingTop="10dp"
+                    android:text="$550.02"
+                    android:textColor="#10CB3C"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/lato_bold" />
             </LinearLayout>
+
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="10">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="9"
                     android:paddingStart="10dp"
                     android:paddingTop="10dp"
-                    android:layout_weight="9"
-                    android:text="Total:"/>
+                    android:text="Shipping" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:textColor="#10CB3C"
-                    android:fontFamily="@font/lato_bold"
-                    android:textSize="16sp"
                     android:layout_marginStart="60dp"
-                    android:text="$5.00"/>
-
+                    android:paddingTop="10dp"
+                    android:text="$0.00"
+                    android:textColor="#10CB3C"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/lato_bold" />
             </LinearLayout>
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_marginTop="30dp"
+            <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
-                android:text="PROCEED TO CHECKOUT"
-                android:textColor="@color/white"
-                android:padding="20dp"
-                android:background="@drawable/cart_checkout_btn"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="9"
+                    android:paddingStart="10dp"
+                    android:paddingTop="10dp"
+                    android:text="Total:" />
+
+                <TextView
+                    android:id="@+id/CartPageTotall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:paddingTop="10dp"
+                    android:text="$5.00"
+                    android:textColor="#10CB3C"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/lato_bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:padding="20dp"
+                    android:background="@drawable/cart_checkout_btn"
+                    android:text="PROCEED TO CHECKOUT"
+                    android:textColor="@color/white" />
+            </LinearLayout>
 
         </LinearLayout>
-
-
     </ScrollView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

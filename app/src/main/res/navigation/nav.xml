@@ -89,14 +89,5 @@
         android:name="com.example.nopstationcart.view.Product_Shopping_Cart.Product_Cart_Main"
         android:label="fragment_product__cart__main"
         tools:layout="@layout/fragment_product__cart__main" >
-        <argument
-            android:name="tittle"
-            app:argType="string" />
-        <argument
-            android:name="price"
-            app:argType="string" />
-        <argument
-            android:name="image"
-            app:argType="integer" />
     </fragment>
 </navigation>

@@ -30,6 +30,7 @@ import com.example.nopstationcart.Services.Interfaces.womenHeelOnItemClickListen
 import com.example.nopstationcart.Services.Model.CategoryList.CategorySingleItem
 import com.example.nopstationcart.Services.Model.Home_Page.Featured_Products.featuredProductsItem2
 import com.example.nopstationcart.Services.Model.featuredProductsItem
+import com.example.nopstationcart.databinding.HomePageFragmentBinding
 import com.example.nopstationcart.view.Adapters.bestSellingAdapters
 import com.example.nopstationcart.view.Adapters.featuredProductsAdapter
 import com.example.nopstationcart.view.Adapters.womenHeelAdapter
@@ -54,6 +55,8 @@ class Home_Page : Fragment(){
     private val featuredViewModel: FeaturedProductsViewModel by viewModels()
     private val categoryListViewModel: CategoryListViewModel by viewModels()
     private val cartPageViewModel: CartViewModel by viewModels()
+    lateinit var totallCartProducts:String
+    private lateinit var binding:HomePageFragmentBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +73,14 @@ class Home_Page : Fragment(){
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.home_page_fragment, container, false)
+        binding = HomePageFragmentBinding.bind(view)
+
         addToCartBtn = view.findViewById(R.id.home_page_cartBtn)
+
+        binding.cartBtn.setOnClickListener {
+            val action = Home_PageDirections.actionHomePageToProductCartMain()
+            findNavController().navigate(action)
+        }
         initializeImageSlider(view)
         categoryListRecycleView(view)
         bestSellingRecycleView(view)
@@ -79,7 +89,7 @@ class Home_Page : Fragment(){
 
         handleLogOut(view)
 
-        return view
+        return binding.root
     }
     fun handleLogOut(view: View?){
 
@@ -167,7 +177,9 @@ class Home_Page : Fragment(){
         featuredViewModel.getFeaturedProducts()
         var featuredList = arrayListOf<featuredProductsItem2>()
         val adapter = featuredProductsAdapter(featuredList)
+        myRecyclerView3.adapter = adapter
         featuredViewModel.result.observe(viewLifecycleOwner){ it ->
+            featuredList.clear()
             it.onSuccess {response ->
                 response.Data.forEach {
                     val name = it.Name
@@ -184,9 +196,9 @@ class Home_Page : Fragment(){
                     val data = featuredProductsItem2(name,price, image = image,rating,shortDes,longDes,oldPrice, id = id)
                     featuredList.add(data)
                 }
-
+                adapter.notifyDataSetChanged()
                 //val adapter = featuredProductsAdapter(featuredList)
-                myRecyclerView3.adapter = adapter
+                //myRecyclerView3.adapter = adapter
 
             }.onFailure {
                 Toast.makeText(requireContext(),"Image data Api call failed",Toast.LENGTH_LONG).show()
@@ -216,7 +228,9 @@ class Home_Page : Fragment(){
                 cartPageViewModel.getCartResponse(productId)
                 cartPageViewModel.result.observe(viewLifecycleOwner){
                     it.onSuccess {response->
+                        totallCartProducts = response.Data.TotalShoppingCartProducts.toString()
                         Toast.makeText(requireContext(),"${response.Message}",Toast.LENGTH_LONG).show()
+                        setShoppingCart(totallCartProducts)
                     }.onFailure {response->
                         Toast.makeText(requireContext(),"${response.cause?.cause}",Toast.LENGTH_LONG).show()
                         println(response.cause?.message)
@@ -284,6 +298,10 @@ class Home_Page : Fragment(){
             }
         }
 
+    }
+
+    private fun setShoppingCart(quantity:String){
+        binding.homePageCartBtn.text = quantity
     }
 
 
