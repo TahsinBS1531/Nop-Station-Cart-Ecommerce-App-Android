@@ -1,4 +1,4 @@
-package com.example.nopstationcart.Services.Model
+package com.example.nopstationcart.dummyData
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

@@ -1,16 +1,15 @@
-package com.example.nopstationcart.Services.Model.Cart
+package com.example.nopstationcart.Services.Model.logout
 
 import android.content.Context
-import com.example.nopstationcart.Services.Netwrok.AddToCartApiInterface
+import com.example.nopstationcart.Services.Model.Cart.CartAuthInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object CartretrofitInstance {
+class LogOutRetrofitInstance(private val context:Context) {
 
-    fun getretrofit(context:Context):Retrofit{
         val client = OkHttpClient.Builder()
-            .addInterceptor(CartAuthInterceptor(context))
+            .addInterceptor(logOutAuthInterceptor(context))
             .build()
 
         val retrofit = Retrofit.Builder()
@@ -18,10 +17,4 @@ object CartretrofitInstance {
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-
-        //val addToCartApi = retrofit.create(AddToCartApiInterface::class.java)
-        return retrofit
-    }
-
-
 }

@@ -1,7 +1,6 @@
 package com.example.nopstationcart.dummyData
 
 import com.example.nopstationcart.R
-import com.example.nopstationcart.Services.Model.categoryDetailsItem
 
 
 class dummyProductsList {

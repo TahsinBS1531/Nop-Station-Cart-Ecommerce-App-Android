@@ -1,5 +1,6 @@
 package com.example.nopstationcart.view.Home_Page
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,24 +21,19 @@ import com.example.nopstationcart.view.Adapters.CategoryAdapter
 import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Interfaces.ItemClickListener
 import com.example.nopstationcart.dummyData.bestSellingProducts
-import com.example.nopstationcart.dummyData.categoryList
-import com.example.nopstationcart.dummyData.featuredProducts
 import com.example.nopstationcart.dummyData.womenHeelProducts
 import com.example.nopstationcart.Services.Interfaces.bestSellingProductsItemClick
-import com.example.nopstationcart.Services.Interfaces.onItemClickListener
 import com.example.nopstationcart.Services.Interfaces.womenHeelOnItemClickListener
 import com.example.nopstationcart.Services.Model.CategoryList.CategorySingleItem
 import com.example.nopstationcart.Services.Model.Home_Page.Featured_Products.featuredProductsItem2
-import com.example.nopstationcart.Services.Model.featuredProductsItem
 import com.example.nopstationcart.databinding.HomePageFragmentBinding
 import com.example.nopstationcart.view.Adapters.bestSellingAdapters
 import com.example.nopstationcart.view.Adapters.featuredProductsAdapter
 import com.example.nopstationcart.view.Adapters.womenHeelAdapter
-import com.example.nopstationcart.dummyData.dummyProductsList
 import com.example.nopstationcart.viewmodel.CartViewModel
 import com.example.nopstationcart.viewmodel.CategoryListViewModel
 import com.example.nopstationcart.viewmodel.FeaturedProductsViewModel
-import com.example.nopstationcart.viewmodel.LoginViewModel
+import com.example.nopstationcart.viewmodel.LogOutViewModel
 import com.example.nopstationcart.viewmodel.SliderViewModel
 
 
@@ -55,6 +50,7 @@ class Home_Page : Fragment(){
     private val featuredViewModel: FeaturedProductsViewModel by viewModels()
     private val categoryListViewModel: CategoryListViewModel by viewModels()
     private val cartPageViewModel: CartViewModel by viewModels()
+    private val logOutViewModel:LogOutViewModel by viewModels()
     lateinit var totallCartProducts:String
     private lateinit var binding:HomePageFragmentBinding
 
@@ -81,6 +77,7 @@ class Home_Page : Fragment(){
             val action = Home_PageDirections.actionHomePageToProductCartMain()
             findNavController().navigate(action)
         }
+
         initializeImageSlider(view)
         categoryListRecycleView(view)
         bestSellingRecycleView(view)
@@ -92,13 +89,22 @@ class Home_Page : Fragment(){
         return binding.root
     }
     fun handleLogOut(view: View?){
-
-        if (view != null) {
-            logOutBtn = view.findViewById(R.id.logOutBtn)
-        }
-        logOutBtn.setOnClickListener {
-            //val handler = logOutHandler(requireContext())
-            //handler.getLogOut()
+        binding.logOutBtn.setOnClickListener {
+            logOutViewModel.getCartResponse(requireContext())
+            logOutViewModel.result.observe(viewLifecycleOwner){response->
+                response.onSuccess {
+                    val sharedpreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+                    with(sharedpreferences.edit()) {
+                        remove("TOKEN")
+                        apply()
+                    }
+                    Toast.makeText(requireContext(),"Log Out Successful",Toast.LENGTH_LONG).show()
+                    val action = Home_PageDirections.actionHomePageToLoginMain()
+                    findNavController().navigate(action)
+                }.onFailure {
+                    Toast.makeText(requireContext(),"Log Out failed",Toast.LENGTH_LONG).show()
+                }
+            }
         }
     }
     private fun womenHeelRecycleView(view: View?){
@@ -227,7 +233,7 @@ class Home_Page : Fragment(){
             override fun onCartBtnClick(position: Int) {
                 val currentItem = featuredList[position]
                 val productId = currentItem.id
-                cartPageViewModel.getCartResponse(productId)
+                cartPageViewModel.getCartResponse(productId,requireContext())
                 cartPageViewModel.result.observe(viewLifecycleOwner){
                     it.onSuccess {response->
                         totallCartProducts = response.Data.TotalShoppingCartProducts.toString()

@@ -1,5 +1,6 @@
 package com.example.nopstationcart.Services.Repository
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.nopstationcart.Services.Model.Update_Cart.UpdateCartInstance
@@ -12,9 +13,10 @@ import retrofit2.Response
 
 class UpdateCartRepository {
 
-    fun getUpdatedCart(request:UpdateCartRequest):LiveData<Result<UpdateCartResponse>>{
+    fun getUpdatedCart(request:UpdateCartRequest,context:Context):LiveData<Result<UpdateCartResponse>>{
         val _result = MutableLiveData<Result<UpdateCartResponse>>()
-        val instance = UpdateCartInstance.retrofit.create(UpdateCartApiInterface::class.java)
+        val instance = UpdateCartInstance.getRetrofit(context).create(UpdateCartApiInterface::class.java)
+        //val instance = UpdateCartInstance.retrofit.create(UpdateCartApiInterface::class.java)
         val call = instance.updateCart(request)
         call.enqueue(object:Callback<UpdateCartResponse>{
             override fun onResponse(p0: Call<UpdateCartResponse>, response: Response<UpdateCartResponse>){

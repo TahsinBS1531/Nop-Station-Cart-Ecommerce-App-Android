@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Interfaces.ItemClickListener
-import com.example.nopstationcart.Services.Model.featuredProductsItem
 import com.example.nopstationcart.Services.Model.Home_Page.Featured_Products.featuredProductsItem2
 
 class featuredProductsAdapter(var featuredProducts:ArrayList<featuredProductsItem2>):RecyclerView.Adapter<featuredProductsAdapter.MyViewHolder>() {

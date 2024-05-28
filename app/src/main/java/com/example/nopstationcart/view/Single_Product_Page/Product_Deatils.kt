@@ -70,7 +70,7 @@ class Product_Deatils : Fragment() {
     }
     fun handleCartBtn(id:String){
         binding.ProductDetailsAddToCart.setOnClickListener {
-            cartPageViewModel.getCartResponse(id.toInt())
+            cartPageViewModel.getCartResponse(id.toInt(),requireContext())
             cartPageViewModel.result.observe(viewLifecycleOwner){response->
                 response.onSuccess {
                     Toast.makeText(requireContext(),"${it.Message}", Toast.LENGTH_LONG).show()

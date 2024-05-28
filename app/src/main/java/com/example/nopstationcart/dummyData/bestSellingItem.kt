@@ -1,3 +1,3 @@
-package com.example.nopstationcart.Services.Model
+package com.example.nopstationcart.dummyData
 
 data class bestSellingItem(val tittle:String,val imageRes:Int,val price:String)

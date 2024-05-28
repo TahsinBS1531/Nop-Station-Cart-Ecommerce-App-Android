@@ -1,5 +1,6 @@
 package com.example.nopstationcart.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,9 +12,9 @@ class ShoppingCartViewModel:ViewModel() {
     private val _response = MutableLiveData<Result<CartProductsResponse>>()
     val response: LiveData<Result<CartProductsResponse>> =_response
 
-    fun getCartProducts(){
+    fun getCartProducts(context:Context){
         val repository = ShoppingCartRepository()
-        val result = repository.getShoppingCartData()
+        val result = repository.getShoppingCartData(context)
         result.observeForever { _response.postValue(it) }
     }
 }

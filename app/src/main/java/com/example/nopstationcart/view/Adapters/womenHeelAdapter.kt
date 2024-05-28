@@ -9,7 +9,7 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nopstationcart.R
-import com.example.nopstationcart.Services.Model.womenHeelItems
+import com.example.nopstationcart.dummyData.womenHeelItems
 import com.example.nopstationcart.Services.Interfaces.womenHeelOnItemClickListener
 
 class womenHeelAdapter(var womenHeelArrayList:ArrayList<womenHeelItems>):RecyclerView.Adapter<womenHeelAdapter.MyViewHolder>() {

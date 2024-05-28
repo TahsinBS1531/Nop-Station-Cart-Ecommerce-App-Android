@@ -89,7 +89,7 @@ class Product_Cart_Main : Fragment() {
     fun updateCartQuantity(position: Int, productId: String, quantity:String){
         val formValue = FormValue("itemquantity${productId}",quantity)
         val request = UpdateCartRequest(listOf(formValue))
-        updateCartViewModel.getApiCall(request)
+        updateCartViewModel.getApiCall(request,requireContext())
         updateCartViewModel.response.observe(viewLifecycleOwner) {response->
             response.onSuccess {
                 Toast.makeText(requireContext(),"Cart value updated",Toast.LENGTH_LONG).show()
@@ -111,7 +111,7 @@ class Product_Cart_Main : Fragment() {
     fun removeFromCart(position: Int, productId: String,productList:ArrayList<productCartItems>){
         val formValue = com.example.nopstationcart.Services.Model.Remove_Cart.FormValue("removefromcart",productId)
         val request = RemoveCartRequest(listOf(formValue))
-        removeCartViewModel.getTheCartRemoved(request)
+        removeCartViewModel.getTheCartRemoved(request,requireContext())
         removeCartViewModel.response.observe(viewLifecycleOwner){response->
             response.onSuccess {
                 if(position>=0 && position <productList.size){
@@ -135,7 +135,7 @@ class Product_Cart_Main : Fragment() {
 
     fun fetchData(){
 
-        shoppingCartViewModel.getCartProducts()
+        shoppingCartViewModel.getCartProducts(requireContext())
         shoppingCartViewModel.response.observe(viewLifecycleOwner) { result ->
             result.onSuccess { response ->
                 productsList.clear() // Clear the list to avoid duplicates

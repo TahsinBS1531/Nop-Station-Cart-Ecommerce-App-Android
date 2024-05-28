@@ -8,20 +8,22 @@ import com.example.nopstationcart.Services.Model.Cart.CartResponse
 import com.example.nopstationcart.Services.Model.Cart.CartretrofitInstance
 import com.example.nopstationcart.Services.Model.Cart.FormValue
 import com.example.nopstationcart.Services.Model.CategoryList.CategoryListResponse
-import com.example.nopstationcart.Services.Netwrok.AddToCartApiInterface
+import com.example.nopstationcart.Services.Model.logout.LogOutResponse
+import com.example.nopstationcart.Services.Model.logout.LogOutRetrofitInstance
+import com.example.nopstationcart.Services.Netwrok.logOutApiInterface
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.Normalizer.Form
 
-class CartPageRepository(val productID:Int) {
+class LogOutRepository() {
 
-    fun addProductCart(request: CartBodyRequest,context:Context):LiveData<Result<CartResponse>>{
-        val call = CartretrofitInstance.getretrofit(context).create(AddToCartApiInterface::class.java).getAddToCartApi(productID,request)
+    fun logOutRepo(context:Context):LiveData<Result<LogOutResponse>>{
+        val call = LogOutRetrofitInstance(context).retrofit.create(logOutApiInterface::class.java).logOut()
+        val _result = MutableLiveData<Result<LogOutResponse>>()
 
-        val _result = MutableLiveData<Result<CartResponse>>()
-        call.enqueue(object: Callback<CartResponse>{
-            override fun onResponse(p0: Call<CartResponse>, response: Response<CartResponse>) {
+        call.enqueue(object: Callback<LogOutResponse>{
+            override fun onResponse(p0: Call<LogOutResponse>, response: Response<LogOutResponse>) {
                 if(response.isSuccessful){
                     response.body()?.let {
                         _result.postValue(Result.success(it))
@@ -31,7 +33,7 @@ class CartPageRepository(val productID:Int) {
                 }
             }
 
-            override fun onFailure(p0: Call<CartResponse>, p1: Throwable) {
+            override fun onFailure(p0: Call<LogOutResponse>, p1: Throwable) {
                 _result.postValue(Result.failure(Throwable("request is denied")))
             }
 

@@ -1,5 +1,6 @@
 package com.example.nopstationcart.Services.Repository
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.nopstationcart.Services.Model.Cart.CartBodyRequest
@@ -16,8 +17,9 @@ import retrofit2.create
 
 class RemoveCartRepository {
 
-    fun addProductCart(request: RemoveCartRequest): LiveData<Result<RemoveCartResponse>> {
-        val instance = RemoveCartInstance.retrofit.create(RemoveCartApiInterface::class.java)
+    fun addProductCart(request: RemoveCartRequest,context:Context): LiveData<Result<RemoveCartResponse>> {
+        val instance = RemoveCartInstance.getInstance(context).create(RemoveCartApiInterface::class.java)
+        //val instance = RemoveCartInstance.retrofit.create(RemoveCartApiInterface::class.java)
         val call = instance.getRemoveCart(request)
 
         val _result = MutableLiveData<Result<RemoveCartResponse>>()

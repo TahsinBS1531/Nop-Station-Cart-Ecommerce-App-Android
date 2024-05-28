@@ -1,5 +1,6 @@
 package com.example.nopstationcart.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,9 +13,9 @@ class RemoveCartViewModel :ViewModel() {
     private val _response= MutableLiveData<Result<RemoveCartResponse>>()
     val response: LiveData<Result<RemoveCartResponse>> = _response
 
-    fun getTheCartRemoved(request : RemoveCartRequest){
+    fun getTheCartRemoved(request : RemoveCartRequest, context:Context){
         val repository = RemoveCartRepository()
-        val result = repository.addProductCart(request)
+        val result = repository.addProductCart(request,context)
 
         result.observeForever { _response.postValue(it) }
 
