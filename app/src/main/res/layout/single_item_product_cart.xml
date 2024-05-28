@@ -103,7 +103,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/productCartPrice" />
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView3"
+                android:id="@+id/decreaseCart"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:background="@drawable/add_to_cart_bg"
@@ -122,6 +122,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/increaseCart"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginTop="17dp"
@@ -132,7 +133,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/CartQuantity"
                 app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/cardView3"
+                app:layout_constraintStart_toEndOf="@+id/decreaseCart"
                 app:layout_constraintTop_toBottomOf="@+id/textView12">
 
                 <TextView

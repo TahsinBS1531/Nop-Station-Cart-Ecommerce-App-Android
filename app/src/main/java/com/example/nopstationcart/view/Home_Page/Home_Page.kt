@@ -19,12 +19,12 @@ import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.nopstationcart.view.Adapters.CategoryAdapter
 import com.example.nopstationcart.R
+import com.example.nopstationcart.Services.Interfaces.ItemClickListener
 import com.example.nopstationcart.dummyData.bestSellingProducts
 import com.example.nopstationcart.dummyData.categoryList
 import com.example.nopstationcart.dummyData.featuredProducts
 import com.example.nopstationcart.dummyData.womenHeelProducts
 import com.example.nopstationcart.Services.Interfaces.bestSellingProductsItemClick
-import com.example.nopstationcart.Services.Interfaces.featuredProductsItemClickListener
 import com.example.nopstationcart.Services.Interfaces.onItemClickListener
 import com.example.nopstationcart.Services.Interfaces.womenHeelOnItemClickListener
 import com.example.nopstationcart.Services.Model.CategoryList.CategorySingleItem
@@ -207,7 +207,7 @@ class Home_Page : Fragment(){
         }
 
 
-        adapter.setOnItemClick(object: featuredProductsItemClickListener {
+        adapter.setOnItemClick(object: ItemClickListener {
             override fun onItemClick(position: Int) {
                 val currentItem = featuredList[position]
                 val image = currentItem.image
@@ -240,7 +240,6 @@ class Home_Page : Fragment(){
                 }
                 println(productId)
                 println(currentItem.tittle)
-
 
             }
 
