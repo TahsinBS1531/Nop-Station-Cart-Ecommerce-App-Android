@@ -13,10 +13,12 @@ import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Model.ShoppingCart.productCartItems
 import com.example.nopstationcart.databinding.FragmentProductCartMainBinding
 import com.example.nopstationcart.view.Adapters.productCartAdapter
+import com.example.nopstationcart.viewmodel.RemoveCartViewModel
 import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
 
 class Product_Cart_Main : Fragment() {
     private val shoppingCartViewModel: ShoppingCartViewModel by viewModels()
+    private val removeCartViewModel: RemoveCartViewModel by viewModels()
     private lateinit var binding: FragmentProductCartMainBinding
     private val productsList = ArrayList<productCartItems>()
     private lateinit var adapter: productCartAdapter
@@ -35,7 +37,7 @@ class Product_Cart_Main : Fragment() {
 
         // Setup RecyclerView and Adapter
         binding.productCartRecycle.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        adapter = productCartAdapter(productsList)
+        adapter = productCartAdapter(productsList,removeCartViewModel)
         binding.productCartRecycle.adapter = adapter
 
         // Observe LiveData
@@ -48,7 +50,10 @@ class Product_Cart_Main : Fragment() {
                     val image = it.Picture.ImageUrl
                     val price = it.UnitPrice
                     val quantity = it.Quantity
-                    val item = productCartItems(tittle = title, imageResID = image, price = price, quantity = quantity)
+                    val productId = it.Id
+                    val item = productCartItems(tittle = title, imageResID = image, price = price, quantity = quantity,
+                        productId = productId
+                    )
                     productsList.add(item)
 
                     subTotal=it.SubTotalValue+subTotal
@@ -63,7 +68,6 @@ class Product_Cart_Main : Fragment() {
 
         shoppingCartViewModel.getCartProducts()
         handleBackBtn(view)
-
 
 
         return binding.root
