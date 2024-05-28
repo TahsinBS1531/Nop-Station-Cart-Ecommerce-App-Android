@@ -77,25 +77,6 @@ class productCartAdapter(private val itemList: MutableList<productCartItems> , p
             .load(itemList[position].imageResID)
             .into(holder.img)
 
-
-//        val productID = item.productId
-//        val form = FormValue("removefromcart",productID.toString())
-//        val request = RemoveCartRequest(listOf(form))
-//
-//        holder.cartRemoveBtn.setOnClickListener {
-//            viewModel.getTheCartRemoved(request)
-//            viewModel.response.observeForever {result->
-//                result.onSuccess {
-//                    itemList.removeAt(position)
-//                    notifyItemRemoved(position)
-//                    notifyItemRangeChanged(position,itemCount)
-//                }.onFailure {
-//                    Toast.makeText(holder.itemView.context, "Failed to remove item",Toast.LENGTH_LONG).show()
-//                }
-//            }
-//            println("${item.tittle} is clicked")
-//        }
-
     }
 
     override fun getItemCount(): Int {

@@ -192,6 +192,7 @@
                     android:text="Shipping" />
 
                 <TextView
+                    android:id="@+id/cartPageShiping"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="60dp"

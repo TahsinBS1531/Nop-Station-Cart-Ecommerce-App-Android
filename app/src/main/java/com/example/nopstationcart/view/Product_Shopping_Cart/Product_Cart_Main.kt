@@ -42,40 +42,14 @@ class Product_Cart_Main : Fragment() {
         binding = FragmentProductCartMainBinding.bind(view)
 
         // Setup RecyclerView and Adapter
+
         binding.productCartRecycle.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         adapter = productCartAdapter(productsList,removeCartViewModel)
         binding.productCartRecycle.adapter = adapter
 
-        // Observe LiveData
-        var subTotal = 0.00
-        shoppingCartViewModel.response.observe(viewLifecycleOwner) { result ->
-            result.onSuccess { response ->
-                productsList.clear() // Clear the list to avoid duplicates
-                response.Data.Cart.Items.forEach {
-                    val title = it.ProductName
-                    val image = it.Picture.ImageUrl
-                    val price = it.UnitPrice
-                    val quantity = it.Quantity
-                    val productId = it.Id
-                    val item = productCartItems(tittle = title, imageResID = image, price = price, quantity = quantity,
-                        productId = productId
-                    )
-                    productsList.add(item)
-
-                    subTotal=it.SubTotalValue+subTotal
-                }
-                adapter.notifyDataSetChanged() // Notify adapter of data changes
-                handlePrices(subTotal)
-            }.onFailure {
-                Toast.makeText(requireContext(), "Shopping cart Api call failed", Toast.LENGTH_LONG).show()
-            }
-        }
-
-        shoppingCartViewModel.getCartProducts()
+        fetchData()
         handleBackBtn(view)
         handleCartBtn(adapter,productsList)
-
-
 
         return binding.root
     }
@@ -86,10 +60,12 @@ class Product_Cart_Main : Fragment() {
         }
     }
 
-    fun handlePrices(subtotal:Double){
-        binding.CartPageSubTotal.text = subtotal.toString()
-        binding.CartPageTotall.text = subtotal.toString()
+    fun handlePrices(subtotal:String, total:String, shipping:String){
+        binding.CartPageSubTotal.text = subtotal
+        binding.CartPageTotall.text = total
+        binding.cartPageShiping.text =shipping
     }
+
     fun handleCartBtn(adapter:productCartAdapter, productList:ArrayList<productCartItems>){
         adapter.setOnItemClick(object:OnCartClickListener{
 
@@ -117,6 +93,15 @@ class Product_Cart_Main : Fragment() {
         updateCartViewModel.response.observe(viewLifecycleOwner) {response->
             response.onSuccess {
                 Toast.makeText(requireContext(),"Cart value updated",Toast.LENGTH_LONG).show()
+                binding.CartPageSubTotal.text = it.Data.OrderTotals.SubTotal
+                binding.CartPageTotall.text = it.Data.OrderTotals.OrderTotal
+                binding.cartPageShiping.text = it.Data.OrderTotals.Shipping
+                if(quantity.toInt() ==0){
+                    productsList.removeAt(position)
+                    adapter.notifyItemRemoved(position)
+                    adapter.notifyItemRangeChanged(position,productsList.size)
+                }
+                //fetchDataAndUpdatePrices()
             }.onFailure {
                 Toast.makeText(requireContext(),"Cart value update failed",Toast.LENGTH_LONG).show()
             }
@@ -129,15 +114,58 @@ class Product_Cart_Main : Fragment() {
         removeCartViewModel.getTheCartRemoved(request)
         removeCartViewModel.response.observe(viewLifecycleOwner){response->
             response.onSuccess {
-                productList.removeAt(position)
-                adapter.notifyItemRemoved(position)
-                adapter.notifyItemRangeChanged(position,productList.size)
-                Toast.makeText(requireContext(),"Cart Item is removed",Toast.LENGTH_LONG).show()
+                if(position>=0 && position <productList.size){
+                    Toast.makeText(requireContext(),"Cart Item is removed",Toast.LENGTH_LONG).show()
+                    binding.CartPageSubTotal.text=it.Data.OrderTotals.SubTotal
+                    binding.CartPageTotall.text = it.Data.OrderTotals.OrderTotal
+                    binding.cartPageShiping.text = it.Data.OrderTotals.Shipping
+                    productList.removeAt(position)
+                    adapter.notifyItemRemoved(position)
+                    adapter.notifyItemRangeChanged(position,productList.size)
+                }
+
+                //fetchDataAndUpdatePrices()
             }.onFailure {
                 Toast.makeText(requireContext(),"Cart Item remove failed",Toast.LENGTH_LONG).show()
             }
 
         }
+    }
+
+
+    fun fetchData(){
+
+        shoppingCartViewModel.getCartProducts()
+        shoppingCartViewModel.response.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { response ->
+                productsList.clear() // Clear the list to avoid duplicates
+                response.Data.Cart.Items.forEach {
+                    val title = it.ProductName
+                    val image = it.Picture.ImageUrl
+                    val price = it.UnitPrice
+                    val quantity = it.Quantity
+                    val productId = it.Id
+                    println(quantity)
+                    val item = productCartItems(tittle = title, imageResID = image, price = price, quantity = quantity,
+                        productId = productId
+                    )
+                    productsList.add(item)
+
+                }
+                adapter.notifyDataSetChanged() // Notify adapter of data changes
+                val total:String? = response.Data.OrderTotals.OrderTotal?:"0"
+                val subtotal:String? = response.Data.OrderTotals.SubTotal?:"0"
+                val shippingPrice:String? = response.Data.OrderTotals.Shipping.toString()?:"0"
+                if (subtotal != null && total !=null) {
+                    handlePrices(subtotal,total,shippingPrice.toString())
+                }
+
+            }.onFailure {
+                Toast.makeText(requireContext(), "Shopping cart Api call failed", Toast.LENGTH_LONG).show()
+            }
+        }
+
+
     }
 
 }
