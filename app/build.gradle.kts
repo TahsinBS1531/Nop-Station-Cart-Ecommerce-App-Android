@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("androidx.navigation.safeargs.kotlin")
     id ("kotlin-parcelize")
+    id ("kotlin-kapt")
 }
 
 android {
@@ -68,4 +69,25 @@ dependencies {
 
     //Glide Library
     implementation ("com.github.bumptech.glide:glide:4.16.0")
+
+    //Room Database
+    val room_version = "2.6.1"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+
+    // To use Kotlin annotation processing tool (kapt)
+    kapt("androidx.room:room-compiler:$room_version")
+    // To use Kotlin Symbol Processing (KSP)
+    //ksp("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:2.6.1")
+
+    // Optional: Lifecycle extensions for LiveData support
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
+
+    // optional - Test helpers
+    testImplementation("androidx.room:room-testing:$room_version")
+
+    // optional - Paging 3 Integration
+    implementation("androidx.room:room-paging:$room_version")
 }

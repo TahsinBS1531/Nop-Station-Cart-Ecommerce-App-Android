@@ -13,7 +13,7 @@ import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Interfaces.ItemClickListener
 import com.example.nopstationcart.Services.Model.Home_Page.Featured_Products.featuredProductsItem2
 
-class featuredProductsAdapter(var featuredProducts:ArrayList<featuredProductsItem2>):RecyclerView.Adapter<featuredProductsAdapter.MyViewHolder>() {
+class featuredProductsAdapter(var featuredProducts:List<featuredProductsItem2>):RecyclerView.Adapter<featuredProductsAdapter.MyViewHolder>() {
 
 
     lateinit var myListener: ItemClickListener

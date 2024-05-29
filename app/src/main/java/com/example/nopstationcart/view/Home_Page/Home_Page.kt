@@ -53,6 +53,8 @@ class Home_Page : Fragment(){
     private val logOutViewModel:LogOutViewModel by viewModels()
     lateinit var totallCartProducts:String
     private lateinit var binding:HomePageFragmentBinding
+    private var featuredList = mutableListOf<featuredProductsItem2>()
+    private lateinit var featuredAdapter: featuredProductsAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -180,40 +182,63 @@ class Home_Page : Fragment(){
             myRecyclerView3 = view.findViewById(R.id.featuredRecycle)
         }
         myRecyclerView3.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+        // Initialize the adapter with the empty list
+        featuredAdapter = featuredProductsAdapter(featuredList)
+        myRecyclerView3.adapter = featuredAdapter
 
-        featuredViewModel.getFeaturedProducts()
-        var featuredList = arrayListOf<featuredProductsItem2>()
-        val adapter = featuredProductsAdapter(featuredList)
-        myRecyclerView3.adapter = adapter
-        featuredViewModel.result.observe(viewLifecycleOwner){ it ->
+        // Observe LiveData from the ViewModel
+        featuredViewModel.featuredProducts.observe(viewLifecycleOwner) { featuredProducts ->
+            // Update the featuredList and notify the adapter
             featuredList.clear()
-            it.onSuccess {response ->
-                response.Data.forEach {
-                    val name = it.Name
-                    val price = it.ProductPrice.Price.toString()?:"0.0"
-                    val image = it.PictureModels[0].ImageUrl?:"No Image Found"
-                    var rating = 0f
-                    val shortDes = it.ShortDescription
-                    val longDes = it.FullDescription
-                    val oldPrice = it.ProductPrice.OldPrice?:"0.0"
-                    val id = it.Id
-                    if(it.ReviewOverviewModel.TotalReviews !=0){
-                        rating = (it.ReviewOverviewModel.RatingSum/it.ReviewOverviewModel.TotalReviews).toFloat()
-                    }
-                    val data = featuredProductsItem2(name,price, image = image,rating,shortDes,longDes,oldPrice, id = id)
-                    featuredList.add(data)
-                }
-                adapter.notifyDataSetChanged()
-                //val adapter = featuredProductsAdapter(featuredList)
-                //myRecyclerView3.adapter = adapter
+            featuredList.addAll(featuredProducts.map {
+                featuredProductsItem2(
+                    tittle = it.name,
+                    price = it.price,
+                    image = it.imageUrl,
+                    rating = it.rating,
+                    shortDes = it.shortDescription,
+                    longDes = it.longDescription,
+                    oldPrice = it.oldPrice,
+                    id = it.id
+                )
+            })
+            featuredAdapter.notifyDataSetChanged()
 
-            }.onFailure {
-                Toast.makeText(requireContext(),"Image data Api call failed",Toast.LENGTH_LONG).show()
-            }
+            // Adapter's item click listeners setup...
         }
+//        featuredViewModel.getFeaturedProducts()
+//        var featuredList = arrayListOf<featuredProductsItem2>()
+//        val adapter = featuredProductsAdapter(featuredList)
+//        myRecyclerView3.adapter = adapter
+//        featuredViewModel.result.observe(viewLifecycleOwner){ it ->
+//            featuredList.clear()
+//            it.onSuccess {response ->
+//                response.Data.forEach {
+//                    val name = it.Name
+//                    val price = it.ProductPrice.Price.toString()?:"0.0"
+//                    val image = it.PictureModels[0].ImageUrl?:"No Image Found"
+//                    var rating = 0f
+//                    val shortDes = it.ShortDescription
+//                    val longDes = it.FullDescription
+//                    val oldPrice = it.ProductPrice.OldPrice?:"0.0"
+//                    val id = it.Id
+//                    if(it.ReviewOverviewModel.TotalReviews !=0){
+//                        rating = (it.ReviewOverviewModel.RatingSum/it.ReviewOverviewModel.TotalReviews).toFloat()
+//                    }
+//                    val data = featuredProductsItem2(name,price, image = image,rating,shortDes,longDes,oldPrice, id = id)
+//                    featuredList.add(data)
+//                }
+//                adapter.notifyDataSetChanged()
+//                //val adapter = featuredProductsAdapter(featuredList)
+//                //myRecyclerView3.adapter = adapter
+//
+//            }.onFailure {
+//                Toast.makeText(requireContext(),"Image data Api call failed",Toast.LENGTH_LONG).show()
+//            }
+//        }
 
 
-        adapter.setOnItemClick(object: ItemClickListener {
+        featuredAdapter.setOnItemClick(object: ItemClickListener {
             override fun onItemClick(position: Int) {
                 val currentItem = featuredList[position]
                 val image = currentItem.image

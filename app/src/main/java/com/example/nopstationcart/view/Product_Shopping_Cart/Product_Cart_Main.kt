@@ -41,8 +41,6 @@ class Product_Cart_Main : Fragment() {
         val view = inflater.inflate(R.layout.fragment_product__cart__main, container, false)
         binding = FragmentProductCartMainBinding.bind(view)
 
-        // Setup RecyclerView and Adapter
-
         binding.productCartRecycle.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         adapter = productCartAdapter(productsList,removeCartViewModel)
         binding.productCartRecycle.adapter = adapter

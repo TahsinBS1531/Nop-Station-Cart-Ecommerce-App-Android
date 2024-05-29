@@ -1,19 +1,26 @@
 package com.example.nopstationcart.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.nopstationcart.Services.Model.Home_Page.Featured_Products.FeaturedProductsResponse
+import androidx.lifecycle.viewModelScope
+import com.example.nopstationcart.Services.Local.AppDatabase
+import com.example.nopstationcart.Services.Local.FeaturedProductsEntity
 import com.example.nopstationcart.Services.Repository.FeaturedProductsRepository
+import kotlinx.coroutines.launch
 
-class FeaturedProductsViewModel:ViewModel() {
-    val repo = FeaturedProductsRepository()
-    private val _result = MutableLiveData<Result<FeaturedProductsResponse>>()
-    val result: LiveData<Result<FeaturedProductsResponse>> = _result
+class FeaturedProductsViewModel(application: Application) : AndroidViewModel(application) {
+    private val repository: FeaturedProductsRepository
+    val featuredProducts: LiveData<List<FeaturedProductsEntity>>
 
-    fun getFeaturedProducts(){
-        val result = repo.getData()
-        result.observeForever { _result.postValue(it) }
+    init {
+        val featuredProductDao = AppDatabase.getDatabase(application).featuredProductDao()
+        repository = FeaturedProductsRepository(featuredProductDao, application)
+        featuredProducts = repository.featuredProducts
+        fetchAndCacheFeaturedProducts()
     }
 
+    private fun fetchAndCacheFeaturedProducts() = viewModelScope.launch {
+        repository.fetchAndCacheFeaturedProducts()
+    }
 }
