@@ -17,6 +17,7 @@ import com.example.nopstationcart.Services.Model.Update_Cart.FormValue
 import com.example.nopstationcart.Services.Model.Update_Cart.UpdateCartRequest
 import com.example.nopstationcart.databinding.FragmentProductCartMainBinding
 import com.example.nopstationcart.view.Adapters.productCartAdapter
+import com.example.nopstationcart.view.Home_Page.Home_Page
 import com.example.nopstationcart.viewmodel.RemoveCartViewModel
 import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
 import com.example.nopstationcart.viewmodel.UpdateCartViewModel
@@ -132,6 +133,9 @@ class Product_Cart_Main : Fragment() {
 
 
     fun fetchData(){
+        //for shimmer effect
+        val ob = Home_Page()
+        ob.startShimmer(binding.shimmerLayoutProductCart,binding.productCartRecycle)
 
         shoppingCartViewModel.getCartProducts(requireContext())
         shoppingCartViewModel.response.observe(viewLifecycleOwner) { result ->
@@ -148,6 +152,8 @@ class Product_Cart_Main : Fragment() {
                         productId = productId
                     )
                     productsList.add(item)
+                    //stopping shimmer
+                    ob.stopShimmer(binding.shimmerLayoutProductCart,binding.productCartRecycle)
 
                 }
                 adapter.notifyDataSetChanged() // Notify adapter of data changes

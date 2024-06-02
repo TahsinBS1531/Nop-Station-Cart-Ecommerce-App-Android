@@ -90,4 +90,7 @@ dependencies {
 
     // optional - Paging 3 Integration
     implementation("androidx.room:room-paging:$room_version")
+
+    //shimmer effect
+    implementation ("com.facebook.shimmer:shimmer:0.5.0")
 }

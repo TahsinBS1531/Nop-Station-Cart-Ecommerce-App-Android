@@ -1,6 +1,7 @@
 package com.example.nopstationcart.view.Home_Page
 
 import android.content.Context
+import android.content.res.loader.ResourcesLoader
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.load.engine.Resource
 import com.denzcoskun.imageslider.ImageSlider
 import com.denzcoskun.imageslider.constants.AnimationTypes
 import com.denzcoskun.imageslider.constants.ScaleTypes
@@ -35,6 +37,7 @@ import com.example.nopstationcart.viewmodel.CategoryListViewModel
 import com.example.nopstationcart.viewmodel.FeaturedProductsViewModel
 import com.example.nopstationcart.viewmodel.LogOutViewModel
 import com.example.nopstationcart.viewmodel.SliderViewModel
+import com.facebook.shimmer.ShimmerFrameLayout
 
 
 class Home_Page : Fragment(){
@@ -178,67 +181,47 @@ class Home_Page : Fragment(){
     }
 
     private fun featuredRecycleView(view: View?) {
+        startShimmer(binding.shimmerLayoutFeatured,binding.featuredRecycle)
+
         if (view != null) {
             myRecyclerView3 = view.findViewById(R.id.featuredRecycle)
         }
         myRecyclerView3.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
-        // Initialize the adapter with the empty list
-        featuredAdapter = featuredProductsAdapter(featuredList)
-        myRecyclerView3.adapter = featuredAdapter
 
-        // Observe LiveData from the ViewModel
-        featuredViewModel.featuredProducts.observe(viewLifecycleOwner) { featuredProducts ->
-            // Update the featuredList and notify the adapter
+        featuredViewModel.getFeaturedProducts()
+        var featuredList = arrayListOf<featuredProductsItem2>()
+        val adapter = featuredProductsAdapter(featuredList)
+        myRecyclerView3.adapter = adapter
+        featuredViewModel.result.observe(viewLifecycleOwner){ it ->
             featuredList.clear()
-            featuredList.addAll(featuredProducts.map {
-                featuredProductsItem2(
-                    tittle = it.name,
-                    price = it.price,
-                    image = it.imageUrl,
-                    rating = it.rating,
-                    shortDes = it.shortDescription,
-                    longDes = it.longDescription,
-                    oldPrice = it.oldPrice,
-                    id = it.id
-                )
-            })
-            featuredAdapter.notifyDataSetChanged()
+            it.onSuccess {response ->
+                response.Data.forEach {
+                    val name = it.Name
+                    val price = it.ProductPrice.Price.toString()?:"0.0"
+                    val image = it.PictureModels[0].ImageUrl?:"No Image Found"
+                    var rating = 0f
+                    val shortDes = it.ShortDescription
+                    val longDes = it.FullDescription
+                    val oldPrice = it.ProductPrice.OldPrice?:"0.0"
+                    val id = it.Id
+                    if(it.ReviewOverviewModel.TotalReviews !=0){
+                        rating = (it.ReviewOverviewModel.RatingSum/it.ReviewOverviewModel.TotalReviews).toFloat()
+                    }
+                    val data = featuredProductsItem2(name,price, image = image,rating,shortDes,longDes,oldPrice, id = id)
+                    featuredList.add(data)
+                }
+                adapter.notifyDataSetChanged()
+                stopShimmer(binding.shimmerLayoutFeatured,binding.featuredRecycle)
+                //val adapter = featuredProductsAdapter(featuredList)
+                //myRecyclerView3.adapter = adapter
 
-            // Adapter's item click listeners setup...
+            }.onFailure {
+                Toast.makeText(requireContext(),"Image data Api call failed",Toast.LENGTH_LONG).show()
+            }
         }
-//        featuredViewModel.getFeaturedProducts()
-//        var featuredList = arrayListOf<featuredProductsItem2>()
-//        val adapter = featuredProductsAdapter(featuredList)
-//        myRecyclerView3.adapter = adapter
-//        featuredViewModel.result.observe(viewLifecycleOwner){ it ->
-//            featuredList.clear()
-//            it.onSuccess {response ->
-//                response.Data.forEach {
-//                    val name = it.Name
-//                    val price = it.ProductPrice.Price.toString()?:"0.0"
-//                    val image = it.PictureModels[0].ImageUrl?:"No Image Found"
-//                    var rating = 0f
-//                    val shortDes = it.ShortDescription
-//                    val longDes = it.FullDescription
-//                    val oldPrice = it.ProductPrice.OldPrice?:"0.0"
-//                    val id = it.Id
-//                    if(it.ReviewOverviewModel.TotalReviews !=0){
-//                        rating = (it.ReviewOverviewModel.RatingSum/it.ReviewOverviewModel.TotalReviews).toFloat()
-//                    }
-//                    val data = featuredProductsItem2(name,price, image = image,rating,shortDes,longDes,oldPrice, id = id)
-//                    featuredList.add(data)
-//                }
-//                adapter.notifyDataSetChanged()
-//                //val adapter = featuredProductsAdapter(featuredList)
-//                //myRecyclerView3.adapter = adapter
-//
-//            }.onFailure {
-//                Toast.makeText(requireContext(),"Image data Api call failed",Toast.LENGTH_LONG).show()
-//            }
-//        }
 
 
-        featuredAdapter.setOnItemClick(object: ItemClickListener {
+        adapter.setOnItemClick(object: ItemClickListener {
             override fun onItemClick(position: Int) {
                 val currentItem = featuredList[position]
                 val image = currentItem.image
@@ -276,8 +259,21 @@ class Home_Page : Fragment(){
 
         })
     }
+     fun startShimmer(shimmer: ShimmerFrameLayout,view : RecyclerView){
+        shimmer.startShimmer()
+        shimmer.visibility = View.VISIBLE
+        view.visibility = View.GONE
+    }
+
+     fun stopShimmer(shimmer: ShimmerFrameLayout,view : RecyclerView){
+        shimmer.stopShimmer()
+        shimmer.visibility= View.GONE
+        view.visibility =View.VISIBLE
+    }
 
     private fun categoryListRecycleView(view: View?) {
+        startShimmer(binding.shimmerLayoutCategories,binding.categoryrecycleView)
+
         if (view != null) {
             myRecycleView = view.findViewById(R.id.categoryrecycleView)
         }
@@ -305,6 +301,7 @@ class Home_Page : Fragment(){
                     categoryListApi.add(data)
                 }
                 myAdapter.notifyDataSetChanged()
+                stopShimmer(binding.shimmerLayoutCategories,binding.categoryrecycleView)
             }.onFailure {
                 Toast.makeText(requireContext(),"Category List Api call failed",Toast.LENGTH_LONG).show()
             }
