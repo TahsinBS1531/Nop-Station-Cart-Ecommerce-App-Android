@@ -16,6 +16,7 @@ import com.example.nopstationcart.Services.Model.ShoppingCart.productCartItems
 import com.example.nopstationcart.Services.Model.Update_Cart.FormValue
 import com.example.nopstationcart.Services.Model.Update_Cart.UpdateCartRequest
 import com.example.nopstationcart.databinding.FragmentProductCartMainBinding
+import com.example.nopstationcart.dummyData.cartPrices
 import com.example.nopstationcart.view.Adapters.productCartAdapter
 import com.example.nopstationcart.view.Home_Page.Home_Page
 import com.example.nopstationcart.viewmodel.RemoveCartViewModel
@@ -49,8 +50,16 @@ class Product_Cart_Main : Fragment() {
         fetchData()
         handleBackBtn(view)
         handleCartBtn(adapter,productsList)
+        handleCheckOutBtn()
 
         return binding.root
+    }
+
+    fun handleCheckOutBtn(){
+        binding.checkOutBtn.setOnClickListener {
+            val action = Product_Cart_MainDirections.actionProductCartMainToCheckoutMain()
+            findNavController().navigate(action)
+        }
     }
 
     fun handleBackBtn(view:View){
@@ -59,11 +68,6 @@ class Product_Cart_Main : Fragment() {
         }
     }
 
-    fun handlePrices(subtotal:String, total:String, shipping:String){
-        binding.CartPageSubTotal.text = subtotal
-        binding.CartPageTotall.text = total
-        binding.cartPageShiping.text =shipping
-    }
 
     fun handleCartBtn(adapter:productCartAdapter, productList:ArrayList<productCartItems>){
         adapter.setOnItemClick(object:OnCartClickListener{
@@ -162,6 +166,7 @@ class Product_Cart_Main : Fragment() {
                 val shippingPrice:String? = response.Data.OrderTotals.Shipping.toString()?:"0"
                 if (subtotal != null && total !=null) {
                     handlePrices(subtotal,total,shippingPrice.toString())
+                    cartPrices(subtotal,total,shippingPrice.toString())
                 }
 
             }.onFailure {
@@ -170,6 +175,12 @@ class Product_Cart_Main : Fragment() {
         }
 
 
+    }
+
+    fun handlePrices(subtotal:String, total:String, shipping:String){
+        binding.CartPageSubTotal.text = subtotal
+        binding.CartPageTotall.text = total
+        binding.cartPageShiping.text =shipping
     }
 
 }
