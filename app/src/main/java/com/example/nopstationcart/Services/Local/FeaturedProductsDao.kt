@@ -9,7 +9,7 @@ import androidx.room.Query
 @Dao
 interface FeaturedProductsDao {
     @Query("SELECT * FROM featured_products")
-    fun getAllFeaturedProducts(): LiveData<List<FeaturedProductsEntity>>
+    fun getAllFeaturedProducts(): List<FeaturedProductsEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(products: List<FeaturedProductsEntity>)

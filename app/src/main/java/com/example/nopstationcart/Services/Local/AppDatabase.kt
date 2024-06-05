@@ -6,13 +6,17 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.nopstationcart.Services.Local.Converters.Converter
+import com.example.nopstationcart.Services.Model.CategoryList.Data
 import com.example.nopstationcart.Services.Model.Home_Page.Slider.Slider
 
-@Database(entities = [FeaturedProductsEntity::class,Slider::class], version = 1, exportSchema = false)
+@Database(entities = [FeaturedProductsEntity::class,Slider::class,Data::class], version = 2, exportSchema = false)
 @TypeConverters(Converter::class)
 
 abstract class AppDatabase:RoomDatabase() {
     abstract fun featuredProductDao(): FeaturedProductsDao
+    abstract fun bannerDao():BannerDao
+
+    abstract fun categoryDao():CategoryDao
 
     companion object {
         @Volatile
@@ -24,7 +28,8 @@ abstract class AppDatabase:RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "app_database"
-                ).build()
+                ).fallbackToDestructiveMigration()
+                    .build()
                 INSTANCE = instance
                 instance
             }

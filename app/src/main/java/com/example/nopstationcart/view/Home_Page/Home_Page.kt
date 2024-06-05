@@ -26,8 +26,11 @@ import com.example.nopstationcart.dummyData.bestSellingProducts
 import com.example.nopstationcart.dummyData.womenHeelProducts
 import com.example.nopstationcart.Services.Interfaces.bestSellingProductsItemClick
 import com.example.nopstationcart.Services.Interfaces.womenHeelOnItemClickListener
+import com.example.nopstationcart.Services.Local.AppDatabase
+import com.example.nopstationcart.Services.Local.BannerDao
 import com.example.nopstationcart.Services.Model.CategoryList.CategorySingleItem
 import com.example.nopstationcart.Services.Model.Home_Page.Featured_Products.featuredProductsItem2
+import com.example.nopstationcart.Services.Repository.SliderRespository
 import com.example.nopstationcart.databinding.HomePageFragmentBinding
 import com.example.nopstationcart.view.Adapters.bestSellingAdapters
 import com.example.nopstationcart.view.Adapters.featuredProductsAdapter
@@ -36,6 +39,7 @@ import com.example.nopstationcart.viewmodel.CartViewModel
 import com.example.nopstationcart.viewmodel.CategoryListViewModel
 import com.example.nopstationcart.viewmodel.FeaturedProductsViewModel
 import com.example.nopstationcart.viewmodel.LogOutViewModel
+import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
 import com.example.nopstationcart.viewmodel.SliderViewModel
 import com.facebook.shimmer.ShimmerFrameLayout
 
@@ -54,6 +58,7 @@ class Home_Page : Fragment(){
     private val categoryListViewModel: CategoryListViewModel by viewModels()
     private val cartPageViewModel: CartViewModel by viewModels()
     private val logOutViewModel:LogOutViewModel by viewModels()
+    private val shoppingCartViewModel:ShoppingCartViewModel by viewModels()
     lateinit var totallCartProducts:String
     private lateinit var binding:HomePageFragmentBinding
     private var featuredList = mutableListOf<featuredProductsItem2>()
@@ -88,8 +93,8 @@ class Home_Page : Fragment(){
         bestSellingRecycleView(view)
         featuredRecycleView(view)
         womenHeelRecycleView(view)
-
         handleLogOut(view)
+        setShoppingCart()
 
         return binding.root
     }
@@ -188,32 +193,30 @@ class Home_Page : Fragment(){
         }
         myRecyclerView3.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
 
-        featuredViewModel.getFeaturedProducts()
+        featuredViewModel.getFeaturedProducts(requireContext())
         var featuredList = arrayListOf<featuredProductsItem2>()
         val adapter = featuredProductsAdapter(featuredList)
         myRecyclerView3.adapter = adapter
-        featuredViewModel.result.observe(viewLifecycleOwner){ it ->
+        featuredViewModel.featuredProductsResult.observe(viewLifecycleOwner){ it ->
             featuredList.clear()
             it.onSuccess {response ->
-                response.Data.forEach {
-                    val name = it.Name
-                    val price = it.ProductPrice.Price.toString()?:"0.0"
-                    val image = it.PictureModels[0].ImageUrl?:"No Image Found"
+                response.forEach {
+                    val name = it.name
+                    val price = it.price?:"0.0"
+                    val image = it.imageUrl?:"No Image Found"
                     var rating = 0f
-                    val shortDes = it.ShortDescription
-                    val longDes = it.FullDescription
-                    val oldPrice = it.ProductPrice.OldPrice?:"0.0"
-                    val id = it.Id
-                    if(it.ReviewOverviewModel.TotalReviews !=0){
-                        rating = (it.ReviewOverviewModel.RatingSum/it.ReviewOverviewModel.TotalReviews).toFloat()
-                    }
+                    val shortDes = it.shortDescription
+                    val longDes = it.longDescription
+                    val oldPrice = it.oldPrice?:"0.0"
+                    val id = it.id
+                    rating = it.rating
+
                     val data = featuredProductsItem2(name,price, image = image,rating,shortDes,longDes,oldPrice, id = id)
                     featuredList.add(data)
                 }
+
                 adapter.notifyDataSetChanged()
                 stopShimmer(binding.shimmerLayoutFeatured,binding.featuredRecycle)
-                //val adapter = featuredProductsAdapter(featuredList)
-                //myRecyclerView3.adapter = adapter
 
             }.onFailure {
                 Toast.makeText(requireContext(),"Image data Api call failed",Toast.LENGTH_LONG).show()
@@ -246,7 +249,8 @@ class Home_Page : Fragment(){
                     it.onSuccess {response->
                         totallCartProducts = response.Data.TotalShoppingCartProducts.toString()
                         Toast.makeText(requireContext(),"${response.Message}",Toast.LENGTH_LONG).show()
-                        setShoppingCart(totallCartProducts)
+                        setShoppingCartQuantity(totallCartProducts)
+                        //setShoppingCart(totallCartProducts)
                     }.onFailure {response->
                         Toast.makeText(requireContext(),"${response.cause?.cause}",Toast.LENGTH_LONG).show()
                         println(response.cause?.message)
@@ -288,7 +292,7 @@ class Home_Page : Fragment(){
             }
         })
 
-        categoryListViewModel.getCategoryList()
+        categoryListViewModel.getCategoryList(requireContext())
         categoryListViewModel.result.observe(viewLifecycleOwner){result->
             categoryListApi.clear()
             result.onSuccess {
@@ -312,12 +316,18 @@ class Home_Page : Fragment(){
 
     private fun initializeImageSlider(view: View?) {
         val imageList = ArrayList<SlideModel>() // Create image list
-        sliderViewModel.getSlider()
+        val bannerDao = AppDatabase.getDatabase(requireContext()).bannerDao()
+        val sliderRepo = SliderRespository(bannerDao,requireContext())
+        sliderViewModel.getSlider(sliderRepo)
         sliderViewModel.sliderResult.observe(viewLifecycleOwner){
             it.onSuccess {response ->
-                response.Data.Sliders.forEach {slider->
+                response.map {slider->
                     imageList.add(SlideModel(slider.ImageUrl,ScaleTypes.FIT))
                 }
+//
+//                response.Data.Sliders.forEach {slider->
+//                    imageList.add(SlideModel(slider.ImageUrl,ScaleTypes.FIT))
+//                }
                 view?.findViewById<ImageSlider>(R.id.image_slider)?.apply {
                     setImageList(imageList)
                     setSlideAnimation(AnimationTypes.ZOOM_OUT)
@@ -329,9 +339,23 @@ class Home_Page : Fragment(){
 
     }
 
-    private fun setShoppingCart(quantity:String){
+    private fun setShoppingCart(){
+        shoppingCartViewModel.getCartProducts(requireContext())
+        shoppingCartViewModel.response.observe(viewLifecycleOwner){
+            it.onSuccess {
+                val items = it.Data.Cart.Items.toString()
+                setShoppingCartQuantity(items)
+            }.onFailure {
+
+            }
+        }
+    }
+
+    private fun setShoppingCartQuantity(quantity: String){
         binding.homePageCartBtn.text = quantity
     }
+
+
 
 
 }

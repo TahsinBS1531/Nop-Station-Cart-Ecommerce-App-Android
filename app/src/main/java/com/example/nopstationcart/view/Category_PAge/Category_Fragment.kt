@@ -56,7 +56,7 @@ class Category_Fragment : Fragment() {
 
         })
 
-        categoryViewModels.getCategoryList()
+        categoryViewModels.getCategoryList(requireContext())
         categoryViewModels.result.observe(viewLifecycleOwner){result->
             categoryListApi.clear()
             result.onSuccess {

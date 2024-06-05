@@ -101,6 +101,8 @@ class Product_Cart_Main : Fragment() {
                 binding.cartPageShiping.text = it.Data.OrderTotals.Shipping
                 if(quantity.toInt() ==0){
                     productsList.removeAt(position)
+                    binding.CartPageItems.text = "${it.Data.Cart.Items.size.toString()} Items"
+                    binding.cartPageCartAmount.text =it.Data.Cart.Items.size.toString()
                     adapter.notifyItemRemoved(position)
                     adapter.notifyItemRangeChanged(position,productsList.size)
                 }
@@ -122,6 +124,8 @@ class Product_Cart_Main : Fragment() {
                     binding.CartPageSubTotal.text=it.Data.OrderTotals.SubTotal
                     binding.CartPageTotall.text = it.Data.OrderTotals.OrderTotal
                     binding.cartPageShiping.text = it.Data.OrderTotals.Shipping
+                    binding.CartPageItems.text = "${it.Data.Cart.Items.size.toString()} Items"
+                    binding.cartPageCartAmount.text =it.Data.Cart.Items.size.toString()
                     productList.removeAt(position)
                     adapter.notifyItemRemoved(position)
                     adapter.notifyItemRangeChanged(position,productList.size)
@@ -145,6 +149,8 @@ class Product_Cart_Main : Fragment() {
         shoppingCartViewModel.response.observe(viewLifecycleOwner) { result ->
             result.onSuccess { response ->
                 productsList.clear() // Clear the list to avoid duplicates
+                binding.cartPageCartAmount.text = response.Data.Cart.Items.size.toString()
+                binding.CartPageItems.text = "${response.Data.Cart.Items.size.toString()} Items"
                 response.Data.Cart.Items.forEach {
                     val title = it.ProductName
                     val image = it.Picture.ImageUrl

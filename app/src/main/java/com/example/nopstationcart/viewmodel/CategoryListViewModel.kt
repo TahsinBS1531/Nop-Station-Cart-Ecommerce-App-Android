@@ -1,5 +1,6 @@
 package com.example.nopstationcart.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,8 +16,8 @@ class CategoryListViewModel() : ViewModel() {
     val result: LiveData<Result<CategoryListResponse>> = _result
 
 
-    fun getCategoryList(){
-        val result = repo.getData()
+    fun getCategoryList(context:Context){
+        val result = repo.getData(context)
         result.observeForever { _result.postValue(it) }
     }
 
