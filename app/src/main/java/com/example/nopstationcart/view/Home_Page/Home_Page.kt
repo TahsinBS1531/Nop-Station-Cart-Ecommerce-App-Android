@@ -42,8 +42,9 @@ import com.example.nopstationcart.viewmodel.LogOutViewModel
 import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
 import com.example.nopstationcart.viewmodel.SliderViewModel
 import com.facebook.shimmer.ShimmerFrameLayout
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class Home_Page : Fragment(){
 
     lateinit var myRecycleView:RecyclerView
@@ -51,7 +52,6 @@ class Home_Page : Fragment(){
     lateinit var myRecyclerView3: RecyclerView
     lateinit var myRecyclerView4: RecyclerView
     lateinit var addToCartBtn:TextView
-    lateinit var logOutBtn:TextView
     var cartCount =0;
     private val sliderViewModel: SliderViewModel by viewModels()
     private val featuredViewModel: FeaturedProductsViewModel by viewModels()
@@ -61,8 +61,6 @@ class Home_Page : Fragment(){
     private val shoppingCartViewModel:ShoppingCartViewModel by viewModels()
     lateinit var totallCartProducts:String
     private lateinit var binding:HomePageFragmentBinding
-    private var featuredList = mutableListOf<featuredProductsItem2>()
-    private lateinit var featuredAdapter: featuredProductsAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,14 +78,6 @@ class Home_Page : Fragment(){
     ): View? {
         val view = inflater.inflate(R.layout.home_page_fragment, container, false)
         binding = HomePageFragmentBinding.bind(view)
-
-        addToCartBtn = view.findViewById(R.id.home_page_cartBtn)
-
-        binding.cartBtn.setOnClickListener {
-            val action = Home_PageDirections.actionHomePageToProductCartMain()
-            findNavController().navigate(action)
-        }
-
         initializeImageSlider(view)
         categoryListRecycleView(view)
         bestSellingRecycleView(view)
@@ -95,8 +85,28 @@ class Home_Page : Fragment(){
         womenHeelRecycleView(view)
         handleLogOut(view)
         setShoppingCart()
+        handleCartBtn()
 
         return binding.root
+    }
+
+    fun startShimmer(shimmer: ShimmerFrameLayout,view : RecyclerView){
+        shimmer.startShimmer()
+        shimmer.visibility = View.VISIBLE
+        view.visibility = View.GONE
+    }
+
+    fun stopShimmer(shimmer: ShimmerFrameLayout,view : RecyclerView){
+        shimmer.stopShimmer()
+        shimmer.visibility= View.GONE
+        view.visibility =View.VISIBLE
+    }
+
+    fun handleCartBtn(){
+        binding.cartBtn.setOnClickListener {
+            val action = Home_PageDirections.actionHomePageToProductCartMain()
+            findNavController().navigate(action)
+        }
     }
     fun handleLogOut(view: View?){
         binding.logOutBtn.setOnClickListener {
@@ -250,7 +260,6 @@ class Home_Page : Fragment(){
                         totallCartProducts = response.Data.TotalShoppingCartProducts.toString()
                         Toast.makeText(requireContext(),"${response.Message}",Toast.LENGTH_LONG).show()
                         setShoppingCartQuantity(totallCartProducts)
-                        //setShoppingCart(totallCartProducts)
                     }.onFailure {response->
                         Toast.makeText(requireContext(),"${response.cause?.cause}",Toast.LENGTH_LONG).show()
                         println(response.cause?.message)
@@ -262,17 +271,6 @@ class Home_Page : Fragment(){
             }
 
         })
-    }
-     fun startShimmer(shimmer: ShimmerFrameLayout,view : RecyclerView){
-        shimmer.startShimmer()
-        shimmer.visibility = View.VISIBLE
-        view.visibility = View.GONE
-    }
-
-     fun stopShimmer(shimmer: ShimmerFrameLayout,view : RecyclerView){
-        shimmer.stopShimmer()
-        shimmer.visibility= View.GONE
-        view.visibility =View.VISIBLE
     }
 
     private fun categoryListRecycleView(view: View?) {
@@ -317,17 +315,13 @@ class Home_Page : Fragment(){
     private fun initializeImageSlider(view: View?) {
         val imageList = ArrayList<SlideModel>() // Create image list
         val bannerDao = AppDatabase.getDatabase(requireContext()).bannerDao()
-        val sliderRepo = SliderRespository(bannerDao,requireContext())
-        sliderViewModel.getSlider(sliderRepo)
+        //val sliderRepo = SliderRespository(bannerDao,requireContext())
+        sliderViewModel.getSlider()
         sliderViewModel.sliderResult.observe(viewLifecycleOwner){
             it.onSuccess {response ->
                 response.map {slider->
                     imageList.add(SlideModel(slider.ImageUrl,ScaleTypes.FIT))
                 }
-//
-//                response.Data.Sliders.forEach {slider->
-//                    imageList.add(SlideModel(slider.ImageUrl,ScaleTypes.FIT))
-//                }
                 view?.findViewById<ImageSlider>(R.id.image_slider)?.apply {
                     setImageList(imageList)
                     setSlideAnimation(AnimationTypes.ZOOM_OUT)

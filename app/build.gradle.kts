@@ -4,6 +4,7 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id ("kotlin-parcelize")
     id ("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -119,4 +120,11 @@ dependencies {
 
     // custom design system based on Foundation)
     implementation("androidx.compose.material:material-icons-core")
+
+    //Dagger Hilt
+    implementation("com.google.dagger:hilt-android:2.48")
+    kapt("com.google.dagger:hilt-android-compiler:2.48")
+}
+kapt {
+    correctErrorTypes = true
 }

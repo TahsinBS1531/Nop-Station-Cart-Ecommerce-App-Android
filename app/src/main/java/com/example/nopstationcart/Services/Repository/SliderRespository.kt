@@ -8,7 +8,9 @@ import com.example.nopstationcart.Services.Model.Home_Page.Slider.Slider
 import com.example.nopstationcart.Services.Model.Home_Page.Slider.SliderResponse
 import com.example.nopstationcart.Services.Model.login.loginResponse
 import com.example.nopstationcart.Services.Netwrok.InternetStatus
+import com.example.nopstationcart.Services.Netwrok.sliderApiInterface
 import com.example.nopstationcart.Services.SliderApiClient
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -17,15 +19,18 @@ import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class SliderRespository(private val bannerDao:BannerDao, private val context:Context) {
+@Singleton
+class SliderRespository @Inject constructor(private val bannerDao:BannerDao, @ApplicationContext private val context: Context, private val sliderApiClient:sliderApiInterface) {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     fun getSlideData():LiveData<Result<List<Slider>>>{
         val result = MutableLiveData<Result<List<Slider>>>()
 
         if(InternetStatus.isOnline(context)){
-            val call = SliderApiClient.apiService.getApiData()
+            val call = sliderApiClient.getApiData()
             call.enqueue(object : Callback<SliderResponse>{
                 override fun onResponse(p0: Call<SliderResponse>, response: Response<SliderResponse>) {
                     if(response.isSuccessful){
@@ -52,22 +57,38 @@ class SliderRespository(private val bannerDao:BannerDao, private val context:Con
 
             })
         }else{
-            // Fetch data from the local database
-            coroutineScope.launch {
-                try {
-                    val localData = bannerDao.getBannerList()
-                    withContext(Dispatchers.Main) {
-                        result.postValue(Result.success(localData))
-                    }
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        result.postValue(Result.failure(e))
-                    }
-                }
-            }
+
+            getSliderFromLocal(result)
+//            coroutineScope.launch {
+//                try {
+//                    val localData = bannerDao.getBannerList()
+//                    withContext(Dispatchers.Main) {
+//                        result.postValue(Result.success(localData))
+//                    }
+//                } catch (e: Exception) {
+//                    withContext(Dispatchers.Main) {
+//                        result.postValue(Result.failure(e))
+//                    }
+//                }
+//            }
 
         }
 
         return result
+    }
+
+    private fun getSliderFromLocal(result: MutableLiveData<Result<List<Slider>>>){
+        coroutineScope.launch {
+            try {
+                val localData = bannerDao.getBannerList()
+                withContext(Dispatchers.Main) {
+                    result.postValue(Result.success(localData))
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    result.postValue(Result.failure(e))
+                }
+            }
+        }
     }
 }

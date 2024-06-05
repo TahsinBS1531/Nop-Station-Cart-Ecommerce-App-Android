@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Model.CategoryList.CategorySingleItem
-import com.example.nopstationcart.Services.Model.CategoryTree.categoryDataClass
 
 class CategoryTreeAdapter(
     private val categoryList: ArrayList<CategorySingleItem>,

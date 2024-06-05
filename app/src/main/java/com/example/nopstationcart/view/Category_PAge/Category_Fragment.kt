@@ -11,7 +11,6 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Model.CategoryList.CategorySingleItem
-import com.example.nopstationcart.Services.Model.CategoryTree.categoryDataClass
 import com.example.nopstationcart.databinding.FragmentCategoryBinding
 import com.example.nopstationcart.view.Adapters.CategoryAdapter
 import com.example.nopstationcart.view.Adapters.CategoryTreeAdapter

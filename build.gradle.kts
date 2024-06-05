@@ -15,4 +15,6 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid) apply false
     val room_version = "2.6.1"
     id("androidx.room") version "$room_version" apply false
+//Dagger Hilt
+    id("com.google.dagger.hilt.android") version "2.48" apply false
 }

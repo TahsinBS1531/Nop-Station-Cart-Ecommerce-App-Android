@@ -65,22 +65,26 @@ class FeaturedProductsRepository {
 
             })
         }else{
-            coroutineScope.launch {
-                try {
-                    val localData = featuredProductsDao.getAllFeaturedProducts()
-                    withContext(Dispatchers.Main){
-                        _result.postValue(Result.success(localData))
-                    }
-                }catch (e:Exception){
-                    withContext(Dispatchers.Main) {
-                        _result.postValue(Result.failure(e))
-                    }
-                }
-            }
+            getDataFromLocal(_result,featuredProductsDao)
         }
 
 
         return _result
+    }
+
+    private fun getDataFromLocal(_result : MutableLiveData<Result<List<FeaturedProductsEntity>>>,featuredProductsDao:FeaturedProductsDao){
+        coroutineScope.launch {
+            try {
+                val localData = featuredProductsDao.getAllFeaturedProducts()
+                withContext(Dispatchers.Main){
+                    _result.postValue(Result.success(localData))
+                }
+            }catch (e:Exception){
+                withContext(Dispatchers.Main) {
+                    _result.postValue(Result.failure(e))
+                }
+            }
+        }
     }
 
 }
