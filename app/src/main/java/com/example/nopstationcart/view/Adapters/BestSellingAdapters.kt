@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nopstationcart.R
-import com.example.nopstationcart.Services.Model.bestSellingItem
+import com.example.nopstationcart.dummyData.bestSellingItem
 import com.example.nopstationcart.Services.Interfaces.bestSellingProductsItemClick
 
 class bestSellingAdapters(var bestSellingtArrayList: ArrayList<bestSellingItem>):RecyclerView.Adapter<bestSellingAdapters.MyViewHolder>(){

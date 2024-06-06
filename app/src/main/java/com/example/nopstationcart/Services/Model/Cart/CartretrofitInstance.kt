@@ -8,15 +8,20 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object CartretrofitInstance {
 
-    val client = OkHttpClient.Builder()
-        .addInterceptor(CartAuthInterceptor())
-        .build()
+    fun getretrofit(context:Context):Retrofit{
+        val client = OkHttpClient.Builder()
+            .addInterceptor(CartAuthInterceptor(context))
+            .build()
 
-    val retrofit = Retrofit.Builder()
-        .baseUrl("http://demo460.nop-station.com/api/")
-        .client(client)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://demo460.nop-station.com/api/")
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
 
-    val addToCartApi = retrofit.create(AddToCartApiInterface::class.java)
+        //val addToCartApi = retrofit.create(AddToCartApiInterface::class.java)
+        return retrofit
+    }
+
+
 }

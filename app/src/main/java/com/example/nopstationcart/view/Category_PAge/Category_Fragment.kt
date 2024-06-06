@@ -11,7 +11,6 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Model.CategoryList.CategorySingleItem
-import com.example.nopstationcart.Services.Model.CategoryTree.categoryDataClass
 import com.example.nopstationcart.databinding.FragmentCategoryBinding
 import com.example.nopstationcart.view.Adapters.CategoryAdapter
 import com.example.nopstationcart.view.Adapters.CategoryTreeAdapter
@@ -49,14 +48,13 @@ class Category_Fragment : Fragment() {
         val myAdapter = CategoryTreeAdapter(categoryListApi, object : CategoryTreeAdapter.OnItemClickListener {
             override fun onItemClick(category: CategorySingleItem) {
                 val action = Category_FragmentDirections.actionCategoryFragmentToHomePageCategory(category.imageRes,category.products.toTypedArray(),category.tittle)
-                //val action = Home_PageDirections.actionHomePageToHomePageCategory(category.imageRes,category.products.toTypedArray(),category.tittle)
                 view?.findNavController()?.navigate(action)
             }
 
 
         })
 
-        categoryViewModels.getCategoryList()
+        categoryViewModels.getCategoryList(requireContext())
         categoryViewModels.result.observe(viewLifecycleOwner){result->
             categoryListApi.clear()
             result.onSuccess {

@@ -86,11 +86,26 @@
         <argument
             android:name="product_Id"
             app:argType="string" />
+        <action
+            android:id="@+id/action_product_Deatils_to_product_Cart_Main"
+            app:destination="@id/product_Cart_Main" />
     </fragment>
     <fragment
         android:id="@+id/product_Cart_Main"
         android:name="com.example.nopstationcart.view.Product_Shopping_Cart.Product_Cart_Main"
         android:label="fragment_product__cart__main"
         tools:layout="@layout/fragment_product__cart__main" >
+        <action
+            android:id="@+id/action_product_Cart_Main_to_checkout_main"
+            app:destination="@id/checkout_main" />
+    </fragment>
+    <fragment
+        android:id="@+id/checkout_main"
+        android:name="com.example.nopstationcart.view.Checkout.Checkout_main"
+        android:label="fragment_checkout_main"
+        tools:layout="@layout/fragment_checkout_main" >
+        <action
+            android:id="@+id/action_checkout_main_to_home_Page"
+            app:destination="@id/home_Page" />
     </fragment>
 </navigation>

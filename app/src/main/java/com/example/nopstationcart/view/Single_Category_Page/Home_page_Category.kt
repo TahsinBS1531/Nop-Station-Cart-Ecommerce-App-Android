@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,10 +17,12 @@ import com.bumptech.glide.Glide
 import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Interfaces.categoryDetailsOnClicklistener
 import com.example.nopstationcart.Services.Model.CategoryList.Product
+import com.example.nopstationcart.viewmodel.CartViewModel
 
 
 class Home_page_Category : Fragment() {
     lateinit var backBtn: Toolbar
+    private val cartPageViewModel: CartViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -69,7 +73,17 @@ class Home_page_Category : Fragment() {
                 }
 
                 override fun onCartBtnClick(position: Int) {
-                    val id = items[position].Id
+                    val currentItem = items[position]
+                    val productId = currentItem.Id
+                    cartPageViewModel.getCartResponse(productId,requireContext(),"1")
+                    cartPageViewModel.result.observe(viewLifecycleOwner){
+                        it.onSuccess {response->
+                            Toast.makeText(requireContext(),"${response.Message}", Toast.LENGTH_LONG).show()
+                        }.onFailure {response->
+                            Toast.makeText(requireContext(),"${response.cause?.cause}", Toast.LENGTH_LONG).show()
+                            println(response.cause?.message)
+                        }
+                    }
                 }
 
             })

@@ -107,6 +107,7 @@
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/CartPageItems"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/rectangle"
@@ -119,11 +120,29 @@
                     android:text="5 ITEM(S)"
                     android:textSize="10sp" />
             </LinearLayout>
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmer_layout_product_cart"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:shimmer_auto_start="true"
+                app:shimmer_duration="1500"
+                android:visibility="gone">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp">
 
+                    <!-- Placeholder views for shimmer effect -->
+                    <include layout="@layout/single_item_product_cart_shimmer"/>
+                    <include layout="@layout/single_item_product_cart_shimmer"/>
+                    <include layout="@layout/single_item_product_cart_shimmer"/>
+
+                    <!-- Add more placeholder views as needed -->
+                </LinearLayout>
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/productCartRecycle"
                     android:layout_width="match_parent"
@@ -131,14 +150,8 @@
                     android:foregroundGravity="center"
                     android:paddingTop="20dp"
                     android:paddingBottom="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.52"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:listitem="@layout/single_item_product_cart" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    tools:listitem="@layout/single_item_product_cart"
+                    />
 
 
             <com.google.android.material.divider.MaterialDivider
@@ -192,6 +205,7 @@
                     android:text="Shipping" />
 
                 <TextView
+                    android:id="@+id/cartPageShiping"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="60dp"
@@ -238,6 +252,7 @@
                 android:layout_height="wrap_content">
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/checkOutBtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"

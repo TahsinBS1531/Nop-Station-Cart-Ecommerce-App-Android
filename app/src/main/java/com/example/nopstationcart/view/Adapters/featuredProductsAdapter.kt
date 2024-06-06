@@ -10,16 +10,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.nopstationcart.R
-import com.example.nopstationcart.Services.Model.featuredProductsItem
-import com.example.nopstationcart.Services.Interfaces.featuredProductsItemClickListener
+import com.example.nopstationcart.Services.Interfaces.ItemClickListener
 import com.example.nopstationcart.Services.Model.Home_Page.Featured_Products.featuredProductsItem2
 
-class featuredProductsAdapter(var featuredProducts:ArrayList<featuredProductsItem2>):RecyclerView.Adapter<featuredProductsAdapter.MyViewHolder>() {
+class featuredProductsAdapter(var featuredProducts:List<featuredProductsItem2>):RecyclerView.Adapter<featuredProductsAdapter.MyViewHolder>() {
 
 
-    lateinit var myListener: featuredProductsItemClickListener
+    lateinit var myListener: ItemClickListener
 
-    fun setOnItemClick(listener: featuredProductsItemClickListener){
+    fun setOnItemClick(listener: ItemClickListener){
         myListener = listener
     }
 
@@ -46,7 +45,7 @@ class featuredProductsAdapter(var featuredProducts:ArrayList<featuredProductsIte
         return featuredProducts.size
     }
 
-    class MyViewHolder(itemview:View, listener: featuredProductsItemClickListener):RecyclerView.ViewHolder(itemview){
+    class MyViewHolder(itemview:View, listener: ItemClickListener):RecyclerView.ViewHolder(itemview){
         val tittle = itemview.findViewById<TextView>(R.id.featuredTittle)
         val img = itemview.findViewById<ImageView>(R.id.featuredImg)
         val price = itemview.findViewById<TextView>(R.id.featuredPrice)
