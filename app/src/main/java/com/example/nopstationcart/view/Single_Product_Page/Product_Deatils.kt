@@ -17,10 +17,12 @@ import com.bumptech.glide.Glide
 import com.example.nopstationcart.R
 import com.example.nopstationcart.databinding.FragmentProductDeatilsBinding
 import com.example.nopstationcart.viewmodel.CartViewModel
+import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
 
 class Product_Deatils : Fragment() {
     lateinit var binding : FragmentProductDeatilsBinding
     private val cartPageViewModel:CartViewModel by viewModels()
+    private val shoppingCartViewModel: ShoppingCartViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,11 +37,29 @@ class Product_Deatils : Fragment() {
         binding.productPageOldPrice.paintFlags = binding.productPageOldPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
         getProductsDetails(view)
         handleBackBtn(view)
+        handleCartAmount()
 
         return binding.root
     }
 
+    fun handleCartAmount(){
+        shoppingCartViewModel.getCartProducts(requireContext())
+        shoppingCartViewModel.response.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { response ->
+                val cartAmount = response.Data.Cart.Items.size.toString()
+                println("Cart Amount: $cartAmount")
+                binding.productDeatilsCartAmount.text = cartAmount
+            }.onFailure {
+                val cartAmount = "0"
+                binding.productDeatilsCartAmount.text = cartAmount
+            }
+        }
 
+        binding.productDetailsCart.setOnClickListener {
+            val action = Product_DeatilsDirections.actionProductDeatilsToProductCartMain()
+            findNavController().navigate(action)
+        }
+    }
     fun getProductsDetails(view:View){
         val args = Product_DeatilsArgs.fromBundle(requireArguments())
         val imageResId = args.productImage
@@ -68,15 +88,39 @@ class Product_Deatils : Fragment() {
             findNavController().popBackStack()
         }
     }
-    fun handleCartBtn(id:String){
-        binding.ProductDetailsAddToCart.setOnClickListener {
-            cartPageViewModel.getCartResponse(id.toInt(),requireContext())
-            cartPageViewModel.result.observe(viewLifecycleOwner){response->
-                response.onSuccess {
-                    Toast.makeText(requireContext(),"${it.Message}", Toast.LENGTH_LONG).show()
-                }.onFailure {
-                    Toast.makeText(requireContext(),"${it.cause?.cause}",Toast.LENGTH_LONG).show()
-                    println(it.cause?.message)
+
+    private var cartAmount = 1
+
+    fun handleCartBtn(id: String) {
+        binding?.apply {
+            ProductDetailsAddToCart.setOnClickListener {
+                println("Cart Amount From the Details page : $cartAmount")
+                cartPageViewModel.getCartResponse(id.toInt(), requireContext(), cartAmount.toString())
+                cartPageViewModel.result.observe(viewLifecycleOwner) { response ->
+                    response.onSuccess {
+                        println("Total Cart Items: ${it.Data.TotalShoppingCartProducts}")
+                        println("Amount: $cartAmount")
+                        Toast.makeText(requireContext(), it.Message, Toast.LENGTH_LONG).show()
+                    }.onFailure {
+                        Toast.makeText(requireContext(), "${it.cause?.cause}", Toast.LENGTH_LONG).show()
+                        println(it.cause?.message)
+                    }
+                }
+            }
+
+            productDetailsIncreaseCart.setOnClickListener {
+                cartAmount++
+                editText.setText(cartAmount.toString())
+                println("Cart Increase btn is called $cartAmount")
+            }
+
+            productDetailsDecreaseCart.setOnClickListener {
+                println("Cart Decrease btn is called")
+                if (cartAmount > 1) {
+                    cartAmount--
+                    editText.setText(cartAmount.toString())
+                } else {
+                    Toast.makeText(requireContext(), "Sorry, you can't decrease more", Toast.LENGTH_LONG).show()
                 }
             }
         }

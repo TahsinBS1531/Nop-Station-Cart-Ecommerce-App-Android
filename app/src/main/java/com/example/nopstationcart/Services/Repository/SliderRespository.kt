@@ -22,15 +22,14 @@ import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
-class SliderRespository @Inject constructor(private val bannerDao:BannerDao, @ApplicationContext private val context: Context, private val sliderApiClient:sliderApiInterface) {
+class SliderRespository (private val bannerDao:BannerDao) {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-    fun getSlideData():LiveData<Result<List<Slider>>>{
+    fun getSlideData(context:Context):LiveData<Result<List<Slider>>>{
         val result = MutableLiveData<Result<List<Slider>>>()
 
         if(InternetStatus.isOnline(context)){
-            val call = sliderApiClient.getApiData()
+            val call = SliderApiClient.apiService.getApiData()
             call.enqueue(object : Callback<SliderResponse>{
                 override fun onResponse(p0: Call<SliderResponse>, response: Response<SliderResponse>) {
                     if(response.isSuccessful){

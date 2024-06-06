@@ -90,15 +90,19 @@ class Product_Cart_Main : Fragment() {
     }
 
     fun updateCartQuantity(position: Int, productId: String, quantity:String){
+
+        if (position < 0 || position >= productsList.size) {
+            Toast.makeText(requireContext(), "Invalid position", Toast.LENGTH_LONG).show()
+            return
+        }
+
         val formValue = FormValue("itemquantity${productId}",quantity)
         val request = UpdateCartRequest(listOf(formValue))
         updateCartViewModel.getApiCall(request,requireContext())
         updateCartViewModel.response.observe(viewLifecycleOwner) {response->
             response.onSuccess {
                 Toast.makeText(requireContext(),"Cart value updated",Toast.LENGTH_LONG).show()
-                binding.CartPageSubTotal.text = it.Data.OrderTotals.SubTotal
-                binding.CartPageTotall.text = it.Data.OrderTotals.OrderTotal
-                binding.cartPageShiping.text = it.Data.OrderTotals.Shipping
+                handlePrices(it.Data.OrderTotals.SubTotal,it.Data.OrderTotals.OrderTotal,it.Data.OrderTotals.Shipping)
                 if(quantity.toInt() ==0){
                     productsList.removeAt(position)
                     binding.CartPageItems.text = "${it.Data.Cart.Items.size.toString()} Items"
@@ -121,16 +125,18 @@ class Product_Cart_Main : Fragment() {
             response.onSuccess {
                 if(position>=0 && position <productList.size){
                     Toast.makeText(requireContext(),"Cart Item is removed",Toast.LENGTH_LONG).show()
-                    binding.CartPageSubTotal.text=it.Data.OrderTotals.SubTotal
-                    binding.CartPageTotall.text = it.Data.OrderTotals.OrderTotal
-                    binding.cartPageShiping.text = it.Data.OrderTotals.Shipping
+
+                    handlePrices(it.Data.OrderTotals.SubTotal,it.Data.OrderTotals.OrderTotal,it.Data.OrderTotals.Shipping)
                     binding.CartPageItems.text = "${it.Data.Cart.Items.size.toString()} Items"
                     binding.cartPageCartAmount.text =it.Data.Cart.Items.size.toString()
                     productList.removeAt(position)
                     adapter.notifyItemRemoved(position)
                     adapter.notifyItemRangeChanged(position,productList.size)
-                }
 
+                    if (productList.isEmpty()) {
+                        handlePrices("0","0","0")
+                    }
+                }
                 //fetchDataAndUpdatePrices()
             }.onFailure {
                 Toast.makeText(requireContext(),"Cart Item remove failed",Toast.LENGTH_LONG).show()
@@ -151,6 +157,10 @@ class Product_Cart_Main : Fragment() {
                 productsList.clear() // Clear the list to avoid duplicates
                 binding.cartPageCartAmount.text = response.Data.Cart.Items.size.toString()
                 binding.CartPageItems.text = "${response.Data.Cart.Items.size.toString()} Items"
+                if(response.Data.Cart.Items.size==0){
+                    ob.stopShimmer(binding.shimmerLayoutProductCart,binding.productCartRecycle)
+                    Toast.makeText(requireContext(),"There is no product in the cart",Toast.LENGTH_LONG).show()
+                }
                 response.Data.Cart.Items.forEach {
                     val title = it.ProductName
                     val image = it.Picture.ImageUrl

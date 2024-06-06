@@ -5,7 +5,7 @@
     android:layout_marginEnd="15dp"
     android:layout_marginBottom="15dp"
     android:layout_width="180dp"
-    android:layout_height="240dp"
+    android:layout_height="280dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardElevation="2dp"
     app:cardCornerRadius="16dp">
@@ -24,6 +24,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageButton
+            android:id="@+id/categoryDetailsCartBtn"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="@drawable/add_to_cart_bg"
+            android:contentDescription="TODO"
+            android:padding="10dp"
+            android:src="@drawable/add_24dp_fill0_wght400_grad0_opsz24"
+            app:layout_constraintBottom_toBottomOf="@+id/categoryDetailsImg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.896"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.88" />
 
         <TextView
             android:id="@+id/categoryDetailsTittle"
@@ -40,6 +54,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/categoryDetailsImg" />
 
+        <RatingBar
+            android:id="@+id/categoryRatingBar"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:numStars="5"
+            android:progressTint="#FFBA49"
+            android:rating="3"
+            app:layout_constraintBottom_toTopOf="@+id/categoryDetailsPrice"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/categoryDetailsTittle"
+            app:layout_constraintVertical_bias="0.0" />
+
         <TextView
             android:id="@+id/categoryDetailsPrice"
             android:layout_width="wrap_content"
@@ -54,8 +83,10 @@
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/categoryDetailsTittle" />
+            app:layout_constraintTop_toBottomOf="@+id/categoryDetailsTittle"
+            app:layout_constraintVertical_bias="0.794" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

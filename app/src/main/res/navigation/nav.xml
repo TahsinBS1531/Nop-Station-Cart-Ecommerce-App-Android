@@ -86,6 +86,9 @@
         <argument
             android:name="product_Id"
             app:argType="string" />
+        <action
+            android:id="@+id/action_product_Deatils_to_product_Cart_Main"
+            app:destination="@id/product_Cart_Main" />
     </fragment>
     <fragment
         android:id="@+id/product_Cart_Main"
@@ -100,5 +103,9 @@
         android:id="@+id/checkout_main"
         android:name="com.example.nopstationcart.view.Checkout.Checkout_main"
         android:label="fragment_checkout_main"
-        tools:layout="@layout/fragment_checkout_main" />
+        tools:layout="@layout/fragment_checkout_main" >
+        <action
+            android:id="@+id/action_checkout_main_to_home_Page"
+            app:destination="@id/home_Page" />
+    </fragment>
 </navigation>

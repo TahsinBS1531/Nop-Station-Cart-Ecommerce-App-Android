@@ -48,7 +48,6 @@ class Category_Fragment : Fragment() {
         val myAdapter = CategoryTreeAdapter(categoryListApi, object : CategoryTreeAdapter.OnItemClickListener {
             override fun onItemClick(category: CategorySingleItem) {
                 val action = Category_FragmentDirections.actionCategoryFragmentToHomePageCategory(category.imageRes,category.products.toTypedArray(),category.tittle)
-                //val action = Home_PageDirections.actionHomePageToHomePageCategory(category.imageRes,category.products.toTypedArray(),category.tittle)
                 view?.findNavController()?.navigate(action)
             }
 

@@ -30,6 +30,7 @@ import com.example.nopstationcart.Services.Local.AppDatabase
 import com.example.nopstationcart.Services.Local.BannerDao
 import com.example.nopstationcart.Services.Model.CategoryList.CategorySingleItem
 import com.example.nopstationcart.Services.Model.Home_Page.Featured_Products.featuredProductsItem2
+import com.example.nopstationcart.Services.Netwrok.sliderApiInterface
 import com.example.nopstationcart.Services.Repository.SliderRespository
 import com.example.nopstationcart.databinding.HomePageFragmentBinding
 import com.example.nopstationcart.view.Adapters.bestSellingAdapters
@@ -44,7 +45,6 @@ import com.example.nopstationcart.viewmodel.SliderViewModel
 import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class Home_Page : Fragment(){
 
     lateinit var myRecycleView:RecyclerView
@@ -254,7 +254,7 @@ class Home_Page : Fragment(){
             override fun onCartBtnClick(position: Int) {
                 val currentItem = featuredList[position]
                 val productId = currentItem.id
-                cartPageViewModel.getCartResponse(productId,requireContext())
+                cartPageViewModel.getCartResponse(productId,requireContext(),"1")
                 cartPageViewModel.result.observe(viewLifecycleOwner){
                     it.onSuccess {response->
                         totallCartProducts = response.Data.TotalShoppingCartProducts.toString()
@@ -316,7 +316,7 @@ class Home_Page : Fragment(){
         val imageList = ArrayList<SlideModel>() // Create image list
         val bannerDao = AppDatabase.getDatabase(requireContext()).bannerDao()
         //val sliderRepo = SliderRespository(bannerDao,requireContext())
-        sliderViewModel.getSlider()
+        sliderViewModel.getSlider(requireContext(),bannerDao)
         sliderViewModel.sliderResult.observe(viewLifecycleOwner){
             it.onSuccess {response ->
                 response.map {slider->
@@ -337,7 +337,8 @@ class Home_Page : Fragment(){
         shoppingCartViewModel.getCartProducts(requireContext())
         shoppingCartViewModel.response.observe(viewLifecycleOwner){
             it.onSuccess {
-                val items = it.Data.Cart.Items.toString()
+                val items = it.Data.Cart.Items.size.toString()
+                println("Items :"+items)
                 setShoppingCartQuantity(items)
             }.onFailure {
 

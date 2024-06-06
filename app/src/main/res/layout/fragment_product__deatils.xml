@@ -61,7 +61,6 @@
                     android:layout_marginBottom="12dp"
                     android:background="@drawable/badge"
                     android:gravity="center"
-                    android:text="0"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="@+id/productDetailsCart"
                     app:layout_constraintEnd_toEndOf="@+id/productDetailsCart"
@@ -91,7 +90,6 @@
                 android:id="@+id/productPageImg"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:background="@drawable/home_background"
                 android:scaleType="centerCrop"
                 />
 
@@ -205,12 +203,13 @@
 
                 <EditText
                     android:id="@+id/editText"
+                    android:text="1"
                     android:layout_width="207dp"
                     android:layout_height="37dp"
                     android:layout_marginStart="28dp"
                     android:background="@drawable/product_quantity_button"
                     android:gravity="center"
-                    android:hint="5"
+                    android:hint="1"
                     android:inputType="number"
                     android:textColorHint="#10CB3C"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -233,6 +232,7 @@
 
 
                     <ImageView
+                        android:id="@+id/productDetailsDecreaseCart"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/remove"
@@ -253,6 +253,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
+                        android:id="@+id/productDetailsIncreaseCart"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/plus_smaller" />

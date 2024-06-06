@@ -16,11 +16,10 @@ class CartViewModel():ViewModel(){
     private val _response = MutableLiveData<Result<CartResponse>>()
     val result:LiveData<Result<CartResponse>> = _response
 
-    fun getCartResponse(id:Int,context:Context){
-        form = listOf(FormValue("addtocart_12020.EnteredQuantity","1"),
-            FormValue("addtocart_12020.EnteredGender","Male"))
+    fun getCartResponse(id:Int,context:Context,quantity:String){
+        form = listOf(FormValue("addtocart_${id}.EnteredQuantity",quantity),
+            FormValue("addtocart_${id}.EnteredGender","Male"))
         val requestBody = CartBodyRequest(form)
-
         var repository = CartPageRepository(id)
 
         val result = repository.addProductCart(requestBody,context)
