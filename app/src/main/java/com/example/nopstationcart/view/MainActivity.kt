@@ -22,49 +22,50 @@ import com.example.nopstationcart.view.Login_Page.login_main
 import com.example.nopstationcart.view.Login_Page.login_mainDirections
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
+
 class MainActivity : AppCompatActivity() {
-    lateinit var bottomNav:BottomNavigationView
-    lateinit var navcontroller:NavController
-    lateinit var sharedPreferences:SharedPreferences
-    lateinit var binding:ActivityMainBinding
+    private lateinit var bottomNav: BottomNavigationView
+    private lateinit var navController: NavController
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        //setContentView(R.layout.activity_main)
-
-
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer) as NavHostFragment
-        val navController = navHostFragment.navController
+        navController = navHostFragment.navController
         bottomNav = findViewById(R.id.bottom_navigation)
         bottomNav.setupWithNavController(navController)
 
         sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("TOKEN", null)
         println("Token : $token")
-        //Home_Page().handleLogOut(token)
 
-
-        if(token!=null){
-            navController.navigate(R.id.home_Page)
-            Toast.makeText(this,"User already Logged In",Toast.LENGTH_LONG).show()
+        if (token != null) {
+            Toast.makeText(this, "User already Logged In", Toast.LENGTH_LONG).show()
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.home_Page -> bottomNav.visibility = View.VISIBLE
-                R.id.login_main -> {
-                    bottomNav.visibility = View.GONE
+                R.id.home_Page -> {
+                    bottomNav.visibility = View.VISIBLE
                 }
-                R.id.home_page_Category ->bottomNav.visibility = View.GONE
+                R.id.login_main -> {
+                    val sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+                    val token = sharedPreferences.getString("TOKEN", null)
+                    if (token != null) {
+                        navController.navigate(R.id.home_Page)
+                        println("User already has token: $token")
+                        Toast.makeText(this, "User already Logged In", Toast.LENGTH_LONG).show()
+                    } else {
+                        bottomNav.visibility = View.GONE
+                    }
+                }
+                R.id.home_page_Category -> bottomNav.visibility = View.GONE
                 else -> bottomNav.visibility = View.VISIBLE
             }
         }
-
     }
-
-
 }

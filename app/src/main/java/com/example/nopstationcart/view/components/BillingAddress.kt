@@ -25,6 +25,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -238,12 +239,27 @@ fun finalAmountBox(viewModel: CheckoutViewModel, navController: NavController, a
 
     val context = LocalContext.current
 
-    val result by viewModel.result.observeAsState()
+    val response by viewModel.result.observeAsState()
     val shoppingCartResult by shoppingCartViewModel.response.observeAsState()
     var subtotal =""
     var Shipping =""
     var Discount =""
     var orderTotal =""
+
+    // Handle the response inside a LaunchedEffect
+    LaunchedEffect(response) {
+        response?.let {
+            it.onSuccess {
+                Toast.makeText(context, "${it.message}, ${it.orderId}", Toast.LENGTH_LONG).show()
+                println(it.message)
+                navController.navigate(action)
+            }.onFailure {
+                println(it)
+                println("Failed API checkout")
+                Toast.makeText(context, "Checkout API Failed", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 
     OutlinedCard(modifier = Modifier
         .fillMaxWidth()
@@ -259,7 +275,7 @@ fun finalAmountBox(viewModel: CheckoutViewModel, navController: NavController, a
             it.onSuccess {
                 subtotal = it.Data.OrderTotals.SubTotal.toString()
                 Shipping = it.Data.OrderTotals.Shipping.toString()
-                Discount = it.Data.OrderTotals.OrderTotalDiscount.toString()
+                Discount = it.Data.OrderTotals.OrderTotalDiscount
                 orderTotal = it.Data.OrderTotals.OrderTotal.toString()
             }.onFailure {
                 subtotal = "0"
@@ -274,20 +290,7 @@ fun finalAmountBox(viewModel: CheckoutViewModel, navController: NavController, a
         TextField("Totall:",orderTotal)
         Spacer(modifier = Modifier.height(10.dp))
         Spacer(modifier = Modifier.height(10.dp))
-        TextButton(onClick = {
-            viewModel.getResponse()
-                             result?.let {
-                                 it.onSuccess {
-                                     Toast.makeText(context, "${it.message}, ${it.orderId}",Toast.LENGTH_LONG).show()
-                                     println(it.message)
-                                     navController.navigate(action)
-
-                                 }.onFailure {
-                                     println(it)
-                                     println("Failed api checkout")
-                                     Toast.makeText(context, "Checkout Api Failed",Toast.LENGTH_LONG).show()
-                                 }
-                             }},
+        TextButton(onClick = { viewModel.getResponse() },
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(start = 15.dp, end = 15.dp)

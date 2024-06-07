@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.nopstationcart.R
 import com.example.nopstationcart.databinding.FragmentLoginMainBinding
 import com.example.nopstationcart.viewmodel.LoginViewModel
@@ -27,13 +28,24 @@ class login_main : Fragment(R.layout.fragment_login_main) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentLoginMainBinding.bind(view)
         getApiResponse(view)
+        guestUser()
+    }
+    private fun guestUser(){
+        binding.guestUser.setOnClickListener {
+            val action = login_mainDirections.actionLoginMainToHomePage()
+            findNavController().navigate(action)
+        }
     }
 
     private fun getApiResponse(view: View) {
         binding.loginBtn.setOnClickListener {
             val userName = binding.userName.text.toString().trim()
             val userPassword = binding.userPassword.text.toString().trim()
-            loginViewModel.login(userName, userPassword)
+            if (userName.isNotEmpty() && userPassword.isNotEmpty()) {
+                loginViewModel.login(userName, userPassword)
+            } else {
+                Toast.makeText(requireContext(), "Please enter both username and password", Toast.LENGTH_LONG).show()
+            }
         }
 
         loginViewModel.loginResult.observe(viewLifecycleOwner) { result ->

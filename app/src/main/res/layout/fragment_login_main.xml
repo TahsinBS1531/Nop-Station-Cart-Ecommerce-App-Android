@@ -72,12 +72,12 @@
                     android:layout_height="40dp">
 
                     <TextView
-                        android:id="@+id/textView3"
+                        android:id="@+id/guestUser"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:fontFamily="@font/lato_400"
-                        android:text="New Customer"
+                        android:text="Guest User"
                         android:textSize="14sp"
                         android:textColor="#83868C"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -96,7 +96,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.912"
-                        app:layout_constraintStart_toEndOf="@+id/textView3"
+                        app:layout_constraintStart_toEndOf="@+id/guestUser"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="0.521" />
 

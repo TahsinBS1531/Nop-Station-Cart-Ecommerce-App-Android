@@ -50,6 +50,9 @@
         <action
             android:id="@+id/action_home_Page_to_product_Deatils"
             app:destination="@id/product_Deatils" />
+        <action
+            android:id="@+id/action_home_Page_to_logOutMain"
+            app:destination="@id/logOutMain" />
     </fragment>
     <fragment
         android:id="@+id/category_Fragment"
@@ -107,5 +110,14 @@
         <action
             android:id="@+id/action_checkout_main_to_home_Page"
             app:destination="@id/home_Page" />
+    </fragment>
+    <fragment
+        android:id="@+id/logOutMain"
+        android:name="com.example.nopstationcart.view.logOut.logOutMain"
+        android:label="fragment_log_out_main"
+        tools:layout="@layout/fragment_log_out_main" >
+        <action
+            android:id="@+id/action_logOutMain_to_login_main"
+            app:destination="@id/login_main" />
     </fragment>
 </navigation>
