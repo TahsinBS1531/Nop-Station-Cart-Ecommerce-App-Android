@@ -1,6 +1,7 @@
 package com.example.nopstationcart.view.Login_Page
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -52,7 +53,21 @@ class login_main : Fragment(R.layout.fragment_login_main) {
             result.onSuccess {
                 Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_LONG).show()
                 loginViewModel.saveToken(requireContext(), it.Data.Token)
-                view.findNavController().navigate(R.id.action_login_main_to_home_Page)
+
+                val sharedpreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+                val user = sharedpreferences.getString("User", null)
+
+                if(user=="Guest"){
+                    with(sharedpreferences.edit()) {
+                        remove("User")
+                        apply()
+                    }
+                    val action = login_mainDirections.actionLoginMainToCheckoutMain()
+                    findNavController().navigate(action)
+                }else{
+                    view.findNavController().navigate(R.id.action_login_main_to_home_Page)
+
+                }
             }.onFailure {
                 Toast.makeText(requireContext(), "Login Failed", Toast.LENGTH_LONG).show()
             }

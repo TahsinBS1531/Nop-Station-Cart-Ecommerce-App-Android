@@ -1,5 +1,7 @@
 package com.example.nopstationcart.view.Product_Shopping_Cart
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -56,9 +58,19 @@ class Product_Cart_Main : Fragment() {
     }
 
     fun handleCheckOutBtn(){
+        val sharedpreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+        val token = sharedpreferences.getString("TOKEN", null)
         binding.checkOutBtn.setOnClickListener {
-            val action = Product_Cart_MainDirections.actionProductCartMainToCheckoutMain()
-            findNavController().navigate(action)
+            if (token==null){
+                val editor = sharedpreferences.edit()
+                editor.putString("User", "Guest")
+                editor.apply()
+                val action = Product_Cart_MainDirections.actionProductCartMainToLoginMain()
+                findNavController().navigate(action)
+            }else{
+                val action = Product_Cart_MainDirections.actionProductCartMainToCheckoutMain()
+                findNavController().navigate(action)
+            }
         }
     }
 

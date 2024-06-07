@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_login_main_to_home_Page"
             app:destination="@id/home_Page" />
+        <action
+            android:id="@+id/action_login_main_to_checkout_main"
+            app:destination="@id/checkout_main" />
     </fragment>
     <fragment
         android:id="@+id/home_page_Category"
@@ -101,6 +104,9 @@
         <action
             android:id="@+id/action_product_Cart_Main_to_checkout_main"
             app:destination="@id/checkout_main" />
+        <action
+            android:id="@+id/action_product_Cart_Main_to_login_main"
+            app:destination="@id/login_main" />
     </fragment>
     <fragment
         android:id="@+id/checkout_main"

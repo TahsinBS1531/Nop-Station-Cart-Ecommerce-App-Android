@@ -14,7 +14,7 @@ class CheckoutViewModel:ViewModel() {
     val result: LiveData<Result<CheckoutResponse>> = _response
 
     fun getResponse(){
-        val result = repository.getCheckoutRepo()
-        result.observeForever { _response.postValue(it) }
+        val result1 = repository.getCheckoutRepo()
+        result1.observeForever { _response.postValue(it) }
     }
 }

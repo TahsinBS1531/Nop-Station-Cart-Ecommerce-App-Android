@@ -9,7 +9,7 @@ import com.example.nopstationcart.Services.Local.Converters.Converter
 import com.example.nopstationcart.Services.Model.CategoryList.Data
 import com.example.nopstationcart.Services.Model.Home_Page.Slider.Slider
 
-@Database(entities = [FeaturedProductsEntity::class,Slider::class,Data::class], version = 2, exportSchema = false)
+@Database(entities = [FeaturedProductsEntity::class,Slider::class,Data::class,OrderDetailsEntity::class], version = 3, exportSchema = false)
 @TypeConverters(Converter::class)
 
 abstract class AppDatabase:RoomDatabase() {
@@ -17,6 +17,8 @@ abstract class AppDatabase:RoomDatabase() {
     abstract fun bannerDao():BannerDao
 
     abstract fun categoryDao():CategoryDao
+
+    abstract fun orderDetailsDao():OrderDetailsDao
 
     companion object {
         @Volatile

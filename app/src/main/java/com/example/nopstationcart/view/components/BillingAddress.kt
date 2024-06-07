@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -30,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,8 +52,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.example.nopstationcart.R
+import com.example.nopstationcart.Services.Local.OrderDetailsEntity
 import com.example.nopstationcart.viewmodel.CheckoutViewModel
+import com.example.nopstationcart.viewmodel.OrderDetailsViewModel
 import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -95,21 +100,20 @@ fun customText(value:String, color: Color){
 }
 
 @Composable
-fun customTextField(label :String, value:String,isTrailingIcon:Boolean) {
+fun customTextField(label :String, value:String, onValueChange: (String) -> Unit,error: String,isTrailingIcon:Boolean) {
     var existingAddress by remember { mutableStateOf("") }
 
     TextField(
         value = value,
-        onValueChange = {existingAddress = it},
+        onValueChange = onValueChange,
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.Transparent),
         label = { Text(label) },
         trailingIcon = {
             if (isTrailingIcon) {
-                // Add your desired trailing icon here (e.g., IconButton, ImageVector)
                 IconButton(onClick = { /* Handle icon click here */ }) {
-                    Icon( // Replace with your desired icon content (e.g., Icons.Clear)
+                    Icon(
                         imageVector = Icons.Filled.KeyboardArrowDown,
                         contentDescription = "Clear text"
                     )
@@ -125,6 +129,7 @@ fun customTextField(label :String, value:String,isTrailingIcon:Boolean) {
             focusedLabelColor = colorResource(id = R.color.blue)
         ),
     )
+
 }
 
 @Composable
@@ -235,62 +240,104 @@ fun ButtonCheck(
 
 
 @Composable
-fun finalAmountBox(viewModel: CheckoutViewModel, navController: NavController, action: NavDirections, shoppingCartViewModel: ShoppingCartViewModel) {
+fun finalAmountBox(
+    viewModel: CheckoutViewModel,
+    navController: NavController,
+    action: NavDirections,
+    shoppingCartViewModel: ShoppingCartViewModel,
+    validation: Boolean,
+    productsEntity: OrderDetailsEntity,
+    orderDeatilsViewModel: OrderDetailsViewModel
+) {
 
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     val response by viewModel.result.observeAsState()
     val shoppingCartResult by shoppingCartViewModel.response.observeAsState()
-    var subtotal =""
-    var Shipping =""
-    var Discount =""
-    var orderTotal =""
 
-    // Handle the response inside a LaunchedEffect
-    LaunchedEffect(response) {
-        response?.let {
-            it.onSuccess {
-                Toast.makeText(context, "${it.message}, ${it.orderId}", Toast.LENGTH_LONG).show()
-                println(it.message)
-                navController.navigate(action)
-            }.onFailure {
-                println(it)
-                println("Failed API checkout")
-                Toast.makeText(context, "Checkout API Failed", Toast.LENGTH_LONG).show()
-            }
-        }
-    }
+    var subtotal by remember { mutableStateOf("") }
+    var shipping by remember { mutableStateOf("") }
+    var discount by remember { mutableStateOf("") }
+    var orderTotal by remember { mutableStateOf("") }
 
-    OutlinedCard(modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 16.dp, vertical = 8.dp)
-        .height(200.dp),
+//    LaunchedEffect(response) {
+//        response?.let {
+//            it.onSuccess {
+//                Toast.makeText(context, "${it.message}, ${it.orderId}", Toast.LENGTH_LONG).show()
+//                productsEntity.orderId = it.orderId
+//                println(it.message)
+//                println("Checkout Button is clicked and validation is okay")
+//                orderDeatilsViewModel.saveOrderDetails(context, productsEntity)
+//                navController.navigate(action)
+//            }.onFailure {
+//                println(it)
+//                println(it.message)
+//                println("Failed API checkout")
+//                Toast.makeText(context, "Checkout API Failed", Toast.LENGTH_LONG).show()
+//            }
+//        }
+//    }
+
+    OutlinedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .height(200.dp),
         colors = CardDefaults.outlinedCardColors(containerColor = colorResource(id = R.color.white)),
         shape = RoundedCornerShape(4.dp)
     ) {
-        
         Spacer(modifier = Modifier.height(10.dp))
         shoppingCartViewModel.getCartProducts(context)
         shoppingCartResult?.let {
-            it.onSuccess {
-                subtotal = it.Data.OrderTotals.SubTotal.toString()
-                Shipping = it.Data.OrderTotals.Shipping.toString()
-                Discount = it.Data.OrderTotals.OrderTotalDiscount
-                orderTotal = it.Data.OrderTotals.OrderTotal.toString()
+            it.onSuccess { data ->
+                subtotal = data.Data.OrderTotals.SubTotal.toString()
+                shipping = data.Data.OrderTotals.Shipping.toString()
+                discount = data.Data.OrderTotals.OrderTotalDiscount?:"0"
+                orderTotal = data.Data.OrderTotals.OrderTotal.toString()
             }.onFailure {
                 subtotal = "0"
-                Shipping = "0"
-                Discount = "0"
+                shipping = "0"
+                discount = "0"
                 orderTotal = "0"
             }
         }
-        TextField("Sub-Total:",subtotal)
-        TextField("Shipping:",Shipping)
-        TextField("Discount Amount:",Discount)
-        TextField("Totall:",orderTotal)
+        TextField("Sub-Total:", subtotal)
+        TextField("Shipping:", shipping)
+        TextField("Discount Amount:", discount)
+        TextField("Total:", orderTotal)
         Spacer(modifier = Modifier.height(10.dp))
-        Spacer(modifier = Modifier.height(10.dp))
-        TextButton(onClick = { viewModel.getResponse() },
+
+        TextButton(
+            onClick = {
+                viewModel.getResponse()
+                response?.let {
+                    it.onSuccess {
+                        Toast.makeText(context, "${it.message}, ${it.orderId}", Toast.LENGTH_LONG).show()
+                    }.onFailure {
+                        println("Failed API checkout")
+                        Toast.makeText(context, "Checkout API Failed", Toast.LENGTH_LONG).show()
+                    }
+                }
+//                if (validation) {
+//                    println("Validation passed, calling getResponse")
+//                    viewModel.getResponse()
+//                    response?.let {
+//                        it.onSuccess {
+//                            Toast.makeText(context, "${it.message}, ${it.orderId}", Toast.LENGTH_LONG).show()
+//                        }.onFailure {
+//                            println("Failed API checkout")
+//                            Toast.makeText(context, "Checkout API Failed", Toast.LENGTH_LONG).show()
+//                        }
+//                    }
+////                    coroutineScope.launch {
+////                        println("Checkout Button is clicked and validation is okay")
+////                        orderDeatilsViewModel.saveOrderDetails(context, productsEntity)
+////                    }
+//                } else {
+//                    Toast.makeText(context, "Please Fill all required fields", Toast.LENGTH_LONG).show()
+//                }
+            },
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(start = 15.dp, end = 15.dp)
@@ -305,11 +352,10 @@ fun finalAmountBox(viewModel: CheckoutViewModel, navController: NavController, a
                         start = Offset(0f, 0f),
                         end = Offset.Infinite
                     )
-                )) {
+                )
+        ) {
             Text(text = "Confirm", color = colorResource(id = R.color.white))
         }
-
-        
     }
 }
 
