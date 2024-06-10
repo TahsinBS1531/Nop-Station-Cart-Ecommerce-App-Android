@@ -56,7 +56,6 @@ import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Local.OrderDetailsEntity
 import com.example.nopstationcart.Services.Model.Remove_Cart.FormValue
 import com.example.nopstationcart.Services.Model.Remove_Cart.RemoveCartRequest
-import com.example.nopstationcart.Services.Model.Remove_Cart.RemoveCartResponse
 import com.example.nopstationcart.Services.Model.ShoppingCart.productCartItems
 import com.example.nopstationcart.viewmodel.CheckoutViewModel
 import com.example.nopstationcart.viewmodel.OrderDetailsViewModel
@@ -244,7 +243,6 @@ fun ButtonCheck(
     }
 }
 
-
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun finalAmountBox(
@@ -317,13 +315,17 @@ fun finalAmountBox(
                                 shoppingCartResult?.let {
                                     it.onSuccess { data ->
                                         val list = ArrayList<productCartItems>()
+                                        val removeList = ArrayList<FormValue>()
                                         list.clear()
+                                        removeList.clear()
                                         data.Data.Cart.Items.forEach { item ->
                                             val product = productCartItems(item.ProductName, item.UnitPrice, item.Picture.ImageUrl, item.Quantity, item.ProductId)
                                             list.add(product)
-                                            val productId = item.ProductId.toString()
-                                            removeCartItems(productId,removeCartViewModel,context,removeCart)
+                                            val productId = item.Id.toString()
+                                            val formValue = FormValue("removefromcart", productId)
+                                            removeList.add(formValue)
                                         }
+                                        removeCartItems(removeList, removeCartViewModel, context)
                                         productsEntity.products = list
                                         productsEntity.orderId = checkoutResponse.orderId
                                         productsEntity.total_amount = list.size.toString()
@@ -360,21 +362,21 @@ fun finalAmountBox(
             Text(text = "Confirm", color = colorResource(id = R.color.white))
         }
     }
-}
 
-private fun removeCartItems(productId: String, removeCartViewModel: RemoveCartViewModel, context: Context, removeCart: Result<RemoveCartResponse>?){
-    val formValue = FormValue("removefromcart", productId)
-    val request = RemoveCartRequest(listOf(formValue))
-
-    removeCartViewModel.getTheCartRemoved(request, context)
     removeCart?.let {
         it.onSuccess {
-            println("Removed api success")
+            println("Removed API success")
         }.onFailure {
-            println("Removed api unsuccess")
+            println("Removed API unsuccess")
         }
     }
 }
+
+private fun removeCartItems(products: ArrayList<FormValue>, removeCartViewModel: RemoveCartViewModel, context: Context) {
+    val request = RemoveCartRequest(products)
+    removeCartViewModel.getTheCartRemoved(request, context)
+}
+
 
 
 
