@@ -39,10 +39,16 @@ class login_main : Fragment(R.layout.fragment_login_main) {
     }
 
     private fun getApiResponse(view: View) {
+        var userName = ""
         binding.loginBtn.setOnClickListener {
-            val userName = binding.userName.text.toString().trim()
+            userName = binding.userName.text.toString().trim()
             val userPassword = binding.userPassword.text.toString().trim()
             if (userName.isNotEmpty() && userPassword.isNotEmpty()) {
+                val sharedpreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+                val editor = sharedpreferences.edit()
+                println("Email From login page : $userName")
+                editor.putString("Email",userName)
+                editor.apply()
                 loginViewModel.login(userName, userPassword)
             } else {
                 Toast.makeText(requireContext(), "Please enter both username and password", Toast.LENGTH_LONG).show()

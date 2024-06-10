@@ -126,4 +126,9 @@
             android:id="@+id/action_logOutMain_to_login_main"
             app:destination="@id/login_main" />
     </fragment>
+    <fragment
+        android:id="@+id/order_Details"
+        android:name="com.example.nopstationcart.view.Order_Details.Order_Details"
+        android:label="fragment_order__details"
+        tools:layout="@layout/fragment_order__details" />
 </navigation>

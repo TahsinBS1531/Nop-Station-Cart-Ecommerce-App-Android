@@ -26,6 +26,7 @@ class RemoveCartRepository {
         call.enqueue(object: Callback<RemoveCartResponse> {
             override fun onResponse(p0: Call<RemoveCartResponse>, response: Response<RemoveCartResponse>) {
                 if(response.isSuccessful){
+                    println("Product is removed")
                     response.body()?.let {
                         _result.postValue(Result.success(it))
                     }?:_result.postValue(Result.failure(Throwable("Response Body is Null")))

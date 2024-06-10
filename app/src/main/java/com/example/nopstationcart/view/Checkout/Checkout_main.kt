@@ -1,5 +1,6 @@
 package com.example.nopstationcart.view.Checkout
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -63,6 +64,7 @@ import com.example.nopstationcart.view.components.customTextField
 import com.example.nopstationcart.view.components.finalAmountBox
 import com.example.nopstationcart.viewmodel.CheckoutViewModel
 import com.example.nopstationcart.viewmodel.OrderDetailsViewModel
+import com.example.nopstationcart.viewmodel.RemoveCartViewModel
 import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
 
 class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
@@ -283,22 +285,39 @@ class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
                     val viewModel: CheckoutViewModel by viewModels()
                     val shoppingCartViewModel:ShoppingCartViewModel by viewModels()
                     val orderDeatilsViewModel: OrderDetailsViewModel by viewModels()
+                    val removeCartViewModel:RemoveCartViewModel by viewModels()
                     val action = Checkout_mainDirections.actionCheckoutMainToHomePage()
+
+                    val sharedpreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+                    val token = sharedpreferences.getString("TOKEN", null)
+                    var userEmail = sharedpreferences.getString("Email",null)
+
+                    if(userEmail==null){
+                        userEmail ="None"
+                    }
+                    //println("Email from the checkout page : $userEmail")
+
                     val navController = findNavController()
                     val validation = validateFields()
                     shoppingCartViewModel.getCartProducts(requireContext())
                     val list = ArrayList<productCartItems>()
                     shoppingCartViewModel.response.observe(viewLifecycleOwner){
                         it.onSuccess {
-
-                            it.Data.Cart.Items.map {
+                            it.Data.Cart.Items.forEach {
+                                //println("Product Name: ${it.ProductName}")
                                 val product = productCartItems(it.ProductName,it.UnitPrice,it.Picture.ImageUrl,it.Quantity,it.ProductId)
                                 list.add(product)
                             }
                         }
                     }
-                    val productsEntity = OrderDetailsEntity("",existingAddress,billingAddress,firstName,lastName,email,company,country,state,zip,city,phoneNumber, faxNumber,"",list)
-                    finalAmountBox(viewModel,navController,action,shoppingCartViewModel,validation,productsEntity,orderDeatilsViewModel)
+                    //println("Products size :"+list.size)
+                    val productsEntity = token?.let {
+                        OrderDetailsEntity("", it,userEmail,existingAddress,billingAddress,firstName,lastName,email,company,country,state,zip,city,phoneNumber, faxNumber,"", products = list)
+                    }
+
+                    if (productsEntity != null) {
+                        finalAmountBox(viewModel,navController,action,shoppingCartViewModel,validation,productsEntity,orderDeatilsViewModel,removeCartViewModel)
+                    }
 
 
                 }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="30dp"
+        app:cardBackgroundColor="#9AA0FA"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/OrderDetUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="User Name: " />
+
+            <TextView
+                android:id="@+id/OrderDetUserEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="User Email: " />
+
+            <TextView
+                android:id="@+id/OrderDetTotallProducts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Totall Products: " />
+
+            <TextView
+                android:id="@+id/OrderDetOrderId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Order Id:" />
+
+
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

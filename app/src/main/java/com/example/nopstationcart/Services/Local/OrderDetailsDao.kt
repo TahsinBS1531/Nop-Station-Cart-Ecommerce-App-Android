@@ -8,8 +8,8 @@ import androidx.room.Query
 @Dao
 interface OrderDetailsDao {
 
-    @Query("SELECT * FROM order_details WHERE orderId = :orderId")
-    suspend fun getOrder(orderId: String): OrderDetailsEntity
+    @Query("SELECT * FROM order_details WHERE userEmail = :userEmail")
+    suspend fun getOrder(userEmail: String): List<OrderDetailsEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrder(order: OrderDetailsEntity)

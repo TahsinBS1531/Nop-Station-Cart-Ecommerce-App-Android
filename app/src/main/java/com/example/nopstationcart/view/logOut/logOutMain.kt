@@ -48,11 +48,13 @@ class logOutMain : Fragment() {
                 val sharedpreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
                 with(sharedpreferences.edit()) {
                     remove("TOKEN")
+                    remove("Email")
                     apply()
                 }
 
                 val token = sharedpreferences.getString("TOKEN", null)
-                println("Token after successful log out: $token")
+                val email = sharedpreferences.getString("Email", null)
+                println("Email after successful log out: $email")
 
                 Toast.makeText(requireContext(), "Log Out Successful", Toast.LENGTH_LONG).show()
                 //val action = logOutMainDirections.actionLogOutMainToLoginMain()

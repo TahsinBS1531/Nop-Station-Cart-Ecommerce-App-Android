@@ -8,6 +8,8 @@ import com.example.nopstationcart.Services.Model.ShoppingCart.productCartItems
 @Entity(tableName = "order_details")
 data class OrderDetailsEntity(
     @PrimaryKey var orderId: String,
+    val token:String,
+    val userEmail:String,
     val existing_address: String,
     val billing_address: String,
     val firstName: String,
@@ -20,7 +22,7 @@ data class OrderDetailsEntity(
     val city:String,
     val phone_number:String,
     val fax_number:String,
-    val total_amount:String,
-    val products:List<productCartItems>
+    var total_amount:String,
+    var products:List<productCartItems>
 
 )

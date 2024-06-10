@@ -1,5 +1,7 @@
 package com.example.nopstationcart.view.components
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,7 +21,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -53,8 +54,13 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Local.OrderDetailsEntity
+import com.example.nopstationcart.Services.Model.Remove_Cart.FormValue
+import com.example.nopstationcart.Services.Model.Remove_Cart.RemoveCartRequest
+import com.example.nopstationcart.Services.Model.Remove_Cart.RemoveCartResponse
+import com.example.nopstationcart.Services.Model.ShoppingCart.productCartItems
 import com.example.nopstationcart.viewmodel.CheckoutViewModel
 import com.example.nopstationcart.viewmodel.OrderDetailsViewModel
+import com.example.nopstationcart.viewmodel.RemoveCartViewModel
 import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
 import kotlinx.coroutines.launch
 
@@ -239,6 +245,7 @@ fun ButtonCheck(
 }
 
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun finalAmountBox(
     viewModel: CheckoutViewModel,
@@ -246,38 +253,25 @@ fun finalAmountBox(
     action: NavDirections,
     shoppingCartViewModel: ShoppingCartViewModel,
     validation: Boolean,
-    productsEntity: OrderDetailsEntity,
-    orderDeatilsViewModel: OrderDetailsViewModel
+    productsEntity: OrderDetailsEntity?,
+    orderDetailsViewModel: OrderDetailsViewModel,
+    removeCartViewModel: RemoveCartViewModel
 ) {
-
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
     val response by viewModel.result.observeAsState()
+    val removeCart by removeCartViewModel.response.observeAsState()
     val shoppingCartResult by shoppingCartViewModel.response.observeAsState()
 
-    var subtotal by remember { mutableStateOf("") }
-    var shipping by remember { mutableStateOf("") }
-    var discount by remember { mutableStateOf("") }
-    var orderTotal by remember { mutableStateOf("") }
+    var subtotal by remember { mutableStateOf("0") }
+    var shipping by remember { mutableStateOf("0") }
+    var discount by remember { mutableStateOf("0") }
+    var orderTotal by remember { mutableStateOf("0") }
 
-//    LaunchedEffect(response) {
-//        response?.let {
-//            it.onSuccess {
-//                Toast.makeText(context, "${it.message}, ${it.orderId}", Toast.LENGTH_LONG).show()
-//                productsEntity.orderId = it.orderId
-//                println(it.message)
-//                println("Checkout Button is clicked and validation is okay")
-//                orderDeatilsViewModel.saveOrderDetails(context, productsEntity)
-//                navController.navigate(action)
-//            }.onFailure {
-//                println(it)
-//                println(it.message)
-//                println("Failed API checkout")
-//                Toast.makeText(context, "Checkout API Failed", Toast.LENGTH_LONG).show()
-//            }
-//        }
-//    }
+    LaunchedEffect(Unit) {
+        shoppingCartViewModel.getCartProducts(context)
+    }
 
     OutlinedCard(
         modifier = Modifier
@@ -288,12 +282,12 @@ fun finalAmountBox(
         shape = RoundedCornerShape(4.dp)
     ) {
         Spacer(modifier = Modifier.height(10.dp))
-        shoppingCartViewModel.getCartProducts(context)
+
         shoppingCartResult?.let {
             it.onSuccess { data ->
                 subtotal = data.Data.OrderTotals.SubTotal.toString()
                 shipping = data.Data.OrderTotals.Shipping.toString()
-                discount = data.Data.OrderTotals.OrderTotalDiscount?:"0"
+                discount = data.Data.OrderTotals.OrderTotalDiscount ?: "0"
                 orderTotal = data.Data.OrderTotals.OrderTotal.toString()
             }.onFailure {
                 subtotal = "0"
@@ -302,41 +296,50 @@ fun finalAmountBox(
                 orderTotal = "0"
             }
         }
-        TextField("Sub-Total:", subtotal)
+
+        TextField("Sub-Total", subtotal)
         TextField("Shipping:", shipping)
         TextField("Discount Amount:", discount)
         TextField("Total:", orderTotal)
+
         Spacer(modifier = Modifier.height(10.dp))
 
         TextButton(
             onClick = {
+                println("Checkout button is clicked")
                 viewModel.getResponse()
-                response?.let {
-                    it.onSuccess {
-                        Toast.makeText(context, "${it.message}, ${it.orderId}", Toast.LENGTH_LONG).show()
-                    }.onFailure {
-                        println("Failed API checkout")
-                        Toast.makeText(context, "Checkout API Failed", Toast.LENGTH_LONG).show()
+                coroutineScope.launch {
+                    response?.let {
+                        it.onSuccess { checkoutResponse ->
+                            println("API Response Successful")
+                            Toast.makeText(context, "${checkoutResponse.message}, ${checkoutResponse.orderId}", Toast.LENGTH_LONG).show()
+                            if (productsEntity != null) {
+                                shoppingCartResult?.let {
+                                    it.onSuccess { data ->
+                                        val list = ArrayList<productCartItems>()
+                                        list.clear()
+                                        data.Data.Cart.Items.forEach { item ->
+                                            val product = productCartItems(item.ProductName, item.UnitPrice, item.Picture.ImageUrl, item.Quantity, item.ProductId)
+                                            list.add(product)
+                                            val productId = item.ProductId.toString()
+                                            removeCartItems(productId,removeCartViewModel,context,removeCart)
+                                        }
+                                        productsEntity.products = list
+                                        productsEntity.orderId = checkoutResponse.orderId
+                                        productsEntity.total_amount = list.size.toString()
+                                        orderDetailsViewModel.saveOrderDetails(context, productsEntity)
+                                        navController.navigate(action)
+                                    }.onFailure {
+                                        println("Failed to fetch cart products")
+                                    }
+                                }
+                            }
+                        }.onFailure {
+                            println("Failed API checkout")
+                            Toast.makeText(context, "Checkout API Failed", Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
-//                if (validation) {
-//                    println("Validation passed, calling getResponse")
-//                    viewModel.getResponse()
-//                    response?.let {
-//                        it.onSuccess {
-//                            Toast.makeText(context, "${it.message}, ${it.orderId}", Toast.LENGTH_LONG).show()
-//                        }.onFailure {
-//                            println("Failed API checkout")
-//                            Toast.makeText(context, "Checkout API Failed", Toast.LENGTH_LONG).show()
-//                        }
-//                    }
-////                    coroutineScope.launch {
-////                        println("Checkout Button is clicked and validation is okay")
-////                        orderDeatilsViewModel.saveOrderDetails(context, productsEntity)
-////                    }
-//                } else {
-//                    Toast.makeText(context, "Please Fill all required fields", Toast.LENGTH_LONG).show()
-//                }
             },
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -358,6 +361,23 @@ fun finalAmountBox(
         }
     }
 }
+
+private fun removeCartItems(productId: String, removeCartViewModel: RemoveCartViewModel, context: Context, removeCart: Result<RemoveCartResponse>?){
+    val formValue = FormValue("removefromcart", productId)
+    val request = RemoveCartRequest(listOf(formValue))
+
+    removeCartViewModel.getTheCartRemoved(request, context)
+    removeCart?.let {
+        it.onSuccess {
+            println("Removed api success")
+        }.onFailure {
+            println("Removed api unsuccess")
+        }
+    }
+}
+
+
+
 
 @Composable
 fun TextField(title:String, amount:String, mode:String ="default"){

@@ -137,7 +137,6 @@ class Product_Cart_Main : Fragment() {
             response.onSuccess {
                 if(position>=0 && position <productList.size){
                     Toast.makeText(requireContext(),"Cart Item is removed",Toast.LENGTH_LONG).show()
-
                     handlePrices(it.Data.OrderTotals.SubTotal,it.Data.OrderTotals.OrderTotal,it.Data.OrderTotals.Shipping)
                     binding.CartPageItems.text = "${it.Data.Cart.Items.size.toString()} Items"
                     binding.cartPageCartAmount.text =it.Data.Cart.Items.size.toString()
