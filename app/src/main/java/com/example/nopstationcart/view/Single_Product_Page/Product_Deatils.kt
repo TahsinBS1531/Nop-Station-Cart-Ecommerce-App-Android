@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.nopstationcart.R
+import com.example.nopstationcart.Services.Netwrok.InternetStatus
 import com.example.nopstationcart.databinding.FragmentProductDeatilsBinding
 import com.example.nopstationcart.viewmodel.CartViewModel
 import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
@@ -96,19 +97,24 @@ class Product_Deatils : Fragment() {
     fun handleCartBtn(id: String) {
         binding?.apply {
             ProductDetailsAddToCart.setOnClickListener {
-                println("Cart Amount From the Details page : $cartAmount")
-                cartPageViewModel.getCartResponse(id.toInt(), requireContext(), cartAmount.toString())
-                cartPageViewModel.result.observe(viewLifecycleOwner) { response ->
-                    response.onSuccess {
-                        handleCartAmount()
-                        println("Total Cart Items: ${it.Data.TotalShoppingCartProducts}")
-                        println("Amount: $cartAmount")
-                        Toast.makeText(requireContext(), it.Message, Toast.LENGTH_LONG).show()
-                    }.onFailure {
-                        Toast.makeText(requireContext(), "${it.cause?.cause}", Toast.LENGTH_LONG).show()
-                        println(it.cause?.message)
+                if(InternetStatus.isOnline(requireContext())){
+                    println("Cart Amount From the Details page : $cartAmount")
+                    cartPageViewModel.getCartResponse(id.toInt(), requireContext(), cartAmount.toString())
+                    cartPageViewModel.result.observe(viewLifecycleOwner) { response ->
+                        response.onSuccess {
+                            handleCartAmount()
+                            println("Total Cart Items: ${it.Data.TotalShoppingCartProducts}")
+                            println("Amount: $cartAmount")
+                            Toast.makeText(requireContext(), it.Message, Toast.LENGTH_LONG).show()
+                        }.onFailure {
+                            Toast.makeText(requireContext(), "${it.cause?.cause}", Toast.LENGTH_LONG).show()
+                            println(it.cause?.message)
+                        }
                     }
+                }else{
+                    Toast.makeText(requireContext(), "No Internet Connection. Please Connect to a Network", Toast.LENGTH_LONG).show()
                 }
+
             }
 
             productDetailsIncreaseCart.setOnClickListener {

@@ -37,7 +37,7 @@
                     android:fontFamily="@font/lato_bold"
                     android:text="Order Details"
                     android:textAlignment="center"
-                    android:textColor="#313437"
+                    android:textColor="#10CB3C"
                     android:textSize="15sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

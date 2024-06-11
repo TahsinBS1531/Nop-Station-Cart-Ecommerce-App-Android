@@ -17,6 +17,7 @@ import com.example.nopstationcart.Services.Model.Remove_Cart.RemoveCartRequest
 import com.example.nopstationcart.Services.Model.ShoppingCart.productCartItems
 import com.example.nopstationcart.Services.Model.Update_Cart.FormValue
 import com.example.nopstationcart.Services.Model.Update_Cart.UpdateCartRequest
+import com.example.nopstationcart.Services.Netwrok.InternetStatus
 import com.example.nopstationcart.databinding.FragmentProductCartMainBinding
 import com.example.nopstationcart.dummyData.cartPrices
 import com.example.nopstationcart.view.Adapters.productCartAdapter
@@ -171,43 +172,47 @@ class Product_Cart_Main : Fragment() {
         val ob = Home_Page()
         ob.startShimmer(binding.shimmerLayoutProductCart,binding.productCartRecycle)
 
-        shoppingCartViewModel.getCartProducts(requireContext())
-        shoppingCartViewModel.response.observe(viewLifecycleOwner) { result ->
-            result.onSuccess { response ->
-                productsList.clear() // Clear the list to avoid duplicates
-                binding.cartPageCartAmount.text = response.Data.Cart.Items.size.toString()
-                binding.CartPageItems.text = "${response.Data.Cart.Items.size.toString()} Items"
-                if(response.Data.Cart.Items.size==0){
-                    ob.stopShimmer(binding.shimmerLayoutProductCart,binding.productCartRecycle)
-                    Toast.makeText(requireContext(),"There is no product in the cart",Toast.LENGTH_LONG).show()
-                }
-                response.Data.Cart.Items.forEach {
-                    val title = it.ProductName
-                    val image = it.Picture.ImageUrl
-                    val price = it.UnitPrice
-                    val quantity = it.Quantity
-                    val productId = it.Id
-                    println(quantity)
-                    val item = productCartItems(tittle = title, imageResID = image, price = price, quantity = quantity,
-                        productId = productId
-                    )
-                    productsList.add(item)
-                    //stopping shimmer
-                    ob.stopShimmer(binding.shimmerLayoutProductCart,binding.productCartRecycle)
+        if(InternetStatus.isOnline(requireContext())){
+            shoppingCartViewModel.getCartProducts(requireContext())
+            shoppingCartViewModel.response.observe(viewLifecycleOwner) { result ->
+                result.onSuccess { response ->
+                    productsList.clear() // Clear the list to avoid duplicates
+                    binding.cartPageCartAmount.text = response.Data.Cart.Items.size.toString()
+                    binding.CartPageItems.text = "${response.Data.Cart.Items.size.toString()} Items"
+                    if(response.Data.Cart.Items.size==0){
+                        ob.stopShimmer(binding.shimmerLayoutProductCart,binding.productCartRecycle)
+                        Toast.makeText(requireContext(),"There is no product in the cart",Toast.LENGTH_LONG).show()
+                    }
+                    response.Data.Cart.Items.forEach {
+                        val title = it.ProductName
+                        val image = it.Picture.ImageUrl
+                        val price = it.UnitPrice
+                        val quantity = it.Quantity
+                        val productId = it.Id
+                        println(quantity)
+                        val item = productCartItems(tittle = title, imageResID = image, price = price, quantity = quantity,
+                            productId = productId
+                        )
+                        productsList.add(item)
+                        //stopping shimmer
+                        ob.stopShimmer(binding.shimmerLayoutProductCart,binding.productCartRecycle)
 
-                }
-                adapter.notifyDataSetChanged() // Notify adapter of data changes
-                val total:String? = response.Data.OrderTotals.OrderTotal?:"0"
-                val subtotal:String? = response.Data.OrderTotals.SubTotal?:"0"
-                val shippingPrice:String? = response.Data.OrderTotals.Shipping.toString()?:"0"
-                if (subtotal != null && total !=null) {
-                    handlePrices(subtotal,total,shippingPrice.toString())
-                    cartPrices(subtotal,total,shippingPrice.toString())
-                }
+                    }
+                    adapter.notifyDataSetChanged() // Notify adapter of data changes
+                    val total:String? = response.Data.OrderTotals.OrderTotal?:"0"
+                    val subtotal:String? = response.Data.OrderTotals.SubTotal?:"0"
+                    val shippingPrice:String? = response.Data.OrderTotals.Shipping.toString()?:"0"
+                    if (subtotal != null && total !=null) {
+                        handlePrices(subtotal,total,shippingPrice.toString())
+                        cartPrices(subtotal,total,shippingPrice.toString())
+                    }
 
-            }.onFailure {
-                Toast.makeText(requireContext(), "Shopping cart Api call failed", Toast.LENGTH_LONG).show()
+                }.onFailure {
+                    Toast.makeText(requireContext(), "Shopping cart Api call failed", Toast.LENGTH_LONG).show()
+                }
             }
+        }else{
+            Toast.makeText(requireContext(), "No Internet Connection. Please Connect to a Network", Toast.LENGTH_LONG).show()
         }
 
 

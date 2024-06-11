@@ -40,10 +40,10 @@ class OrderDetailsAdapter(
         position: Int
     ) {
         val currentItem = orderDetails[position]
-        holder.orderId.text = "Order Id: ${currentItem.orderId}"
-        holder.totalProducts.text = "Total Products: ${currentItem.totalProducts}"
-        holder.userName.text = "Name: ${currentItem.name}"
-        holder.userEmail.text = "Email: ${currentItem.email}"
+        holder.orderId.text = "Order Date: ${currentItem.orderDate}"
+        holder.totalProducts.text = "Total Amount: ${currentItem.orderTotal}"
+        holder.userName.text = "Order Id: ${currentItem.orderId}"
+        holder.userEmail.text = "Total Products: ${currentItem.totalProducts}"
     }
 
     override fun getItemCount(): Int {
