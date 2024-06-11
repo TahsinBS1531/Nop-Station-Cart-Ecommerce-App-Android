@@ -64,7 +64,8 @@ class OrderDetailsInfo : Fragment() {
         binding.OrderDemail2.text = "Email : ${email}"
         binding.OrderDetUserName.text = "Name : ${name}"
 
-        binding.orderDetailsBackBtn.setOnClickListener {
+
+        binding.OrderDBackBtn.setOnClickListener {
             findNavController().popBackStack()
         }
 

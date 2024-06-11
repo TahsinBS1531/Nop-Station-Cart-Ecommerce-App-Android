@@ -8,6 +8,13 @@
     tools:context=".view.Login_Page.login_main">
 
     <!-- TODO: Update blank fragment layout -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -23,39 +30,58 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.498">
-            
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="10dp"
                 android:orientation="vertical">
-                
-                <EditText
-                    android:id="@+id/userName"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="340dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:hint="Username or Email"
-                    android:paddingBottom="20dp"
-                    android:textSize="14sp"
-                    android:textColorHint="#83868C"
-                    android:inputType="textEmailAddress"
-                    android:drawableEnd="@drawable/login_person_icon" />
 
-                <EditText
-                    android:id="@+id/userPassword"
-                    android:layout_marginTop="20dp"
-                    android:layout_width="340dp"
-                    android:textSize="14sp"
-                    android:paddingBottom="20dp"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="333dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_marginStart="12dp"
+                    style = "?attr/textInputFilledStyle"
+                    android:hint="Username or Email"
+                    android:textColorHint="@color/hint_color"
+                    app:boxStrokeColor="#D4D3DA"
+                    android:layout_marginTop="10dp"
+                    app:endIconMode="custom"
+                    app:endIconDrawable="@drawable/login_person_icon">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/userName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato_bold"
+                        android:background="@color/white"
+                        android:inputType="textEmailAddress"
+                        android:textFontWeight="400" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="333dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    style = "?attr/textInputFilledStyle"
                     android:hint="Password"
-                    android:textColorHint="#83868C"
-                    android:inputType="textPassword"
-                    android:drawableEnd="@drawable/login_eye" />
-                
+                    android:textColorHint="@color/hint_color"
+                    app:boxStrokeColor="#D4D3DA"
+                    android:layout_marginTop="10dp"
+                    app:endIconMode="password_toggle"
+                    app:endIconDrawable="@drawable/login_eye">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/userPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato_bold"
+                        android:background="@color/white"
+                        android:inputType="textPassword"
+                        android:textFontWeight="400" />
+                </com.google.android.material.textfield.TextInputLayout>
+
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/loginBtn"
                     android:layout_width="340dp"
@@ -104,14 +130,14 @@
 
 
 
-                
+
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    
+
 
 
 </FrameLayout>

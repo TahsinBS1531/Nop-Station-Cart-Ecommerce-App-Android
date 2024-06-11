@@ -42,8 +42,10 @@ class productCartAdapter(private val itemList: MutableList<productCartItems> , p
                 val newQuantity = itemList[adapterPosition].quantity.toInt() - 1
                 if (newQuantity >= 0) {
                     listener.onDecreasecart(adapterPosition,productId,newQuantity.toString())
-                    itemList[adapterPosition].quantity = newQuantity
-                    quantity.text = newQuantity.toString()
+                    if(newQuantity!=0){
+                        itemList[adapterPosition].quantity = newQuantity
+                        quantity.text = newQuantity.toString()
+                    }
                     notifyItemChanged(adapterPosition)
                 }
             }

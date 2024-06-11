@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".view.Product_Shopping_Cart.Product_Cart_Main">
 
+    <ProgressBar
+        android:id="@+id/progressBarCart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/scrollView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cart_appBar" />
+
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/cart_appBar"
         android:layout_width="match_parent"
@@ -30,7 +42,7 @@
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Back"
+                    android:text="Shopping Cart"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -73,26 +85,29 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cart_appBar"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/cart_appBar">
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#E9EDF2"
                 android:orientation="horizontal"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
-                android:weightSum="10"
-                android:background="#E9EDF2">
+                android:weightSum="10">
 
                 <TextView
                     android:id="@+id/textView7"
@@ -120,13 +135,14 @@
                     android:text="5 ITEM(S)"
                     android:textSize="10sp" />
             </LinearLayout>
+
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/shimmer_layout_product_cart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:shimmer_auto_start="true"
-                app:shimmer_duration="1500"
-                android:visibility="gone">
+                app:shimmer_duration="1500">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -135,23 +151,25 @@
                     android:padding="8dp">
 
                     <!-- Placeholder views for shimmer effect -->
-                    <include layout="@layout/single_item_product_cart_shimmer"/>
-                    <include layout="@layout/single_item_product_cart_shimmer"/>
-                    <include layout="@layout/single_item_product_cart_shimmer"/>
+                    <include layout="@layout/single_item_product_cart_shimmer" />
+
+                    <include layout="@layout/single_item_product_cart_shimmer" />
+
+                    <include layout="@layout/single_item_product_cart_shimmer" />
 
                     <!-- Add more placeholder views as needed -->
                 </LinearLayout>
 
             </com.facebook.shimmer.ShimmerFrameLayout>
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/productCartRecycle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:foregroundGravity="center"
-                    android:paddingTop="20dp"
-                    android:paddingBottom="10dp"
-                    tools:listitem="@layout/single_item_product_cart"
-                    />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/productCartRecycle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:foregroundGravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="10dp"
+                tools:listitem="@layout/single_item_product_cart" />
 
 
             <com.google.android.material.divider.MaterialDivider
@@ -178,11 +196,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="60dp"
+                    android:fontFamily="@font/lato_bold"
                     android:paddingTop="10dp"
                     android:text="$550.02"
                     android:textColor="#10CB3C"
-                    android:textSize="16sp"
-                    android:fontFamily="@font/lato_bold" />
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <com.google.android.material.divider.MaterialDivider
@@ -209,11 +227,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="60dp"
+                    android:fontFamily="@font/lato_bold"
                     android:paddingTop="10dp"
                     android:text="$0.00"
                     android:textColor="#10CB3C"
-                    android:textSize="16sp"
-                    android:fontFamily="@font/lato_bold" />
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <com.google.android.material.divider.MaterialDivider
@@ -240,11 +258,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="60dp"
+                    android:fontFamily="@font/lato_bold"
                     android:paddingTop="10dp"
                     android:text="$5.00"
                     android:textColor="#10CB3C"
-                    android:textSize="16sp"
-                    android:fontFamily="@font/lato_bold" />
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -256,8 +274,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
-                    android:padding="20dp"
                     android:background="@drawable/cart_checkout_btn"
+                    android:padding="20dp"
                     android:text="PROCEED TO CHECKOUT"
                     android:textColor="@color/white" />
             </LinearLayout>

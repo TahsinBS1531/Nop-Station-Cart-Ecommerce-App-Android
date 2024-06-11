@@ -49,6 +49,8 @@ class login_main : Fragment(R.layout.fragment_login_main) {
                 println("Email From login page : $userName")
                 editor.putString("Email",userName)
                 editor.apply()
+
+                binding.progressBar.visibility = View.VISIBLE
                 loginViewModel.login(userName, userPassword)
             } else {
                 Toast.makeText(requireContext(), "Please enter both username and password", Toast.LENGTH_LONG).show()
@@ -57,6 +59,7 @@ class login_main : Fragment(R.layout.fragment_login_main) {
 
         loginViewModel.loginResult.observe(viewLifecycleOwner) { result ->
             result.onSuccess {
+                binding.progressBar.visibility = View.GONE
                 Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_LONG).show()
                 loginViewModel.saveToken(requireContext(), it.Data.Token)
 
@@ -75,7 +78,8 @@ class login_main : Fragment(R.layout.fragment_login_main) {
 
                 }
             }.onFailure {
-                Toast.makeText(requireContext(), "Login Failed", Toast.LENGTH_LONG).show()
+                binding.progressBar.visibility = View.GONE
+                Toast.makeText(requireContext(), "Login Failed . Please Provide Valid Credentials", Toast.LENGTH_LONG).show()
             }
         }
     }

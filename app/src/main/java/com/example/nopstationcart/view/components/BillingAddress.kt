@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedCard
@@ -270,6 +271,8 @@ fun finalAmountBox(
     var shipping by remember { mutableStateOf("0") }
     var discount by remember { mutableStateOf("0") }
     var orderTotal by remember { mutableStateOf("0") }
+    var isLoading by remember { mutableStateOf(false) }
+
 
     LaunchedEffect(Unit) {
         shoppingCartViewModel.getCartProducts(context)
@@ -306,38 +309,55 @@ fun finalAmountBox(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        TextButton(
-            onClick = {
-                println("Checkout button is clicked")
-                viewModel.getResponse()
-            },
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(start = 15.dp, end = 15.dp)
-                .fillMaxWidth()
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            Color(0xFF0BF7EB),
-                            Color(0xFF07C5FB),
-                            Color(0xFF088DF9)
-                        ),
-                        start = Offset(0f, 0f),
-                        end = Offset.Infinite
+        if(isLoading){
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 16.dp)
+            )
+        }else{
+            TextButton(
+                onClick = {
+                    if(validation){
+                        isLoading = true
+                        println("Checkout button is clicked")
+                        viewModel.getResponse()
+                    }else{
+                        Toast.makeText(context,"Please Fill all the fields",Toast.LENGTH_LONG).show()
+                    }
+
+                },
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(start = 15.dp, end = 15.dp)
+                    .fillMaxWidth()
+                    .background(
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                Color(0xFF0BF7EB),
+                                Color(0xFF07C5FB),
+                                Color(0xFF088DF9)
+                            ),
+                            start = Offset(0f, 0f),
+                            end = Offset.Infinite
+                        )
                     )
-                )
-        ) {
-            Text(text = "Confirm", color = colorResource(id = R.color.white))
+            ) {
+                Text(text = "Confirm", color = colorResource(id = R.color.white))
+            }
         }
+
     }
 
     LaunchedEffect(response) {
         response?.let {
             it.onSuccess { checkoutResponse ->
+                isLoading = false
                 println("API Response Successful")
                 Toast.makeText(context, "${checkoutResponse.message}, ${checkoutResponse.orderId}", Toast.LENGTH_LONG).show()
                 addOrderData(checkoutResponse, productsEntity, coroutineScope, shoppingCartResult, removeCartViewModel, context, orderDetailsViewModel, navController, action, orderTotal)
             }.onFailure {
+                isLoading = false
                 println("Failed API checkout")
                 Toast.makeText(context, "Checkout API Failed", Toast.LENGTH_LONG).show()
             }
