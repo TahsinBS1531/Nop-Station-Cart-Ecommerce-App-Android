@@ -54,14 +54,18 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Local.OrderDetailsEntity
+import com.example.nopstationcart.Services.Model.Checkout.CheckoutResponse
 import com.example.nopstationcart.Services.Model.Remove_Cart.FormValue
 import com.example.nopstationcart.Services.Model.Remove_Cart.RemoveCartRequest
+import com.example.nopstationcart.Services.Model.ShoppingCart.CartProductsResponse
 import com.example.nopstationcart.Services.Model.ShoppingCart.productCartItems
 import com.example.nopstationcart.viewmodel.CheckoutViewModel
 import com.example.nopstationcart.viewmodel.OrderDetailsViewModel
 import com.example.nopstationcart.viewmodel.RemoveCartViewModel
 import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.util.Date
 
 
 @Composable
@@ -306,42 +310,6 @@ fun finalAmountBox(
             onClick = {
                 println("Checkout button is clicked")
                 viewModel.getResponse()
-                coroutineScope.launch {
-                    response?.let {
-                        it.onSuccess { checkoutResponse ->
-                            println("API Response Successful")
-                            Toast.makeText(context, "${checkoutResponse.message}, ${checkoutResponse.orderId}", Toast.LENGTH_LONG).show()
-                            if (productsEntity != null) {
-                                shoppingCartResult?.let {
-                                    it.onSuccess { data ->
-                                        val list = ArrayList<productCartItems>()
-                                        val removeList = ArrayList<FormValue>()
-                                        list.clear()
-                                        removeList.clear()
-                                        data.Data.Cart.Items.forEach { item ->
-                                            val product = productCartItems(item.ProductName, item.UnitPrice, item.Picture.ImageUrl, item.Quantity, item.ProductId)
-                                            list.add(product)
-                                            val productId = item.Id.toString()
-                                            val formValue = FormValue("removefromcart", productId)
-                                            removeList.add(formValue)
-                                        }
-                                        removeCartItems(removeList, removeCartViewModel, context)
-                                        productsEntity.products = list
-                                        productsEntity.orderId = checkoutResponse.orderId
-                                        productsEntity.total_amount = list.size.toString()
-                                        orderDetailsViewModel.saveOrderDetails(context, productsEntity)
-                                        navController.navigate(action)
-                                    }.onFailure {
-                                        println("Failed to fetch cart products")
-                                    }
-                                }
-                            }
-                        }.onFailure {
-                            println("Failed API checkout")
-                            Toast.makeText(context, "Checkout API Failed", Toast.LENGTH_LONG).show()
-                        }
-                    }
-                }
             },
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -363,6 +331,19 @@ fun finalAmountBox(
         }
     }
 
+    LaunchedEffect(response) {
+        response?.let {
+            it.onSuccess { checkoutResponse ->
+                println("API Response Successful")
+                Toast.makeText(context, "${checkoutResponse.message}, ${checkoutResponse.orderId}", Toast.LENGTH_LONG).show()
+                addOrderData(checkoutResponse, productsEntity, coroutineScope, shoppingCartResult, removeCartViewModel, context, orderDetailsViewModel, navController, action, orderTotal)
+            }.onFailure {
+                println("Failed API checkout")
+                Toast.makeText(context, "Checkout API Failed", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
     removeCart?.let {
         it.onSuccess {
             println("Removed API success")
@@ -377,6 +358,50 @@ private fun removeCartItems(products: ArrayList<FormValue>, removeCartViewModel:
     removeCartViewModel.getTheCartRemoved(request, context)
 }
 
+private fun addOrderData(
+    checkoutResponse: CheckoutResponse,
+    productsEntity: OrderDetailsEntity?,
+    coroutineScope: CoroutineScope,
+    shoppingCartResult: Result<CartProductsResponse>?,
+    removeCartViewModel: RemoveCartViewModel,
+    context: Context,
+    orderDetailsViewModel: OrderDetailsViewModel,
+    navController: NavController,
+    action: NavDirections,
+    orderTotal: String
+){
+    coroutineScope.launch {
+        if (productsEntity != null) {
+            shoppingCartResult?.let {
+                it.onSuccess { data ->
+                    val list = ArrayList<productCartItems>()
+                    val removeList = ArrayList<FormValue>()
+                    list.clear()
+                    removeList.clear()
+                    data.Data.Cart.Items.forEach { item ->
+                        val product = productCartItems(item.ProductName, item.UnitPrice, item.Picture.ImageUrl, item.Quantity, item.ProductId)
+                        list.add(product)
+                        val productId = item.Id.toString()
+                        val formValue = FormValue("removefromcart", productId)
+                        removeList.add(formValue)
+                    }
+                    removeCartItems(removeList, removeCartViewModel, context)
+                    val currentDate = Date()
+                    productsEntity.products = list
+                    productsEntity.orderId = checkoutResponse.orderId
+                    productsEntity.total_amount = list.size.toString()
+                    productsEntity.orderTotal = orderTotal
+                    productsEntity.orderDate = currentDate.toString()
+                    orderDetailsViewModel.saveOrderDetails(context, productsEntity)
+                    navController.navigate(action)
+                }.onFailure {
+                    println("Failed to fetch cart products")
+                }
+            }
+        }
+
+    }
+}
 
 
 

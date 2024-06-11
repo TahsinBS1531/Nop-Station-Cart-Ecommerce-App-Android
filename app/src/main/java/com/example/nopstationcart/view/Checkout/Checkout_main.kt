@@ -66,6 +66,7 @@ import com.example.nopstationcart.viewmodel.CheckoutViewModel
 import com.example.nopstationcart.viewmodel.OrderDetailsViewModel
 import com.example.nopstationcart.viewmodel.RemoveCartViewModel
 import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
+import java.util.Date
 
 class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
 
@@ -311,8 +312,9 @@ class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
                         }
                     }
                     //println("Products size :"+list.size)
+                    val currentDate = Date().toString()
                     val productsEntity = token?.let {
-                        OrderDetailsEntity("", it,userEmail,existingAddress,billingAddress,firstName,lastName,email,company,country,state,zip,city,phoneNumber, faxNumber,"", products = list)
+                        OrderDetailsEntity("", "Complete",currentDate,"",it,userEmail,existingAddress,billingAddress,firstName,lastName,email,company,country,state,zip,city,phoneNumber, faxNumber,"", products = list)
                     }
 
                     if (productsEntity != null) {

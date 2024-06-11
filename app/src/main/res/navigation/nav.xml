@@ -130,5 +130,54 @@
         android:id="@+id/order_Details"
         android:name="com.example.nopstationcart.view.Order_Details.Order_Details"
         android:label="fragment_order__details"
-        tools:layout="@layout/fragment_order__details" />
+        tools:layout="@layout/fragment_order__details" >
+        <action
+            android:id="@+id/action_order_Details_to_orderDetailsInfo"
+            app:destination="@id/orderDetailsInfo" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderDetailsInfo"
+        android:name="com.example.nopstationcart.view.Order_Details.OrderDetailsInfo"
+        android:label="fragment_order_details_info"
+        tools:layout="@layout/fragment_order_details_info" >
+        <argument
+            android:name="Name"
+            app:argType="string" />
+        <argument
+            android:name="OrderId"
+            app:argType="string" />
+        <argument
+            android:name="Email"
+            app:argType="string" />
+        <argument
+            android:name="TotalProducts"
+            app:argType="string" />
+        <argument
+            android:name="OrderStatus"
+            app:argType="string" />
+        <argument
+            android:name="OrderDate"
+            app:argType="string" />
+        <argument
+            android:name="OrderTotal"
+            app:argType="string" />
+        <argument
+            android:name="Phone"
+            app:argType="string" />
+        <argument
+            android:name="Fax"
+            app:argType="string" />
+        <argument
+            android:name="BillingAddress"
+            app:argType="string" />
+        <argument
+            android:name="Country"
+            app:argType="string" />
+        <argument
+            android:name="City"
+            app:argType="string" />
+        <argument
+            android:name="ExistingAddress"
+            app:argType="string" />
+    </fragment>
 </navigation>
