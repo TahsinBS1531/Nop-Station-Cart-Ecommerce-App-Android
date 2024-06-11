@@ -148,8 +148,7 @@ class Product_Cart_Main : Fragment() {
                     binding.cartPageCartAmount.text =removeResponse.Data.Cart.Items.size.toString()
 
                     productList.remove(removedItem)
-                    adapter.notifyDataSetChanged() // Notify adapter of dataset change
-                    // Update UI or perform other operations as needed
+                    adapter.notifyDataSetChanged()
                     if (productList.isEmpty()) {
                         handlePrices("0", "0", "0")
                     }

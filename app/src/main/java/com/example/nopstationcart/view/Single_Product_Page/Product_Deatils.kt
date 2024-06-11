@@ -67,13 +67,15 @@ class Product_Deatils : Fragment() {
         val itemPrice = args.productPrice
         val oldPrice = args.oldPrice
         val productId = args.productId
+        val shortDes = args.shortDescription
+        val longDes = args.fullDescription
 
         binding.productPageTitle.text = itemTitle
         binding.productPageOldPrice.text = oldPrice
         binding.productPagePrice.text = itemPrice
 
-        binding.productPageShortDes.text = Html.fromHtml(binding.productPageShortDes.text.toString(), Html.FROM_HTML_MODE_LEGACY)
-        binding.productPageLongDes.text = Html.fromHtml(binding.productPageLongDes.text.toString(), Html.FROM_HTML_MODE_LEGACY)
+        binding.productPageShortDes.text = Html.fromHtml(shortDes, Html.FROM_HTML_MODE_LEGACY)
+        binding.productPageLongDes.text = Html.fromHtml(longDes, Html.FROM_HTML_MODE_LEGACY)
 
         Glide.with(this)
             .load(imageResId)
@@ -98,6 +100,7 @@ class Product_Deatils : Fragment() {
                 cartPageViewModel.getCartResponse(id.toInt(), requireContext(), cartAmount.toString())
                 cartPageViewModel.result.observe(viewLifecycleOwner) { response ->
                     response.onSuccess {
+                        handleCartAmount()
                         println("Total Cart Items: ${it.Data.TotalShoppingCartProducts}")
                         println("Amount: $cartAmount")
                         Toast.makeText(requireContext(), it.Message, Toast.LENGTH_LONG).show()
