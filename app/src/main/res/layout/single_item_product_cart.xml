@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="390dp"
+    android:layout_width="300dp"
     android:layout_height="180dp"
-    android:layout_marginStart="10dp"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp"
     android:layout_marginTop="15dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardElevation="5dp"
@@ -18,26 +19,25 @@
 
         <ImageView
             android:id="@+id/productCartImg"
-            android:layout_width="180dp"
+            android:layout_width="120dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:scaleType="fitXY" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="210dp"
+            android:layout_width="180dp"
             android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/productCartTittle"
-                android:layout_width="wrap_content"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
-
-                android:layout_marginTop="36dp"
+                android:layout_marginTop="12dp"
                 android:fontFamily="@font/lato_bold"
                 android:text="California Orange 8 pcs"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.509"
+                app:layout_constraintHorizontal_bias="0.216"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
-                android:layout_marginTop="13dp"
+                android:layout_marginTop="28dp"
                 android:layout_marginEnd="139dp"
                 android:fontFamily="@font/khand"
                 android:text="$349.0"
@@ -60,14 +60,13 @@
                 android:id="@+id/textView12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="13dp"
-                android:layout_marginEnd="80dp"
+                android:layout_marginTop="28dp"
                 android:fontFamily="@font/khand"
                 android:text="$649.0"
                 android:textColor="#A9AABF"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.325"
                 app:layout_constraintStart_toEndOf="@+id/productCartPrice"
                 app:layout_constraintTop_toBottomOf="@+id/productCartTittle" />
 

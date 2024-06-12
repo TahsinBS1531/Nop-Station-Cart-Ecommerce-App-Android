@@ -90,6 +90,7 @@ class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
     @Composable
     fun CheckoutScreen() {
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+        var isBtnClicked = remember { mutableStateOf(false) }
 
         var cartAmount by remember { mutableStateOf(0) }
 
@@ -154,9 +155,14 @@ class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
             if (email.isBlank()) {
                 emailError = "Email  is required"
                 isValid = false
-            } else {
+            } else if(!email.contains('@')){
+                emailError = "Not a Valid Email Format"
+                isValid = false
+            }
+            else {
                 emailError = ""
             }
+
             if (company.isBlank()) {
                 companyError = "Company  is required"
                 isValid = false
@@ -185,7 +191,7 @@ class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
                 phoneNumberError = "Phone Number  is required"
                 isValid = false
             } else {
-                stateError = ""
+                phoneNumberError = ""
             }
 
 
@@ -251,7 +257,7 @@ class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
                     colors = CardDefaults.cardColors(containerColor = Color.White)) {
                     billingAddress(value = "Billing Address")
                     customText(value = "Address", color = colorResource(id = R.color.blue))
-                    customTextField(label = "Existing Address:", value = existingAddress,onValueChange = { existingAddress = it },existingAddressError, isTrailingIcon =true )
+                    customTextField(label = "Existing Address:", value = existingAddress,onValueChange = { existingAddress = it },existingAddressError, isTrailingIcon =true,isBtnClicked )
 
                     Row(Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp)) {
                         CustomCheckBox(
@@ -265,17 +271,17 @@ class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
                     }
 
                     customText(value = "Select A Billing Address", color = colorResource(id = R.color.blue))
-                    customTextField(label = "New", value = billingAddress,onValueChange = { billingAddress = it },billingAddressError, isTrailingIcon =true )
-                    customTextField(label = "First Name:", value = firstName, onValueChange = {firstName = it},firstNameError, isTrailingIcon =false )
-                    customTextField(label = "Last Name:", value = lastName,onValueChange = { lastName = it },lastNameError, isTrailingIcon =false )
-                    customTextField(label = "Email", value = email,onValueChange = { email = it },emailError, isTrailingIcon =false )
-                    customTextField(label = "Company", value = company,onValueChange = { company = it },companyError, isTrailingIcon =false )
-                    customTextField(label = "Country", value = country,onValueChange = { country = it },countryError, isTrailingIcon =false )
-                    customTextField(label = "State/Province:", value = state,onValueChange = { state = it },stateError, isTrailingIcon =false )
-                    customTextField(label = "Zip/Postal Code:", value = zip,onValueChange = { zip = it },zipError, isTrailingIcon =false )
-                    customTextField(label = "City:", value = city,onValueChange = { city = it },cityError, isTrailingIcon =false )
-                    customTextField(label = "Phone Number:", value = phoneNumber,onValueChange = { phoneNumber = it },phoneNumberError, isTrailingIcon =false )
-                    customTextField(label = "Fax Number:", value = faxNumber,onValueChange = { faxNumber = it },faxNumberError, isTrailingIcon =false )
+                    customTextField(label = "New", value = billingAddress,onValueChange = { billingAddress = it },billingAddressError, isTrailingIcon =true ,isBtnClicked)
+                    customTextField(label = "First Name:", value = firstName, onValueChange = {firstName = it},firstNameError, isTrailingIcon =false,isBtnClicked )
+                    customTextField(label = "Last Name:", value = lastName,onValueChange = { lastName = it },lastNameError, isTrailingIcon =false ,isBtnClicked)
+                    customTextField(label = "Email", value = email,onValueChange = { email = it },emailError, isTrailingIcon =false,isBtnClicked )
+                    customTextField(label = "Company", value = company,onValueChange = { company = it },companyError, isTrailingIcon =false ,isBtnClicked)
+                    customTextField(label = "Country", value = country,onValueChange = { country = it },countryError, isTrailingIcon =false,isBtnClicked )
+                    customTextField(label = "State/Province:", value = state,onValueChange = { state = it },stateError, isTrailingIcon =false,isBtnClicked )
+                    customTextField(label = "Zip/Postal Code:", value = zip,onValueChange = { zip = it },zipError, isTrailingIcon =false,isBtnClicked )
+                    customTextField(label = "City:", value = city,onValueChange = { city = it },cityError, isTrailingIcon =false ,isBtnClicked)
+                    customTextField(label = "Phone Number:", value = phoneNumber,onValueChange = { phoneNumber = it },phoneNumberError, isTrailingIcon =false ,isBtnClicked)
+                    customTextField(label = "Fax Number:", value = faxNumber,onValueChange = { faxNumber = it },faxNumberError, isTrailingIcon =false,isBtnClicked )
 
                     billingAddress(value = "Payment Method")
 
@@ -314,6 +320,7 @@ class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
                             }
                         }
                     }
+
                     //println("Products size :"+list.size)
                     val currentDate = Date().toString()
                     val productsEntity = token?.let {
@@ -321,7 +328,7 @@ class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
                     }
 
                     if (productsEntity != null) {
-                        finalAmountBox(viewModel,navController,action,shoppingCartViewModel,validation,productsEntity,orderDeatilsViewModel,removeCartViewModel)
+                        finalAmountBox(viewModel,navController,action,shoppingCartViewModel,validation,productsEntity,orderDeatilsViewModel,removeCartViewModel,isBtnClicked)
                     }
 
 
