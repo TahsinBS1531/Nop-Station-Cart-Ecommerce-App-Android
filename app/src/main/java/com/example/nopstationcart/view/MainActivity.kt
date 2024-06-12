@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 import android.window.OnBackInvokedDispatcher
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -31,8 +32,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer) as NavHostFragment
         navController = navHostFragment.navController
@@ -52,11 +56,15 @@ class MainActivity : AppCompatActivity() {
                 R.id.home_Page -> {
                     bottomNav.visibility = View.VISIBLE
                 }
+                R.id.product_Deatils ->{
+                    bottomNav.visibility = View.GONE
+                }
                 R.id.login_main -> {
                     val sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
                     val token = sharedPreferences.getString("TOKEN", null)
                     if (token != null) {
-                        navController.navigate(R.id.home_Page)
+                        //navController.navigate(R.id.home_Page)
+                        navController.navigate(R.id.logOutMain)
                         println("User already has token: $token")
                         Toast.makeText(this, "User already Logged In", Toast.LENGTH_LONG).show()
                     } else {

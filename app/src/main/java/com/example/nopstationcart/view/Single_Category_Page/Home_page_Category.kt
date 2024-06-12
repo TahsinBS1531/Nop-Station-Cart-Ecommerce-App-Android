@@ -38,6 +38,7 @@ class Home_page_Category : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.single_category_page, container, false)
         handleCartAmount(view)
+        handleCartBtn(view)
 
         val bundle = arguments
         if (bundle != null) {
@@ -104,6 +105,14 @@ class Home_page_Category : Fragment() {
         }
 
         return view
+    }
+
+    private fun handleCartBtn(view:View){
+        val btn:ImageView = view.findViewById(R.id.singleCategoryCartBtn)
+        btn.setOnClickListener {
+            val action = Home_page_CategoryDirections.actionHomePageCategoryToProductCartMain()
+            findNavController().navigate(action)
+        }
     }
     private fun handleCartAmount(view:View){
         val amount:TextView = view.findViewById(R.id.singleCategoryCartAmount)

@@ -18,8 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:background="@drawable/top_bar_banner"
-            android:paddingTop="20dp"
-            app:navigationIcon="@drawable/baseline_menu_24">
+            android:paddingTop="20dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -51,7 +50,7 @@
                     android:textAlignment="gravity"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.364"
+                    app:layout_constraintHorizontal_bias="0.413"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -167,36 +166,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp">
-
-                <!-- Your existing content after the ImageSlider -->
-
-                <TextView
-                    android:id="@+id/bestSelling"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="BEST SELLING"
-                    android:textColor="#2B2E43"
-                    android:textSize="22sp"
-                    android:lineHeight="33sp"
-                    android:fontFamily="@font/khand"
-                    android:textFontWeight="600" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/bestSellingrecycleView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="15dp"
-                    android:paddingBottom="15dp" />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -251,34 +220,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp">
-
-                <!-- Your existing content after the ImageSlider -->
-
-                <TextView
-                    android:id="@+id/women_heel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="WOMEN HEEL"
-                    android:textColor="#2B2E43"
-                    android:textSize="22sp"
-                    android:lineHeight="33sp"
-                    android:fontFamily="@font/khand"
-                    android:textFontWeight="600" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/women_heel_recycle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
 
             <!-- Add more content here if needed -->
 

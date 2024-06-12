@@ -15,7 +15,6 @@ class ShoppingCartRepository {
     fun getShoppingCartData(context:Context):LiveData<Result<CartProductsResponse>>{
         val _result = MutableLiveData<Result<CartProductsResponse>>()
         val instance = ShoppingCartInstance.getRetrofit(context).create(ShoppingCartApiInterface::class.java)
-        //val instance = ShoppingCartInstance.retrofit.create(ShoppingCartApiInterface::class.java)
         val call = instance.getCartData()
         call.enqueue(object: Callback<CartProductsResponse>{
             override fun onResponse(p0: Call<CartProductsResponse>, response: Response<CartProductsResponse>) {

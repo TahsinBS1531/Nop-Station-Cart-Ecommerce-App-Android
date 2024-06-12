@@ -276,6 +276,7 @@ fun finalAmountBox(
 
     LaunchedEffect(Unit) {
         shoppingCartViewModel.getCartProducts(context)
+        viewModel.getResponse()
     }
 
     OutlinedCard(
@@ -321,7 +322,20 @@ fun finalAmountBox(
                     if(validation){
                         isLoading = true
                         println("Checkout button is clicked")
-                        viewModel.getResponse()
+                        //viewModel.getResponse()
+                        response?.let {
+                            it.onSuccess { checkoutResponse ->
+                                isLoading = false
+                                println("API Response Successful")
+                                Toast.makeText(context, "${checkoutResponse.message}, ${checkoutResponse.orderId}", Toast.LENGTH_LONG).show()
+                                addOrderData(checkoutResponse, productsEntity, coroutineScope, shoppingCartResult, removeCartViewModel, context, orderDetailsViewModel, navController, action, orderTotal)
+                            }.onFailure {
+                                isLoading = false
+                                println("Failed API checkout")
+                                Toast.makeText(context, "Checkout API Failed", Toast.LENGTH_LONG).show()
+                            }
+                        }
+
                     }else{
                         Toast.makeText(context,"Please Fill all the fields",Toast.LENGTH_LONG).show()
                     }
@@ -349,20 +363,20 @@ fun finalAmountBox(
 
     }
 
-    LaunchedEffect(response) {
-        response?.let {
-            it.onSuccess { checkoutResponse ->
-                isLoading = false
-                println("API Response Successful")
-                Toast.makeText(context, "${checkoutResponse.message}, ${checkoutResponse.orderId}", Toast.LENGTH_LONG).show()
-                addOrderData(checkoutResponse, productsEntity, coroutineScope, shoppingCartResult, removeCartViewModel, context, orderDetailsViewModel, navController, action, orderTotal)
-            }.onFailure {
-                isLoading = false
-                println("Failed API checkout")
-                Toast.makeText(context, "Checkout API Failed", Toast.LENGTH_LONG).show()
-            }
-        }
-    }
+//    LaunchedEffect(response) {
+//        response?.let {
+//            it.onSuccess { checkoutResponse ->
+//                isLoading = false
+//                println("API Response Successful")
+//                Toast.makeText(context, "${checkoutResponse.message}, ${checkoutResponse.orderId}", Toast.LENGTH_LONG).show()
+//                addOrderData(checkoutResponse, productsEntity, coroutineScope, shoppingCartResult, removeCartViewModel, context, orderDetailsViewModel, navController, action, orderTotal)
+//            }.onFailure {
+//                isLoading = false
+//                println("Failed API checkout")
+//                Toast.makeText(context, "Checkout API Failed", Toast.LENGTH_LONG).show()
+//            }
+//        }
+//    }
 
     removeCart?.let {
         it.onSuccess {
