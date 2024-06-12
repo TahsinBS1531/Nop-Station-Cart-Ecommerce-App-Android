@@ -76,22 +76,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="36dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginStart="4dp"
             android:fontFamily="@font/khand"
             android:text="Personal Information"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/cardView7"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/cardView7"
             app:layout_constraintTop_toBottomOf="@+id/cardView6"
-            app:layout_constraintVertical_bias="0.466" />
+            app:layout_constraintVertical_bias="0.741" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView7"
             android:layout_width="340dp"
             android:layout_height="220dp"
-            android:layout_marginTop="88dp"
+            android:layout_marginTop="120dp"
             app:cardElevation="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.492"
@@ -103,53 +102,54 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:orientation="vertical">
-                    <TextView
-                        android:id="AccountInfoPhone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:textSize="18sp"
-                        android:fontFamily="@font/khand"
-                        android:text="Phone Number : 01303244508"/>
+
+                <TextView
+                    android:id="@+id/AccountInfoPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/khand"
+                    android:padding="10dp"
+                    android:text="Phone Number : 01303244508"
+                    android:textSize="18sp" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"/>
+                    android:layout_height="1dp" />
 
                 <TextView
                     android:id="@+id/AccountInfoGender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:textSize="18sp"
                     android:fontFamily="@font/khand"
-                    android:text="Gender : Male"/>
+                    android:padding="10dp"
+                    android:text="Gender : Male"
+                    android:textSize="18sp" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"/>
+                    android:layout_height="1dp" />
 
                 <TextView
                     android:id="@+id/AccountInfoCompany"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:textSize="18sp"
                     android:fontFamily="@font/khand"
-                    android:text="Company Name : BS23"/>
+                    android:padding="10dp"
+                    android:text="Company Name : BS23"
+                    android:textSize="18sp" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"/>
+                    android:layout_height="1dp" />
+
                 <TextView
                     android:id="@+id/AccountIntoDOB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:textSize="18sp"
                     android:fontFamily="@font/khand"
-                    android:text="Date Of Birth : 03/03/20000"/>
-
+                    android:padding="10dp"
+                    android:text="Date Of Birth : 03/03/20000"
+                    android:textSize="18sp" />
 
 
             </LinearLayout>
@@ -171,7 +171,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.492"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardView7" />
+            app:layout_constraintTop_toBottomOf="@+id/cardView7"
+            app:layout_constraintVertical_bias="0.0" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

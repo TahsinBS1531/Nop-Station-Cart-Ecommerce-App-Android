@@ -45,9 +45,10 @@ class logOutMain : Fragment() {
             response.onSuccess {
                 binding.accountPageName.text = "${it.Data.FirstName} ${it.Data.LastName}"
                 binding.accountPageEmail.text = it.Data.Email
-                binding.AccountInfoCompany.text = it.Data.Company
-                binding.AccountInfoGender.text = it.Data.Gender
-                binding.AccountIntoDOB.text = "${it.Data.DateOfBirthDay}/${it.Data.DateOfBirthMonth}/${it.Data.DateOfBirthYear}"
+                binding.AccountInfoPhone.text = "Phone Number: ${it.Data.Phone}"
+                binding.AccountInfoCompany.text = "Company Name: ${it.Data.Company}"
+                binding.AccountInfoGender.text = "Gender : ${it.Data.Gender}"
+                binding.AccountIntoDOB.text = "Date of Birth : ${it.Data.DateOfBirthDay}/${it.Data.DateOfBirthMonth}/${it.Data.DateOfBirthYear}"
             }.onFailure {
 
             }

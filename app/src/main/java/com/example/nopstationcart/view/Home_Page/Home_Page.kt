@@ -185,6 +185,8 @@ class Home_Page : Fragment(){
 
     }
 
+
+
     private fun bestSellingRecycleView(view: View?) {
         if (view != null) {
             myRecyclerView2 = view.findViewById(R.id.bestSellingrecycleView)

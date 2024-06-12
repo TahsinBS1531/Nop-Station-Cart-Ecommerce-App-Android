@@ -75,7 +75,6 @@ class Order_Details : Fragment() {
                 }
 
                 override fun onCartBtnClick(position: Int) {
-                    // Implement the logic for the cart button click here
                 }
             })
         }else{

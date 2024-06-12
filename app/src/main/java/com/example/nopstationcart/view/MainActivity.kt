@@ -60,7 +60,8 @@ class MainActivity : AppCompatActivity() {
                     val sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
                     val token = sharedPreferences.getString("TOKEN", null)
                     if (token != null) {
-                        navController.navigate(R.id.home_Page)
+                        //navController.navigate(R.id.home_Page)
+                        navController.navigate(R.id.logOutMain)
                         println("User already has token: $token")
                         Toast.makeText(this, "User already Logged In", Toast.LENGTH_LONG).show()
                     } else {
