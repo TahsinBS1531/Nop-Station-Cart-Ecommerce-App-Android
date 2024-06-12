@@ -30,7 +30,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
-                    android:text="Furniture"
+                    android:text="Category"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -40,7 +40,7 @@
                     app:layout_constraintVertical_bias="0.555" />
 
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/singleCategoryCartBtn"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="224dp"
@@ -62,10 +62,10 @@
                     android:gravity="center"
                     android:text="0"
                     android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView"
-                    app:layout_constraintEnd_toEndOf="@+id/imageView"
+                    app:layout_constraintBottom_toBottomOf="@+id/singleCategoryCartBtn"
+                    app:layout_constraintEnd_toEndOf="@+id/singleCategoryCartBtn"
                     app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="@+id/imageView" />
+                    app:layout_constraintStart_toStartOf="@+id/singleCategoryCartBtn" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

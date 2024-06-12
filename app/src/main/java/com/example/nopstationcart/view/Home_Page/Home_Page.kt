@@ -1,7 +1,6 @@
 package com.example.nopstationcart.view.Home_Page
 
 import android.content.Context
-import android.content.res.loader.ResourcesLoader
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,7 +13,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.load.engine.Resource
 import com.denzcoskun.imageslider.ImageSlider
 import com.denzcoskun.imageslider.constants.AnimationTypes
 import com.denzcoskun.imageslider.constants.ScaleTypes
@@ -22,21 +20,12 @@ import com.denzcoskun.imageslider.models.SlideModel
 import com.example.nopstationcart.view.Adapters.CategoryAdapter
 import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Interfaces.ItemClickListener
-import com.example.nopstationcart.dummyData.bestSellingProducts
-import com.example.nopstationcart.dummyData.womenHeelProducts
-import com.example.nopstationcart.Services.Interfaces.bestSellingProductsItemClick
-import com.example.nopstationcart.Services.Interfaces.womenHeelOnItemClickListener
 import com.example.nopstationcart.Services.Local.AppDatabase
-import com.example.nopstationcart.Services.Local.BannerDao
 import com.example.nopstationcart.Services.Model.CategoryList.CategorySingleItem
 import com.example.nopstationcart.Services.Model.Home_Page.Featured_Products.featuredProductsItem2
 import com.example.nopstationcart.Services.Netwrok.InternetStatus
-import com.example.nopstationcart.Services.Netwrok.sliderApiInterface
-import com.example.nopstationcart.Services.Repository.SliderRespository
 import com.example.nopstationcart.databinding.HomePageFragmentBinding
-import com.example.nopstationcart.view.Adapters.bestSellingAdapters
 import com.example.nopstationcart.view.Adapters.featuredProductsAdapter
-import com.example.nopstationcart.view.Adapters.womenHeelAdapter
 import com.example.nopstationcart.viewmodel.CartViewModel
 import com.example.nopstationcart.viewmodel.CategoryListViewModel
 import com.example.nopstationcart.viewmodel.FeaturedProductsViewModel
@@ -44,7 +33,6 @@ import com.example.nopstationcart.viewmodel.LogOutViewModel
 import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
 import com.example.nopstationcart.viewmodel.SliderViewModel
 import com.facebook.shimmer.ShimmerFrameLayout
-import dagger.hilt.android.AndroidEntryPoint
 
 class Home_Page : Fragment(){
 
@@ -81,9 +69,9 @@ class Home_Page : Fragment(){
         binding = HomePageFragmentBinding.bind(view)
         initializeImageSlider(view)
         categoryListRecycleView(view)
-        bestSellingRecycleView(view)
+        //bestSellingRecycleView(view)
         featuredRecycleView(view)
-        womenHeelRecycleView(view)
+        //womenHeelRecycleView(view)
         setShoppingCart()
         handleCartBtn()
         val sharedpreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
@@ -146,75 +134,7 @@ class Home_Page : Fragment(){
         findNavController().navigate(action)
     }
 
-    private fun womenHeelRecycleView(view: View?){
 
-        if (view != null) {
-            myRecyclerView4 = view.findViewById(R.id.women_heel_recycle)
-        }
-        myRecyclerView4.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
-        val womenHeel = womenHeelProducts()
-        val womenHeelArrayList = womenHeel.getProducts()
-        val adapter = womenHeelAdapter(womenHeelArrayList)
-        myRecyclerView4.adapter = adapter
-
-        adapter.setOnItemClick(object : womenHeelOnItemClickListener {
-            override fun onItemClick(position: Int) {
-                val itemTittle = womenHeelArrayList[position].tittle.toString()
-                val itemImg = womenHeelArrayList[position].imgRes
-                val itemPrice = womenHeelArrayList[position].price.toString()
-                val productId = 1
-                Toast.makeText(requireContext(),"This is a $itemTittle",Toast.LENGTH_LONG).show()
-
-                val action = Home_PageDirections.actionHomePageToProductDeatils(itemTittle,"https://images.pexels.com/photos/24280095/pexels-photo-24280095/free-photo-of-an-armchair-and-a-basket-of-flowers-standing-in-a-garden.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",itemPrice,"Dummy Data for now", "Dummy Data for now","20.00$", productId = productId.toString())
-                findNavController().navigate(action)
-            }
-
-            override fun onCartBtnClick(position: Int) {
-                val itemTittle = womenHeelArrayList[position].tittle
-                val itemPrice = womenHeelArrayList[position].price
-                val itemImg = womenHeelArrayList[position].imgRes
-
-                cartCount += 1
-                addToCartBtn.text = cartCount.toString()
-                Toast.makeText(requireContext(),"You clicked on a $itemTittle cart button",Toast.LENGTH_LONG).show()
-//                val action = Home_PageDirections.actionHomePageToProductCartMain(itemTittle,itemPrice,itemImg)
-//                findNavController().navigate(action)
-            }
-
-        })
-
-    }
-
-
-
-    private fun bestSellingRecycleView(view: View?) {
-        if (view != null) {
-            myRecyclerView2 = view.findViewById(R.id.bestSellingrecycleView)
-        }
-        myRecyclerView2.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
-        val ob = bestSellingProducts()
-        val bestSellingArrayList = ob.getProducts()
-        val adapter = bestSellingAdapters(bestSellingArrayList)
-        myRecyclerView2.adapter = adapter
-        adapter.setOnItemClick(object : bestSellingProductsItemClick {
-            override fun onItemClick(position: Int) {
-                val currentItem = bestSellingArrayList[position]
-                val itemImg = currentItem.imageRes
-                val itemTitle = currentItem.tittle
-                val itemPrice = currentItem.price
-
-                val action = Home_PageDirections.actionHomePageToProductDeatils(itemTitle,"https://images.pexels.com/photos/24280095/pexels-photo-24280095/free-photo-of-an-armchair-and-a-basket-of-flowers-standing-in-a-garden.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",itemPrice,"Dummy Data for now", "Dummy Data for now","20.00$","1")
-                findNavController().navigate(action)
-            }
-
-            override fun onCartBtnClick(position: Int) {
-                TODO("Not yet implemented")
-            }
-
-        })
-
-
-    }
 
     private fun featuredRecycleView(view: View?) {
         startShimmer(binding.shimmerLayoutFeatured,binding.featuredRecycle)

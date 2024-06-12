@@ -56,6 +56,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.home_Page -> {
                     bottomNav.visibility = View.VISIBLE
                 }
+                R.id.product_Deatils ->{
+                    bottomNav.visibility = View.GONE
+                }
                 R.id.login_main -> {
                     val sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
                     val token = sharedPreferences.getString("TOKEN", null)

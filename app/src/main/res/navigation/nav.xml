@@ -35,6 +35,9 @@
         <action
             android:id="@+id/action_home_page_Category_to_product_Deatils"
             app:destination="@id/product_Deatils" />
+        <action
+            android:id="@+id/action_home_page_Category_to_product_Cart_Main"
+            app:destination="@id/product_Cart_Main" />
     </fragment>
 
     <fragment
@@ -119,7 +122,7 @@
     </fragment>
     <fragment
         android:id="@+id/logOutMain"
-        android:name="com.example.nopstationcart.view.logOut.logOutMain"
+        android:name="com.example.nopstationcart.view.Account.logOutMain"
         android:label="fragment_log_out_main"
         tools:layout="@layout/fragment_log_out_main" >
         <action
