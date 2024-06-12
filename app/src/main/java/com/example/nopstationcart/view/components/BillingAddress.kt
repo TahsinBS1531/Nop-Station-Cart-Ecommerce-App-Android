@@ -146,14 +146,6 @@ fun customTextField(
             unfocusedLabelColor = colorResource(id = R.color.hint_color),
             focusedLabelColor = colorResource(id = R.color.blue)
         ),
-        isError = error.isNotEmpty(),
-//        supportingText = {
-//            if (isBtnClicked.value) {
-//                if(error.isNotEmpty()){
-//                    Text(error, color = MaterialTheme.colorScheme.error)
-//                }
-//            }
-//        }
     )
 }
 
