@@ -1,5 +1,6 @@
 package com.example.nopstationcart.view.Checkout
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -53,6 +54,8 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.nopstationcart.R
+import com.example.nopstationcart.Services.Local.OrderDetailsEntity
+import com.example.nopstationcart.Services.Model.ShoppingCart.productCartItems
 import com.example.nopstationcart.view.components.CustomButton
 import com.example.nopstationcart.view.components.CustomCheckBox
 import com.example.nopstationcart.view.components.billingAddress
@@ -60,7 +63,10 @@ import com.example.nopstationcart.view.components.customText
 import com.example.nopstationcart.view.components.customTextField
 import com.example.nopstationcart.view.components.finalAmountBox
 import com.example.nopstationcart.viewmodel.CheckoutViewModel
+import com.example.nopstationcart.viewmodel.OrderDetailsViewModel
+import com.example.nopstationcart.viewmodel.RemoveCartViewModel
 import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
+import java.util.Date
 
 class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
 
@@ -99,6 +105,90 @@ class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
         var city by remember { mutableStateOf("") }
         var phoneNumber by remember { mutableStateOf("") }
         var faxNumber by remember { mutableStateOf("") }
+
+        //error checking
+        var existingAddressError by remember { mutableStateOf("") }
+        var billingAddressError by remember { mutableStateOf("") }
+        var firstNameError by remember { mutableStateOf("") }
+        var checkedStateError by remember { mutableStateOf("") }
+        var lastNameError by remember { mutableStateOf("") }
+        var emailError by remember { mutableStateOf("") }
+        var companyError by remember { mutableStateOf("") }
+        var countryError by remember { mutableStateOf("") }
+        var stateError by remember { mutableStateOf("") }
+        var zipError by remember { mutableStateOf("") }
+        var cityError by remember { mutableStateOf("") }
+        var phoneNumberError by remember { mutableStateOf("") }
+        var faxNumberError by remember { mutableStateOf("") }
+
+        fun validateFields(): Boolean {
+            var isValid = true
+
+            if (billingAddress.isBlank()) {
+                billingAddressError = "Billing address is required"
+                isValid = false
+            } else {
+                billingAddressError = ""
+            }
+
+            if (firstName.isBlank()) {
+                firstNameError = "First name is required"
+                isValid = false
+            } else {
+                firstNameError = ""
+            }
+            if (!checkedState.value) {
+                checkedStateError = "CheckedState  is required"
+                isValid = false
+            } else {
+                checkedStateError = ""
+            }
+            if (lastName.isBlank()) {
+                lastNameError = "Last Name  is required"
+                isValid = false
+            } else {
+                lastNameError = ""
+            }
+            if (email.isBlank()) {
+                emailError = "Email  is required"
+                isValid = false
+            } else {
+                emailError = ""
+            }
+            if (company.isBlank()) {
+                companyError = "Company  is required"
+                isValid = false
+            } else {
+                companyError = ""
+            }
+            if (country.isBlank()) {
+                countryError = "Country  is required"
+                isValid = false
+            } else {
+                countryError = ""
+            }
+            if (state.isBlank()) {
+                stateError = "State  is required"
+                isValid = false
+            } else {
+                stateError = ""
+            }
+            if (city.isBlank()) {
+                cityError = "City  is required"
+                isValid = false
+            } else {
+                cityError = ""
+            }
+            if (phoneNumber.isBlank()) {
+                phoneNumberError = "Phone Number  is required"
+                isValid = false
+            } else {
+                stateError = ""
+            }
+
+
+            return isValid
+        }
 
         Scaffold(
             topBar = {
@@ -159,7 +249,7 @@ class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
                     colors = CardDefaults.cardColors(containerColor = Color.White)) {
                     billingAddress(value = "Billing Address")
                     customText(value = "Address", color = colorResource(id = R.color.blue))
-                    customTextField(label = "Existing Address:", value = existingAddress, isTrailingIcon =true )
+                    customTextField(label = "Existing Address:", value = existingAddress,onValueChange = { existingAddress = it },existingAddressError, isTrailingIcon =true )
 
                     Row(Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp)) {
                         CustomCheckBox(
@@ -173,17 +263,17 @@ class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
                     }
 
                     customText(value = "Select A Billing Address", color = colorResource(id = R.color.blue))
-                    customTextField(label = "New", value = billingAddress, isTrailingIcon =true )
-                    customTextField(label = "First Name:", value = firstName, isTrailingIcon =false )
-                    customTextField(label = "Last Name:", value = lastName, isTrailingIcon =false )
-                    customTextField(label = "Email", value = email, isTrailingIcon =false )
-                    customTextField(label = "Company", value = company, isTrailingIcon =false )
-                    customTextField(label = "Country", value = country, isTrailingIcon =false )
-                    customTextField(label = "State/Province:", value = state, isTrailingIcon =false )
-                    customTextField(label = "Zip/Postal Code:", value = zip, isTrailingIcon =false )
-                    customTextField(label = "City:", value = city, isTrailingIcon =false )
-                    customTextField(label = "Phone Number:", value = phoneNumber, isTrailingIcon =false )
-                    customTextField(label = "Fax Number:", value = faxNumber, isTrailingIcon =false )
+                    customTextField(label = "New", value = billingAddress,onValueChange = { billingAddress = it },billingAddressError, isTrailingIcon =true )
+                    customTextField(label = "First Name:", value = firstName, onValueChange = {firstName = it},firstNameError, isTrailingIcon =false )
+                    customTextField(label = "Last Name:", value = lastName,onValueChange = { lastName = it },lastNameError, isTrailingIcon =false )
+                    customTextField(label = "Email", value = email,onValueChange = { email = it },emailError, isTrailingIcon =false )
+                    customTextField(label = "Company", value = company,onValueChange = { company = it },companyError, isTrailingIcon =false )
+                    customTextField(label = "Country", value = country,onValueChange = { country = it },countryError, isTrailingIcon =false )
+                    customTextField(label = "State/Province:", value = state,onValueChange = { state = it },stateError, isTrailingIcon =false )
+                    customTextField(label = "Zip/Postal Code:", value = zip,onValueChange = { zip = it },zipError, isTrailingIcon =false )
+                    customTextField(label = "City:", value = city,onValueChange = { city = it },cityError, isTrailingIcon =false )
+                    customTextField(label = "Phone Number:", value = phoneNumber,onValueChange = { phoneNumber = it },phoneNumberError, isTrailingIcon =false )
+                    customTextField(label = "Fax Number:", value = faxNumber,onValueChange = { faxNumber = it },faxNumberError, isTrailingIcon =false )
 
                     billingAddress(value = "Payment Method")
 
@@ -195,9 +285,41 @@ class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
                     billingAddress(value = "Payment Information")
                     val viewModel: CheckoutViewModel by viewModels()
                     val shoppingCartViewModel:ShoppingCartViewModel by viewModels()
+                    val orderDeatilsViewModel: OrderDetailsViewModel by viewModels()
+                    val removeCartViewModel:RemoveCartViewModel by viewModels()
                     val action = Checkout_mainDirections.actionCheckoutMainToHomePage()
+
+                    val sharedpreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+                    val token = sharedpreferences.getString("TOKEN", null)
+                    var userEmail = sharedpreferences.getString("Email",null)
+
+                    if(userEmail==null){
+                        userEmail ="None"
+                    }
+                    //println("Email from the checkout page : $userEmail")
+
                     val navController = findNavController()
-                    finalAmountBox(viewModel,navController,action,shoppingCartViewModel)
+                    val validation = validateFields()
+                    shoppingCartViewModel.getCartProducts(requireContext())
+                    val list = ArrayList<productCartItems>()
+                    shoppingCartViewModel.response.observe(viewLifecycleOwner){
+                        it.onSuccess {
+                            it.Data.Cart.Items.forEach {
+                                //println("Product Name: ${it.ProductName}")
+                                val product = productCartItems(it.ProductName,it.UnitPrice,it.Picture.ImageUrl,it.Quantity,it.ProductId)
+                                list.add(product)
+                            }
+                        }
+                    }
+                    //println("Products size :"+list.size)
+                    val currentDate = Date().toString()
+                    val productsEntity = token?.let {
+                        OrderDetailsEntity("", "Complete",currentDate,"",it,userEmail,existingAddress,billingAddress,firstName,lastName,email,company,country,state,zip,city,phoneNumber, faxNumber,"", products = list)
+                    }
+
+                    if (productsEntity != null) {
+                        finalAmountBox(viewModel,navController,action,shoppingCartViewModel,validation,productsEntity,orderDeatilsViewModel,removeCartViewModel)
+                    }
 
 
                 }

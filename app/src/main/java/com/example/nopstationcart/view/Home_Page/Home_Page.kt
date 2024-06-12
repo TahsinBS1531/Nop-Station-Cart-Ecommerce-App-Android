@@ -83,9 +83,17 @@ class Home_Page : Fragment(){
         bestSellingRecycleView(view)
         featuredRecycleView(view)
         womenHeelRecycleView(view)
-        handleLogOut(view)
         setShoppingCart()
         handleCartBtn()
+        val sharedpreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+
+        val token = sharedpreferences.getString("TOKEN", null)
+        if(token==null){
+            binding.logOutBtn.visibility = View.GONE
+        }else{
+            binding.logOutBtn.visibility = View.VISIBLE
+        }
+        handleLogOut(view)
 
         return binding.root
     }
@@ -108,25 +116,35 @@ class Home_Page : Fragment(){
             findNavController().navigate(action)
         }
     }
-    fun handleLogOut(view: View?){
+    fun handleLogOut(view: View?) {
         binding.logOutBtn.setOnClickListener {
             logOutViewModel.getCartResponse(requireContext())
-            logOutViewModel.result.observe(viewLifecycleOwner){response->
+            logOutViewModel.result.observe(viewLifecycleOwner) { response ->
                 response.onSuccess {
                     val sharedpreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
                     with(sharedpreferences.edit()) {
                         remove("TOKEN")
+                        remove("Email")
                         apply()
                     }
-                    Toast.makeText(requireContext(),"Log Out Successful",Toast.LENGTH_LONG).show()
-                    val action = Home_PageDirections.actionHomePageToLoginMain()
-                    findNavController().navigate(action)
+                    val token = sharedpreferences.getString("TOKEN", null)
+                    val email = sharedpreferences.getString("Email", null)
+                    println("Token after successful log out: $token")
+                    println("Email after successful log out: $email")
+                    Toast.makeText(requireContext(), "Log Out Successful", Toast.LENGTH_LONG).show()
+                    navigateToLogin()
                 }.onFailure {
-                    Toast.makeText(requireContext(),"Log Out failed",Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Log Out failed", Toast.LENGTH_LONG).show()
                 }
             }
         }
     }
+
+    private fun navigateToLogin() {
+        val action = Home_PageDirections.actionHomePageToLoginMain()
+        findNavController().navigate(action)
+    }
+
     private fun womenHeelRecycleView(view: View?){
 
         if (view != null) {

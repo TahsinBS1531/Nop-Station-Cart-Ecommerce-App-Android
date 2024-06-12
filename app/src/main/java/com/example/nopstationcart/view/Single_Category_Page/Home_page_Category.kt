@@ -17,12 +17,15 @@ import com.bumptech.glide.Glide
 import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Interfaces.categoryDetailsOnClicklistener
 import com.example.nopstationcart.Services.Model.CategoryList.Product
+import com.example.nopstationcart.databinding.FragmentHomePageCategoryBinding
 import com.example.nopstationcart.viewmodel.CartViewModel
+import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
 
 
 class Home_page_Category : Fragment() {
     lateinit var backBtn: Toolbar
     private val cartPageViewModel: CartViewModel by viewModels()
+    private val shoppingCartViewModel: ShoppingCartViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -33,14 +36,14 @@ class Home_page_Category : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.single_category_page, container, false)
-        // Retrieve arguments bundle
+        handleCartAmount(view)
+
         val bundle = arguments
         if (bundle != null) {
             val args = Home_page_CategoryArgs.fromBundle(requireArguments())
             val imageResId = args.productImage
             val items: List<Product> = args.productListItem.toList()
             val title = args.productTittle
-
 
             val textView = view.findViewById<TextView>(R.id.singleCategoryTittle)
             textView.text = title
@@ -79,6 +82,7 @@ class Home_page_Category : Fragment() {
                     cartPageViewModel.result.observe(viewLifecycleOwner){
                         it.onSuccess {response->
                             Toast.makeText(requireContext(),"${response.Message}", Toast.LENGTH_LONG).show()
+                            handleCartAmount(view)
                         }.onFailure {response->
                             Toast.makeText(requireContext(),"${response.cause?.cause}", Toast.LENGTH_LONG).show()
                             println(response.cause?.message)
@@ -94,6 +98,17 @@ class Home_page_Category : Fragment() {
         }
 
         return view
+    }
+    private fun handleCartAmount(view:View){
+        val amount:TextView = view.findViewById(R.id.singleCategoryCartAmount)
+        shoppingCartViewModel.getCartProducts(requireContext())
+        shoppingCartViewModel.response.observe(viewLifecycleOwner){
+            it.onSuccess {
+                amount.text = it.Data.Cart.Items.size.toString()
+            }.onFailure {
+                amount.text = "0"
+            }
+        }
     }
 
     fun handleBackBtn(view: View){

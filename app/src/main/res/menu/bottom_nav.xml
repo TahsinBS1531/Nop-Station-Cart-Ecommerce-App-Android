@@ -18,5 +18,5 @@
 
     <item android:title="More"
         android:icon="@drawable/menu_more_btn"
-        android:id="@+id/product_Deatils"/>
+        android:id="@+id/order_Details"/>
 </menu>

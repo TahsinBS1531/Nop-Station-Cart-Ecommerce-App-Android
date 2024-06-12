@@ -1,5 +1,7 @@
 package com.example.nopstationcart.view.Product_Shopping_Cart
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -56,9 +58,19 @@ class Product_Cart_Main : Fragment() {
     }
 
     fun handleCheckOutBtn(){
+        val sharedpreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+        val token = sharedpreferences.getString("TOKEN", null)
         binding.checkOutBtn.setOnClickListener {
-            val action = Product_Cart_MainDirections.actionProductCartMainToCheckoutMain()
-            findNavController().navigate(action)
+            if (token==null){
+                val editor = sharedpreferences.edit()
+                editor.putString("User", "Guest")
+                editor.apply()
+                val action = Product_Cart_MainDirections.actionProductCartMainToLoginMain()
+                findNavController().navigate(action)
+            }else{
+                val action = Product_Cart_MainDirections.actionProductCartMainToCheckoutMain()
+                findNavController().navigate(action)
+            }
         }
     }
 
@@ -96,49 +108,57 @@ class Product_Cart_Main : Fragment() {
             return
         }
 
-        val formValue = FormValue("itemquantity${productId}",quantity)
-        val request = UpdateCartRequest(listOf(formValue))
-        updateCartViewModel.getApiCall(request,requireContext())
-        updateCartViewModel.response.observe(viewLifecycleOwner) {response->
-            response.onSuccess {
-                Toast.makeText(requireContext(),"Cart value updated",Toast.LENGTH_LONG).show()
-                handlePrices(it.Data.OrderTotals.SubTotal,it.Data.OrderTotals.OrderTotal,it.Data.OrderTotals.Shipping)
-                if(quantity.toInt() ==0){
-                    productsList.removeAt(position)
-                    binding.CartPageItems.text = "${it.Data.Cart.Items.size.toString()} Items"
-                    binding.cartPageCartAmount.text =it.Data.Cart.Items.size.toString()
-                    adapter.notifyItemRemoved(position)
-                    adapter.notifyItemRangeChanged(position,productsList.size)
+        if(quantity.toInt()==0){
+            Toast.makeText(requireContext(),"Sorry You can't Decrease More",Toast.LENGTH_LONG).show()
+        }else{
+            val formValue = FormValue("itemquantity${productId}",quantity)
+            val request = UpdateCartRequest(listOf(formValue))
+            updateCartViewModel.getApiCall(request,requireContext())
+            updateCartViewModel.response.observe(viewLifecycleOwner) {response->
+                response.onSuccess {
+                    Toast.makeText(requireContext(),"Cart value updated",Toast.LENGTH_LONG).show()
+                    handlePrices(it.Data.OrderTotals.SubTotal,it.Data.OrderTotals.OrderTotal,it.Data.OrderTotals.Shipping)
+                    //fetchDataAndUpdatePrices()
+                }.onFailure {
+                    Toast.makeText(requireContext(),"Cart value update failed",Toast.LENGTH_LONG).show()
                 }
-                //fetchDataAndUpdatePrices()
-            }.onFailure {
-                Toast.makeText(requireContext(),"Cart value update failed",Toast.LENGTH_LONG).show()
             }
         }
     }
 
+    private fun stopLoader(){
+        binding.progressBarCart.visibility= View.GONE
+    }
+    private fun startLoader(){
+        binding.progressBarCart.visibility= View.VISIBLE
+    }
+
     fun removeFromCart(position: Int, productId: String,productList:ArrayList<productCartItems>){
+        startLoader()
         val formValue = com.example.nopstationcart.Services.Model.Remove_Cart.FormValue("removefromcart",productId)
         val request = RemoveCartRequest(listOf(formValue))
         removeCartViewModel.getTheCartRemoved(request,requireContext())
         removeCartViewModel.response.observe(viewLifecycleOwner){response->
-            response.onSuccess {
-                if(position>=0 && position <productList.size){
-                    Toast.makeText(requireContext(),"Cart Item is removed",Toast.LENGTH_LONG).show()
+            response.onSuccess {removeResponse->
+                stopLoader()
+                val removedItem = productList.find { it.productId == productId.toInt() }
+                if (removedItem != null) {
+                    handlePrices(removeResponse.Data.OrderTotals.SubTotal,removeResponse.Data.OrderTotals.OrderTotal,removeResponse.Data.OrderTotals.Shipping)
+                    binding.CartPageItems.text = "${removeResponse.Data.Cart.Items.size.toString()} Items"
+                    binding.cartPageCartAmount.text =removeResponse.Data.Cart.Items.size.toString()
 
-                    handlePrices(it.Data.OrderTotals.SubTotal,it.Data.OrderTotals.OrderTotal,it.Data.OrderTotals.Shipping)
-                    binding.CartPageItems.text = "${it.Data.Cart.Items.size.toString()} Items"
-                    binding.cartPageCartAmount.text =it.Data.Cart.Items.size.toString()
-                    productList.removeAt(position)
-                    adapter.notifyItemRemoved(position)
-                    adapter.notifyItemRangeChanged(position,productList.size)
-
+                    productList.remove(removedItem)
+                    adapter.notifyDataSetChanged()
                     if (productList.isEmpty()) {
-                        handlePrices("0","0","0")
+                        handlePrices("0", "0", "0")
                     }
+                    Toast.makeText(requireContext(), "Cart Item is removed", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(requireContext(), "Failed to find item to remove", Toast.LENGTH_LONG).show()
                 }
                 //fetchDataAndUpdatePrices()
             }.onFailure {
+                stopLoader()
                 Toast.makeText(requireContext(),"Cart Item remove failed",Toast.LENGTH_LONG).show()
             }
 

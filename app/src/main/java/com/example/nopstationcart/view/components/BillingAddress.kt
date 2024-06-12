@@ -1,5 +1,7 @@
 package com.example.nopstationcart.view.components
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedCard
@@ -25,10 +28,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,8 +54,19 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.example.nopstationcart.R
+import com.example.nopstationcart.Services.Local.OrderDetailsEntity
+import com.example.nopstationcart.Services.Model.Checkout.CheckoutResponse
+import com.example.nopstationcart.Services.Model.Remove_Cart.FormValue
+import com.example.nopstationcart.Services.Model.Remove_Cart.RemoveCartRequest
+import com.example.nopstationcart.Services.Model.ShoppingCart.CartProductsResponse
+import com.example.nopstationcart.Services.Model.ShoppingCart.productCartItems
 import com.example.nopstationcart.viewmodel.CheckoutViewModel
+import com.example.nopstationcart.viewmodel.OrderDetailsViewModel
+import com.example.nopstationcart.viewmodel.RemoveCartViewModel
 import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import java.util.Date
 
 
 @Composable
@@ -94,21 +110,20 @@ fun customText(value:String, color: Color){
 }
 
 @Composable
-fun customTextField(label :String, value:String,isTrailingIcon:Boolean) {
+fun customTextField(label :String, value:String, onValueChange: (String) -> Unit,error: String,isTrailingIcon:Boolean) {
     var existingAddress by remember { mutableStateOf("") }
 
     TextField(
         value = value,
-        onValueChange = {existingAddress = it},
+        onValueChange = onValueChange,
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.Transparent),
         label = { Text(label) },
         trailingIcon = {
             if (isTrailingIcon) {
-                // Add your desired trailing icon here (e.g., IconButton, ImageVector)
                 IconButton(onClick = { /* Handle icon click here */ }) {
-                    Icon( // Replace with your desired icon content (e.g., Icons.Clear)
+                    Icon(
                         imageVector = Icons.Filled.KeyboardArrowDown,
                         contentDescription = "Clear text"
                     )
@@ -124,6 +139,7 @@ fun customTextField(label :String, value:String,isTrailingIcon:Boolean) {
             focusedLabelColor = colorResource(id = R.color.blue)
         ),
     )
+
 }
 
 @Composable
@@ -232,83 +248,183 @@ fun ButtonCheck(
     }
 }
 
-
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun finalAmountBox(viewModel: CheckoutViewModel, navController: NavController, action: NavDirections, shoppingCartViewModel: ShoppingCartViewModel) {
-
+fun finalAmountBox(
+    viewModel: CheckoutViewModel,
+    navController: NavController,
+    action: NavDirections,
+    shoppingCartViewModel: ShoppingCartViewModel,
+    validation: Boolean,
+    productsEntity: OrderDetailsEntity?,
+    orderDetailsViewModel: OrderDetailsViewModel,
+    removeCartViewModel: RemoveCartViewModel
+) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
-    val result by viewModel.result.observeAsState()
+    val response by viewModel.result.observeAsState()
+    val removeCart by removeCartViewModel.response.observeAsState()
     val shoppingCartResult by shoppingCartViewModel.response.observeAsState()
-    var subtotal =""
-    var Shipping =""
-    var Discount =""
-    var orderTotal =""
 
-    OutlinedCard(modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 16.dp, vertical = 8.dp)
-        .height(200.dp),
+    var subtotal by remember { mutableStateOf("0") }
+    var shipping by remember { mutableStateOf("0") }
+    var discount by remember { mutableStateOf("0") }
+    var orderTotal by remember { mutableStateOf("0") }
+    var isLoading by remember { mutableStateOf(false) }
+
+
+    LaunchedEffect(Unit) {
+        shoppingCartViewModel.getCartProducts(context)
+    }
+
+    OutlinedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .height(200.dp),
         colors = CardDefaults.outlinedCardColors(containerColor = colorResource(id = R.color.white)),
         shape = RoundedCornerShape(4.dp)
     ) {
-        
         Spacer(modifier = Modifier.height(10.dp))
-        shoppingCartViewModel.getCartProducts(context)
+
         shoppingCartResult?.let {
-            it.onSuccess {
-                subtotal = it.Data.OrderTotals.SubTotal.toString()
-                Shipping = it.Data.OrderTotals.Shipping.toString()
-                Discount = it.Data.OrderTotals.OrderTotalDiscount.toString()
-                orderTotal = it.Data.OrderTotals.OrderTotal.toString()
+            it.onSuccess { data ->
+                subtotal = data.Data.OrderTotals.SubTotal.toString()
+                shipping = data.Data.OrderTotals.Shipping.toString()
+                discount = data.Data.OrderTotals.OrderTotalDiscount ?: "0"
+                orderTotal = data.Data.OrderTotals.OrderTotal.toString()
             }.onFailure {
                 subtotal = "0"
-                Shipping = "0"
-                Discount = "0"
+                shipping = "0"
+                discount = "0"
                 orderTotal = "0"
             }
         }
-        TextField("Sub-Total:",subtotal)
-        TextField("Shipping:",Shipping)
-        TextField("Discount Amount:",Discount)
-        TextField("Totall:",orderTotal)
-        Spacer(modifier = Modifier.height(10.dp))
-        Spacer(modifier = Modifier.height(10.dp))
-        TextButton(onClick = {
-            viewModel.getResponse()
-                             result?.let {
-                                 it.onSuccess {
-                                     Toast.makeText(context, "${it.message}, ${it.orderId}",Toast.LENGTH_LONG).show()
-                                     println(it.message)
-                                     navController.navigate(action)
 
-                                 }.onFailure {
-                                     println(it)
-                                     println("Failed api checkout")
-                                     Toast.makeText(context, "Checkout Api Failed",Toast.LENGTH_LONG).show()
-                                 }
-                             }},
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(start = 15.dp, end = 15.dp)
-                .fillMaxWidth()
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            Color(0xFF0BF7EB),
-                            Color(0xFF07C5FB),
-                            Color(0xFF088DF9)
-                        ),
-                        start = Offset(0f, 0f),
-                        end = Offset.Infinite
+        TextField("Sub-Total", subtotal)
+        TextField("Shipping:", shipping)
+        TextField("Discount Amount:", discount)
+        TextField("Total:", orderTotal)
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        if(isLoading){
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 16.dp)
+            )
+        }else{
+            TextButton(
+                onClick = {
+                    if(validation){
+                        isLoading = true
+                        println("Checkout button is clicked")
+                        viewModel.getResponse()
+                    }else{
+                        Toast.makeText(context,"Please Fill all the fields",Toast.LENGTH_LONG).show()
+                    }
+
+                },
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(start = 15.dp, end = 15.dp)
+                    .fillMaxWidth()
+                    .background(
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                Color(0xFF0BF7EB),
+                                Color(0xFF07C5FB),
+                                Color(0xFF088DF9)
+                            ),
+                            start = Offset(0f, 0f),
+                            end = Offset.Infinite
+                        )
                     )
-                )) {
-            Text(text = "Confirm", color = colorResource(id = R.color.white))
+            ) {
+                Text(text = "Confirm", color = colorResource(id = R.color.white))
+            }
         }
 
-        
+    }
+
+    LaunchedEffect(response) {
+        response?.let {
+            it.onSuccess { checkoutResponse ->
+                isLoading = false
+                println("API Response Successful")
+                Toast.makeText(context, "${checkoutResponse.message}, ${checkoutResponse.orderId}", Toast.LENGTH_LONG).show()
+                addOrderData(checkoutResponse, productsEntity, coroutineScope, shoppingCartResult, removeCartViewModel, context, orderDetailsViewModel, navController, action, orderTotal)
+            }.onFailure {
+                isLoading = false
+                println("Failed API checkout")
+                Toast.makeText(context, "Checkout API Failed", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    removeCart?.let {
+        it.onSuccess {
+            println("Removed API success")
+        }.onFailure {
+            println("Removed API unsuccess")
+        }
     }
 }
+
+private fun removeCartItems(products: ArrayList<FormValue>, removeCartViewModel: RemoveCartViewModel, context: Context) {
+    val request = RemoveCartRequest(products)
+    removeCartViewModel.getTheCartRemoved(request, context)
+}
+
+private fun addOrderData(
+    checkoutResponse: CheckoutResponse,
+    productsEntity: OrderDetailsEntity?,
+    coroutineScope: CoroutineScope,
+    shoppingCartResult: Result<CartProductsResponse>?,
+    removeCartViewModel: RemoveCartViewModel,
+    context: Context,
+    orderDetailsViewModel: OrderDetailsViewModel,
+    navController: NavController,
+    action: NavDirections,
+    orderTotal: String
+){
+    coroutineScope.launch {
+        if (productsEntity != null) {
+            shoppingCartResult?.let {
+                it.onSuccess { data ->
+                    val list = ArrayList<productCartItems>()
+                    val removeList = ArrayList<FormValue>()
+                    list.clear()
+                    removeList.clear()
+                    data.Data.Cart.Items.forEach { item ->
+                        val product = productCartItems(item.ProductName, item.UnitPrice, item.Picture.ImageUrl, item.Quantity, item.ProductId)
+                        list.add(product)
+                        val productId = item.Id.toString()
+                        val formValue = FormValue("removefromcart", productId)
+                        removeList.add(formValue)
+                    }
+                    removeCartItems(removeList, removeCartViewModel, context)
+                    val currentDate = Date()
+                    productsEntity.products = list
+                    productsEntity.orderId = checkoutResponse.orderId
+                    productsEntity.total_amount = list.size.toString()
+                    productsEntity.orderTotal = orderTotal
+                    productsEntity.orderDate = currentDate.toString()
+                    orderDetailsViewModel.saveOrderDetails(context, productsEntity)
+                    navController.navigate(action)
+                }.onFailure {
+                    println("Failed to fetch cart products")
+                }
+            }
+        }
+
+    }
+}
+
+
+
 
 @Composable
 fun TextField(title:String, amount:String, mode:String ="default"){

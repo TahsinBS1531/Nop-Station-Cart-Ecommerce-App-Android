@@ -4,6 +4,8 @@ import androidx.room.TypeConverter
 import com.example.nopstationcart.Services.Model.CategoryList.CustomProperties
 import com.example.nopstationcart.Services.Model.CategoryList.Product
 import com.example.nopstationcart.Services.Model.CategoryList.SubCategory
+import com.example.nopstationcart.Services.Model.ShoppingCart.Item
+import com.example.nopstationcart.Services.Model.ShoppingCart.productCartItems
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -40,5 +42,19 @@ class Converter {
     fun toSubCategories(value: String): List<SubCategory> {
         val type = object : TypeToken<List<SubCategory>>() {}.type
         return Gson().fromJson(value, type)
+    }
+
+    @TypeConverter
+    fun fromItemList(value: List<productCartItems>?): String {
+        val gson = Gson()
+        val type = object : TypeToken<List<productCartItems>>() {}.type
+        return gson.toJson(value, type)
+    }
+
+    @TypeConverter
+    fun toItemList(value: String): List<productCartItems>? {
+        val gson = Gson()
+        val type = object : TypeToken<List<productCartItems>>() {}.type
+        return gson.fromJson(value, type)
     }
 }

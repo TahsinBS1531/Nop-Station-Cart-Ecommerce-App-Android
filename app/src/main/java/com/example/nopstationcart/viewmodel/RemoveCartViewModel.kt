@@ -16,7 +16,6 @@ class RemoveCartViewModel :ViewModel() {
     fun getTheCartRemoved(request : RemoveCartRequest, context:Context){
         val repository = RemoveCartRepository()
         val result = repository.addProductCart(request,context)
-
         result.observeForever { _response.postValue(it) }
 
     }

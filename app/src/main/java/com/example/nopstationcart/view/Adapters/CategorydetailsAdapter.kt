@@ -53,8 +53,10 @@ class CategoryDetailsAdapter(
             .into(holder.imageView)
         holder.itemPrice.text = item.ProductPrice.Price
         val total_review = item.ReviewOverviewModel.TotalReviews
+        println("Total Reviews: $total_review")
         if(total_review>0){
-            holder.rating.rating = (item.ReviewOverviewModel.TotalReviews/item.ReviewOverviewModel.RatingSum).toFloat()
+            val review = item.ReviewOverviewModel.RatingSum/total_review
+            holder.rating.rating = review.toFloat()
         }else{
             holder.rating.rating = 0f
         }

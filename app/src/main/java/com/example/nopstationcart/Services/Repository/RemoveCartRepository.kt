@@ -19,13 +19,13 @@ class RemoveCartRepository {
 
     fun addProductCart(request: RemoveCartRequest,context:Context): LiveData<Result<RemoveCartResponse>> {
         val instance = RemoveCartInstance.getInstance(context).create(RemoveCartApiInterface::class.java)
-        //val instance = RemoveCartInstance.retrofit.create(RemoveCartApiInterface::class.java)
         val call = instance.getRemoveCart(request)
 
         val _result = MutableLiveData<Result<RemoveCartResponse>>()
         call.enqueue(object: Callback<RemoveCartResponse> {
             override fun onResponse(p0: Call<RemoveCartResponse>, response: Response<RemoveCartResponse>) {
                 if(response.isSuccessful){
+                    println("Product is removed")
                     response.body()?.let {
                         _result.postValue(Result.success(it))
                     }?:_result.postValue(Result.failure(Throwable("Response Body is Null")))
