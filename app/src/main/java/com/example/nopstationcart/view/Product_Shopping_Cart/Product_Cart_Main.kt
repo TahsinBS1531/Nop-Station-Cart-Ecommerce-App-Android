@@ -176,7 +176,7 @@ class Product_Cart_Main : Fragment() {
             shoppingCartViewModel.getCartProducts(requireContext())
             shoppingCartViewModel.response.observe(viewLifecycleOwner) { result ->
                 result.onSuccess { response ->
-                    productsList.clear() // Clear the list to avoid duplicates
+                    productsList.clear()
                     binding.cartPageCartAmount.text = response.Data.Cart.Items.size.toString()
                     binding.CartPageItems.text = "${response.Data.Cart.Items.size.toString()} Items"
                     if(response.Data.Cart.Items.size==0){

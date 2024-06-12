@@ -10,7 +10,7 @@
 
     <item android:title="Search"
         android:icon="@drawable/bottom_nav_search"
-        android:id="@+id/product_Cart_Main"/>
+        android:id="@+id/search_Page"/>
 
     <item android:title="Account"
         android:icon="@drawable/menu_account"

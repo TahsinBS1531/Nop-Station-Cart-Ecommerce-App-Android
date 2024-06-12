@@ -180,4 +180,9 @@
             android:name="ExistingAddress"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/search_Page"
+        android:name="com.example.nopstationcart.view.Search_Page.Search_Page"
+        android:label="fragment_search__page"
+        tools:layout="@layout/fragment_search__page" />
 </navigation>
