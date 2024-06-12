@@ -30,6 +30,7 @@ import com.example.nopstationcart.Services.Local.AppDatabase
 import com.example.nopstationcart.Services.Local.BannerDao
 import com.example.nopstationcart.Services.Model.CategoryList.CategorySingleItem
 import com.example.nopstationcart.Services.Model.Home_Page.Featured_Products.featuredProductsItem2
+import com.example.nopstationcart.Services.Netwrok.InternetStatus
 import com.example.nopstationcart.Services.Netwrok.sliderApiInterface
 import com.example.nopstationcart.Services.Repository.SliderRespository
 import com.example.nopstationcart.databinding.HomePageFragmentBinding
@@ -270,21 +271,26 @@ class Home_Page : Fragment(){
             }
 
             override fun onCartBtnClick(position: Int) {
-                val currentItem = featuredList[position]
-                val productId = currentItem.id
-                cartPageViewModel.getCartResponse(productId,requireContext(),"1")
-                cartPageViewModel.result.observe(viewLifecycleOwner){
-                    it.onSuccess {response->
-                        totallCartProducts = response.Data.TotalShoppingCartProducts.toString()
-                        Toast.makeText(requireContext(),"${response.Message}",Toast.LENGTH_LONG).show()
-                        setShoppingCartQuantity(totallCartProducts)
-                    }.onFailure {response->
-                        Toast.makeText(requireContext(),"${response.cause?.cause}",Toast.LENGTH_LONG).show()
-                        println(response.cause?.message)
+                if(InternetStatus.isOnline(requireContext())){
+                    val currentItem = featuredList[position]
+                    val productId = currentItem.id
+                    cartPageViewModel.getCartResponse(productId,requireContext(),"1")
+                    cartPageViewModel.result.observe(viewLifecycleOwner){
+                        it.onSuccess {response->
+                            totallCartProducts = response.Data.TotalShoppingCartProducts.toString()
+                            Toast.makeText(requireContext(),"${response.Message}",Toast.LENGTH_LONG).show()
+                            setShoppingCartQuantity(totallCartProducts)
+                        }.onFailure {response->
+                            Toast.makeText(requireContext(),"${response.cause?.cause}",Toast.LENGTH_LONG).show()
+                            println(response.cause?.message)
+                        }
                     }
+                    println(productId)
+                    println(currentItem.tittle)
+                }else{
+                    Toast.makeText(requireContext(),"No Internet Connection. Please Connect to a network.",Toast.LENGTH_LONG).show()
                 }
-                println(productId)
-                println(currentItem.tittle)
+
 
             }
 

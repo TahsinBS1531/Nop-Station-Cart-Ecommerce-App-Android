@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Interfaces.categoryDetailsOnClicklistener
 import com.example.nopstationcart.Services.Model.CategoryList.Product
+import com.example.nopstationcart.Services.Netwrok.InternetStatus
 import com.example.nopstationcart.databinding.FragmentHomePageCategoryBinding
 import com.example.nopstationcart.viewmodel.CartViewModel
 import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
@@ -76,17 +77,22 @@ class Home_page_Category : Fragment() {
                 }
 
                 override fun onCartBtnClick(position: Int) {
-                    val currentItem = items[position]
-                    val productId = currentItem.Id
-                    cartPageViewModel.getCartResponse(productId,requireContext(),"1")
-                    cartPageViewModel.result.observe(viewLifecycleOwner){
-                        it.onSuccess {response->
-                            Toast.makeText(requireContext(),"${response.Message}", Toast.LENGTH_LONG).show()
-                            handleCartAmount(view)
-                        }.onFailure {response->
-                            Toast.makeText(requireContext(),"${response.cause?.cause}", Toast.LENGTH_LONG).show()
-                            println(response.cause?.message)
+                    if(InternetStatus.isOnline(requireContext())){
+                        val currentItem = items[position]
+                        val productId = currentItem.Id
+                        cartPageViewModel.getCartResponse(productId,requireContext(),"1")
+                        cartPageViewModel.result.observe(viewLifecycleOwner){
+                            it.onSuccess {response->
+                                Toast.makeText(requireContext(),"${response.Message}", Toast.LENGTH_LONG).show()
+                                handleCartAmount(view)
+                            }.onFailure {response->
+                                Toast.makeText(requireContext(),"${response.cause?.cause}", Toast.LENGTH_LONG).show()
+                                println(response.cause?.message)
+                            }
                         }
+
+                    }else{
+                        Toast.makeText(requireContext(),"No Internet Connection. Please Connect to a Network",Toast.LENGTH_LONG).show()
                     }
                 }
 
