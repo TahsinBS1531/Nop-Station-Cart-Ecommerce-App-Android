@@ -14,12 +14,14 @@ import com.example.nopstationcart.R
 import com.example.nopstationcart.databinding.FragmentLogOutMainBinding
 import com.example.nopstationcart.databinding.HomePageFragmentBinding
 import com.example.nopstationcart.view.Home_Page.Home_PageDirections
+import com.example.nopstationcart.viewmodel.AccountInfoViewModel
 import com.example.nopstationcart.viewmodel.LogOutViewModel
 
 class logOutMain : Fragment() {
 
     private lateinit var binding: FragmentLogOutMainBinding
     private val logOutViewModel: LogOutViewModel by viewModels()
+    private val accountInfo:AccountInfoViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,11 +34,25 @@ class logOutMain : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_log_out_main, container, false)
         binding = FragmentLogOutMainBinding.bind(view)
-
+        handleAccountInfo()
         handleLogOut()
         return binding.root
     }
 
+    private fun handleAccountInfo(){
+        accountInfo.getAccountResponse(requireContext())
+        accountInfo.result.observe(viewLifecycleOwner){response->
+            response.onSuccess {
+                binding.accountPageName.text = "${it.Data.FirstName} ${it.Data.LastName}"
+                binding.accountPageEmail.text = it.Data.Email
+                binding.AccountInfoCompany.text = it.Data.Company
+                binding.AccountInfoGender.text = it.Data.Gender
+                binding.AccountIntoDOB.text = "${it.Data.DateOfBirthDay}/${it.Data.DateOfBirthMonth}/${it.Data.DateOfBirthYear}"
+            }.onFailure {
+
+            }
+        }
+    }
 
     private fun handleLogOut() {
         binding.mainLogOut.setOnClickListener {

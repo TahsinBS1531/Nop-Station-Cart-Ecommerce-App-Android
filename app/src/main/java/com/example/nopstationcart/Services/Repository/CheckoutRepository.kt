@@ -20,14 +20,17 @@ class CheckoutRepository {
                 if(response.isSuccessful){
                     response.body()?.let {
                         _result.postValue(Result.success(it))
+                        println("Checkout Api Successful")
                     }?:_result.postValue(Result.failure(Throwable("Response Body is Null")))
                 }else{
                     _result.postValue(Result.failure(Throwable("request is denied")))
+                    println("Checkout Api Not Successful")
                 }
             }
 
             override fun onFailure(p0: Call<CheckoutResponse>, p1: Throwable) {
                 _result.postValue(Result.failure(Throwable("request is denied")))
+                println("Checkout Api unsuccessful")
             }
 
         })

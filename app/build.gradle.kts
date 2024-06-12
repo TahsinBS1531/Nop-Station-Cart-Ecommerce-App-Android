@@ -126,6 +126,9 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-android-compiler:2.48")
     implementation ("androidx.fragment:fragment-ktx:1.5.3")
+
+    //Splash Screen
+    implementation("androidx.core:core-splashscreen:1.0.0")
 }
 kapt {
     correctErrorTypes = true

@@ -25,6 +25,8 @@ import com.example.nopstationcart.view.Home_Page.Home_Page
 import com.example.nopstationcart.viewmodel.RemoveCartViewModel
 import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
 import com.example.nopstationcart.viewmodel.UpdateCartViewModel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 
 class Product_Cart_Main : Fragment() {
     private val shoppingCartViewModel: ShoppingCartViewModel by viewModels()
@@ -62,15 +64,18 @@ class Product_Cart_Main : Fragment() {
         val sharedpreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
         val token = sharedpreferences.getString("TOKEN", null)
         binding.checkOutBtn.setOnClickListener {
+            startLoader()
             if (token==null){
                 val editor = sharedpreferences.edit()
                 editor.putString("User", "Guest")
                 editor.apply()
                 val action = Product_Cart_MainDirections.actionProductCartMainToLoginMain()
                 findNavController().navigate(action)
+                stopLoader()
             }else{
                 val action = Product_Cart_MainDirections.actionProductCartMainToCheckoutMain()
                 findNavController().navigate(action)
+                stopLoader()
             }
         }
     }

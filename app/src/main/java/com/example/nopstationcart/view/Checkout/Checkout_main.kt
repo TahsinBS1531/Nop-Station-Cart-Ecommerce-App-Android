@@ -91,6 +91,8 @@ class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
     fun CheckoutScreen() {
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
+        var cartAmount by remember { mutableStateOf(0) }
+
         var text by remember { mutableStateOf("") }
         var existingAddress by remember { mutableStateOf("") }
         var billingAddress by remember { mutableStateOf("") }
@@ -223,7 +225,7 @@ class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
                     actions = {
                         BadgedBox(modifier = Modifier.padding(horizontal = 16.dp),badge = {
                             Badge(containerColor = Color.White){
-                                Text("2")
+                                Text(text = cartAmount.toString())
                             }
                         }) {
                             Icon(
@@ -304,6 +306,7 @@ class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
                     val list = ArrayList<productCartItems>()
                     shoppingCartViewModel.response.observe(viewLifecycleOwner){
                         it.onSuccess {
+                            cartAmount = it.Data.Cart.Items.size
                             it.Data.Cart.Items.forEach {
                                 //println("Product Name: ${it.ProductName}")
                                 val product = productCartItems(it.ProductName,it.UnitPrice,it.Picture.ImageUrl,it.Quantity,it.ProductId)
