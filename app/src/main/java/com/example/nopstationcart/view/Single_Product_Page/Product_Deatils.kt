@@ -40,6 +40,11 @@ class Product_Deatils : Fragment() {
         handleBackBtn(view)
         handleCartAmount()
 
+        binding.productDetailsCart.setOnClickListener {
+            val action = Product_DeatilsDirections.actionProductDeatilsToProductCartMain()
+            findNavController().navigate(action)
+        }
+
         return binding.root
     }
 
@@ -56,10 +61,6 @@ class Product_Deatils : Fragment() {
             }
         }
 
-        binding.productDetailsCart.setOnClickListener {
-            val action = Product_DeatilsDirections.actionProductDeatilsToProductCartMain()
-            findNavController().navigate(action)
-        }
     }
     fun getProductsDetails(view:View){
         val args = Product_DeatilsArgs.fromBundle(requireArguments())

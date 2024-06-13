@@ -186,7 +186,7 @@ class Home_Page : Fragment(){
                 val oldPrice = currentItem.oldPrice
                 val productId = currentItem.id
 
-                Toast.makeText(requireContext(),"This is a $title",Toast.LENGTH_LONG).show()
+                //Toast.makeText(requireContext(),"This is a $title",Toast.LENGTH_LONG).show()
                 val action = Home_PageDirections.actionHomePageToProductDeatils(title,image,price,shortDes, longDes,oldPrice,productId.toString())
                 findNavController().navigate(action)
 
@@ -197,13 +197,17 @@ class Home_Page : Fragment(){
                     val currentItem = featuredList[position]
                     val productId = currentItem.id
                     cartPageViewModel.getCartResponse(productId,requireContext(),"1")
+
+                    cartPageViewModel.result.removeObservers(viewLifecycleOwner)
+
                     cartPageViewModel.result.observe(viewLifecycleOwner){
                         it.onSuccess {response->
-                            totallCartProducts = response.Data.TotalShoppingCartProducts.toString()
-                            Toast.makeText(requireContext(),"${response.Message}",Toast.LENGTH_LONG).show()
-                            setShoppingCartQuantity(totallCartProducts)
+                            println("Add to cart : ${response.Message}")
+                            Toast.makeText(requireContext(),"${response.Message}",Toast.LENGTH_SHORT).show()
+                            setShoppingCart()
                         }.onFailure {response->
-                            Toast.makeText(requireContext(),"${response.cause?.cause}",Toast.LENGTH_LONG).show()
+                            println("Failed")
+                            Toast.makeText(requireContext(),"${response.cause?.cause}",Toast.LENGTH_SHORT).show()
                             println(response.cause?.message)
                         }
                     }
@@ -212,7 +216,6 @@ class Home_Page : Fragment(){
                 }else{
                     Toast.makeText(requireContext(),"No Internet Connection. Please Connect to a network.",Toast.LENGTH_LONG).show()
                 }
-
 
             }
 
