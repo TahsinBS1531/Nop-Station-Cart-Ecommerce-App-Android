@@ -115,18 +115,18 @@ class Product_Cart_Main : Fragment() {
         }
 
         if(quantity.toInt()==0){
-            Toast.makeText(requireContext(),"Sorry You can't Decrease More",Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(),"Sorry You can't Decrease More",Toast.LENGTH_SHORT).show()
         }else{
             val formValue = FormValue("itemquantity${productId}",quantity)
             val request = UpdateCartRequest(listOf(formValue))
             updateCartViewModel.getApiCall(request,requireContext())
             updateCartViewModel.response.observe(viewLifecycleOwner) {response->
                 response.onSuccess {
-                    Toast.makeText(requireContext(),"Cart value updated",Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(),"Cart value updated",Toast.LENGTH_SHORT).show()
                     handlePrices(it.Data.OrderTotals.SubTotal,it.Data.OrderTotals.OrderTotal,it.Data.OrderTotals.Shipping)
                     //fetchDataAndUpdatePrices()
                 }.onFailure {
-                    Toast.makeText(requireContext(),"Cart value update failed",Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(),"Cart value update failed",Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -158,9 +158,9 @@ class Product_Cart_Main : Fragment() {
                     if (productList.isEmpty()) {
                         handlePrices("0", "0", "0")
                     }
-                    Toast.makeText(requireContext(), "Cart Item is removed", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Cart Item is removed", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(requireContext(), "Failed to find item to remove", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Failed to find item to remove", Toast.LENGTH_SHORT).show()
                 }
                 //fetchDataAndUpdatePrices()
             }.onFailure {

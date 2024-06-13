@@ -22,6 +22,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -29,6 +30,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -67,6 +69,7 @@ import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.Date
+
 
 
 @Composable
@@ -110,9 +113,14 @@ fun customText(value:String, color: Color){
 }
 
 @Composable
-fun customTextField(label :String, value:String, onValueChange: (String) -> Unit,error: String,isTrailingIcon:Boolean) {
-    var existingAddress by remember { mutableStateOf("") }
-
+fun customTextField(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    error: String,
+    isTrailingIcon: Boolean,
+    isBtnClicked: MutableState<Boolean>
+) {
     TextField(
         value = value,
         onValueChange = onValueChange,
@@ -139,7 +147,6 @@ fun customTextField(label :String, value:String, onValueChange: (String) -> Unit
             focusedLabelColor = colorResource(id = R.color.blue)
         ),
     )
-
 }
 
 @Composable
@@ -258,7 +265,8 @@ fun finalAmountBox(
     validation: Boolean,
     productsEntity: OrderDetailsEntity?,
     orderDetailsViewModel: OrderDetailsViewModel,
-    removeCartViewModel: RemoveCartViewModel
+    removeCartViewModel: RemoveCartViewModel,
+    isBtnClicked: MutableState<Boolean>
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -320,6 +328,7 @@ fun finalAmountBox(
             TextButton(
                 onClick = {
                     if(validation){
+                        isBtnClicked.value=true
                         isLoading = true
                         println("Checkout button is clicked")
                         //viewModel.getResponse()
@@ -363,20 +372,6 @@ fun finalAmountBox(
 
     }
 
-//    LaunchedEffect(response) {
-//        response?.let {
-//            it.onSuccess { checkoutResponse ->
-//                isLoading = false
-//                println("API Response Successful")
-//                Toast.makeText(context, "${checkoutResponse.message}, ${checkoutResponse.orderId}", Toast.LENGTH_LONG).show()
-//                addOrderData(checkoutResponse, productsEntity, coroutineScope, shoppingCartResult, removeCartViewModel, context, orderDetailsViewModel, navController, action, orderTotal)
-//            }.onFailure {
-//                isLoading = false
-//                println("Failed API checkout")
-//                Toast.makeText(context, "Checkout API Failed", Toast.LENGTH_LONG).show()
-//            }
-//        }
-//    }
 
     removeCart?.let {
         it.onSuccess {

@@ -14,7 +14,7 @@
 
     <item android:title="Account"
         android:icon="@drawable/menu_account"
-        android:id="@+id/login_main"/>
+        android:id="@+id/logOutMain"/>
 
     <item android:title="More"
         android:icon="@drawable/menu_more_btn"

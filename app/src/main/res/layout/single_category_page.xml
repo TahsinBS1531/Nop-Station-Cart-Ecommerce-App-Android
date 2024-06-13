@@ -43,13 +43,10 @@
                     android:id="@+id/singleCategoryCartBtn"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginStart="224dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="16dp"
                     android:background="@drawable/checkout"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.264"
+                    app:layout_constraintHorizontal_bias="0.8"
                     app:layout_constraintStart_toEndOf="@+id/textView2"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -109,10 +106,9 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/singleCategoryRecycle"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
+                android:layout_gravity="center"
                 android:paddingTop="20dp"
                 tools:listitem="@layout/category_details_single_item"/>
 

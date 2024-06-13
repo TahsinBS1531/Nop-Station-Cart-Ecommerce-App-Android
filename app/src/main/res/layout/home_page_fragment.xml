@@ -29,17 +29,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="37dp"
-                    android:layout_marginTop="20dp"
                     android:layout_marginEnd="35dp"
-                    android:layout_marginBottom="16dp"
                     android:text="Log Out"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/cart_btn"
-                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintHorizontal_bias="0.888"
                     app:layout_constraintStart_toEndOf="@+id/imageView2"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintVertical_bias="0.39" />
 
                 <ImageView
                     android:id="@+id/imageView2"
@@ -62,9 +60,10 @@
                     android:src="@drawable/checkout"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.942"
+                    app:layout_constraintHorizontal_bias="0.81"
                     app:layout_constraintStart_toEndOf="@+id/imageView2"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.38" />
 
                 <TextView
                     android:id="@+id/home_page_cartBtn"
@@ -216,7 +215,9 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/featuredRecycle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/featured_products_single_item"/>
 
             </LinearLayout>
 

@@ -59,17 +59,21 @@ class MainActivity : AppCompatActivity() {
                 R.id.product_Deatils ->{
                     bottomNav.visibility = View.GONE
                 }
-                R.id.login_main -> {
+                R.id.logOutMain -> {
                     val sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
                     val token = sharedPreferences.getString("TOKEN", null)
                     if (token != null) {
                         //navController.navigate(R.id.home_Page)
-                        navController.navigate(R.id.logOutMain)
+                        //navController.navigate(R.id.logOutMain)
                         println("User already has token: $token")
                         Toast.makeText(this, "User already Logged In", Toast.LENGTH_LONG).show()
                     } else {
+                        navController.navigate(R.id.login_main)
                         bottomNav.visibility = View.GONE
                     }
+                }
+                R.id.login_main->{
+                    bottomNav.visibility = View.GONE
                 }
                 R.id.home_page_Category -> bottomNav.visibility = View.GONE
                 else -> bottomNav.visibility = View.VISIBLE
