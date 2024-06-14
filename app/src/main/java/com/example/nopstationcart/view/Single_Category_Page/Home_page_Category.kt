@@ -82,12 +82,14 @@ class Home_page_Category : Fragment() {
                         val currentItem = items[position]
                         val productId = currentItem.Id
                         cartPageViewModel.getCartResponse(productId,requireContext(),"1")
+
+                        cartPageViewModel.result.removeObservers(viewLifecycleOwner)
                         cartPageViewModel.result.observe(viewLifecycleOwner){
                             it.onSuccess {response->
-                                Toast.makeText(requireContext(),"${response.Message}", Toast.LENGTH_LONG).show()
+                                Toast.makeText(requireContext(),"${response.Message}", Toast.LENGTH_SHORT).show()
                                 handleCartAmount(view)
                             }.onFailure {response->
-                                Toast.makeText(requireContext(),"${response.cause?.cause}", Toast.LENGTH_LONG).show()
+                                Toast.makeText(requireContext(),"${response.cause?.cause}", Toast.LENGTH_SHORT).show()
                                 println(response.cause?.message)
                             }
                         }

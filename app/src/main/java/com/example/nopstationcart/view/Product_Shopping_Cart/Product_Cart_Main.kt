@@ -65,7 +65,15 @@ class Product_Cart_Main : Fragment() {
         val token = sharedpreferences.getString("TOKEN", null)
         binding.checkOutBtn.setOnClickListener {
             startLoader()
+            var cartItems =0
+            shoppingCartViewModel.getCartProducts(requireContext())
+            shoppingCartViewModel.response.observe(viewLifecycleOwner){
+                it.onSuccess {
+                    cartItems = it.Data.Cart.Items.size
+                }
+            }
             if (token==null){
+                Toast.makeText(requireContext(),"You must be logged in to checkout",Toast.LENGTH_SHORT).show()
                 val editor = sharedpreferences.edit()
                 editor.putString("User", "Guest")
                 editor.apply()
@@ -73,9 +81,14 @@ class Product_Cart_Main : Fragment() {
                 findNavController().navigate(action)
                 stopLoader()
             }else{
-                val action = Product_Cart_MainDirections.actionProductCartMainToCheckoutMain()
-                findNavController().navigate(action)
-                stopLoader()
+                if(cartItems==0){
+                    Toast.makeText(requireContext(),"Sorry There is no product to checkout",Toast.LENGTH_SHORT).show()
+                    stopLoader()
+                }else{
+                    val action = Product_Cart_MainDirections.actionProductCartMainToCheckoutMain()
+                    findNavController().navigate(action)
+                    stopLoader()
+                }
             }
         }
     }
@@ -160,12 +173,12 @@ class Product_Cart_Main : Fragment() {
                     }
                     Toast.makeText(requireContext(), "Cart Item is removed", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(requireContext(), "Failed to find item to remove", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(requireContext(), "Failed to find item to remove", Toast.LENGTH_SHORT).show()
                 }
                 //fetchDataAndUpdatePrices()
             }.onFailure {
                 stopLoader()
-                Toast.makeText(requireContext(),"Cart Item remove failed",Toast.LENGTH_LONG).show()
+                //Toast.makeText(requireContext(),"Cart Item remove failed",Toast.LENGTH_LONG).show()
             }
 
         }

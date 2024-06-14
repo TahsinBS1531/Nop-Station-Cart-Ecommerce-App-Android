@@ -129,7 +129,6 @@
                     android:paddingTop="5dp"
                     android:paddingEnd="10dp"
                     android:paddingBottom="5dp"
-                    android:text="5 ITEM(S)"
                     android:textSize="10sp" />
             </LinearLayout>
 

@@ -16,18 +16,28 @@ import java.text.Normalizer.Form
 
 class CartPageRepository(val productID:Int) {
 
+
     fun addProductCart(request: CartBodyRequest,context:Context):LiveData<Result<CartResponse>>{
         val call = CartretrofitInstance.getretrofit(context).create(AddToCartApiInterface::class.java).getAddToCartApi(productID,request)
-
         val _result = MutableLiveData<Result<CartResponse>>()
         call.enqueue(object: Callback<CartResponse>{
             override fun onResponse(p0: Call<CartResponse>, response: Response<CartResponse>) {
                 if(response.isSuccessful){
+
                     response.body()?.let {
-                        _result.postValue(Result.success(it))
+                        if(response.code() ==400){
+                            _result.postValue(Result.failure(Throwable("This can't be added")))
+                        }else{
+                            _result.postValue(Result.success(it))
+                        }
                     }?:_result.postValue(Result.failure(Throwable("Response Body is Null")))
-                }else{
-                    _result.postValue(Result.failure(Throwable("request is denied")))
+                }
+                else{
+                    val errorMessage = when (response.code()) {
+                        400 -> "This product cannot be added to the cart"
+                        else -> response.errorBody()?.string() ?: "Unknown error occurred"
+                    }
+                    _result.postValue(Result.failure(Throwable(errorMessage)))
                 }
             }
 
