@@ -1,4 +1,4 @@
-package com.example.nopstationcart.viewmodel
+package com.example.nopstationcart.view.Checkout
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

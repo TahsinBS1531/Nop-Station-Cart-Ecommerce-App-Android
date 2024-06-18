@@ -1,22 +1,17 @@
 package com.example.nopstationcart.view.Adapters
 
-import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.nopstationcart.R
-import com.example.nopstationcart.Services.Interfaces.ItemClickListener
 import com.example.nopstationcart.Services.Interfaces.OnCartClickListener
-import com.example.nopstationcart.Services.Model.Remove_Cart.FormValue
-import com.example.nopstationcart.Services.Model.Remove_Cart.RemoveCartRequest
 import com.example.nopstationcart.Services.Model.ShoppingCart.productCartItems
-import com.example.nopstationcart.viewmodel.RemoveCartViewModel
+import com.example.nopstationcart.view.Product_Shopping_Cart.RemoveCartViewModel
 
 class productCartAdapter(private val itemList: MutableList<productCartItems> , private val viewModel: RemoveCartViewModel): RecyclerView.Adapter<productCartAdapter.MyViewHolder>() {
 

@@ -12,15 +12,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Model.CategoryList.CategorySingleItem
 import com.example.nopstationcart.databinding.FragmentCategoryBinding
-import com.example.nopstationcart.view.Adapters.CategoryAdapter
 import com.example.nopstationcart.view.Adapters.CategoryTreeAdapter
-import com.example.nopstationcart.view.Home_Page.Home_PageDirections
-import com.example.nopstationcart.viewmodel.CategoryListViewModel
+import com.example.nopstationcart.view.Home_Page.CategoryListViewModel
 
 
 class Category_Fragment : Fragment() {
     lateinit var binding:FragmentCategoryBinding
-    private val categoryViewModels:CategoryListViewModel by viewModels()
+    private val categoryViewModels: CategoryListViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

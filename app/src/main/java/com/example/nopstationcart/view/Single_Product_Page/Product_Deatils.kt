@@ -7,22 +7,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Netwrok.InternetStatus
 import com.example.nopstationcart.databinding.FragmentProductDeatilsBinding
-import com.example.nopstationcart.viewmodel.CartViewModel
-import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
+import com.example.nopstationcart.view.Product_Shopping_Cart.CartViewModel
+import com.example.nopstationcart.view.Product_Shopping_Cart.ShoppingCartViewModel
 
 class Product_Deatils : Fragment() {
     lateinit var binding : FragmentProductDeatilsBinding
-    private val cartPageViewModel:CartViewModel by viewModels()
+    private val cartPageViewModel: CartViewModel by viewModels()
     private val shoppingCartViewModel: ShoppingCartViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

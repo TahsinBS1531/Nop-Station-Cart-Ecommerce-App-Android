@@ -1,7 +1,6 @@
 package com.example.nopstationcart.view.Product_Shopping_Cart
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -22,16 +21,11 @@ import com.example.nopstationcart.databinding.FragmentProductCartMainBinding
 import com.example.nopstationcart.dummyData.cartPrices
 import com.example.nopstationcart.view.Adapters.productCartAdapter
 import com.example.nopstationcart.view.Home_Page.Home_Page
-import com.example.nopstationcart.viewmodel.RemoveCartViewModel
-import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
-import com.example.nopstationcart.viewmodel.UpdateCartViewModel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 
 class Product_Cart_Main : Fragment() {
     private val shoppingCartViewModel: ShoppingCartViewModel by viewModels()
     private val removeCartViewModel: RemoveCartViewModel by viewModels()
-    private val updateCartViewModel:UpdateCartViewModel by viewModels()
+    private val updateCartViewModel: UpdateCartViewModel by viewModels()
     private lateinit var binding: FragmentProductCartMainBinding
     private val productsList = ArrayList<productCartItems>()
     private lateinit var adapter: productCartAdapter

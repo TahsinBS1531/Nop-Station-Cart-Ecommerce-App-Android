@@ -11,14 +11,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.nopstationcart.R
 import com.example.nopstationcart.databinding.FragmentLogOutMainBinding
-import com.example.nopstationcart.viewmodel.AccountInfoViewModel
-import com.example.nopstationcart.viewmodel.LogOutViewModel
 
 class logOutMain : Fragment() {
 
     private lateinit var binding: FragmentLogOutMainBinding
     private val logOutViewModel: LogOutViewModel by viewModels()
-    private val accountInfo:AccountInfoViewModel by viewModels()
+    private val accountInfo: AccountInfoViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
