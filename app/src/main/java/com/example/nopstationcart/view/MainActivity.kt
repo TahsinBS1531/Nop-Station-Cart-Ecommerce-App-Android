@@ -22,8 +22,10 @@ import com.example.nopstationcart.view.Home_Page.Home_PageDirections
 import com.example.nopstationcart.view.Login_Page.login_main
 import com.example.nopstationcart.view.Login_Page.login_mainDirections
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var navController: NavController

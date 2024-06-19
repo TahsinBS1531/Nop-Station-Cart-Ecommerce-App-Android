@@ -3,9 +3,6 @@
   <component name="deploymentTargetDropDown">
     <value>
       <entry key="AppPreview">
-        <State />
-      </entry>
-      <entry key="app">
         <State>
           <targetSelectedWithDropDown>
             <Target>
@@ -18,8 +15,27 @@
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-06-15T16:42:42.613549400Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-06-18T20:18:09.699452700Z" />
         </State>
+      </entry>
+      <entry key="app">
+        <State>
+          <targetSelectedWithDropDown>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\TANIM\.android\avd\Pixel_3_API_30.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-06-19T16:41:50.228901Z" />
+        </State>
+      </entry>
+      <entry key="previewSingleItem">
+        <State />
       </entry>
     </value>
   </component>
