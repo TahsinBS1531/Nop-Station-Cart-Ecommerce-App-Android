@@ -182,6 +182,9 @@
         <argument
             android:name="ExistingAddress"
             app:argType="string" />
+        <argument
+            android:name="Products"
+            app:argType="com.example.nopstationcart.Services.Model.ShoppingCart.productCartItems[]" />
     </fragment>
     <fragment
         android:id="@+id/search_Page"

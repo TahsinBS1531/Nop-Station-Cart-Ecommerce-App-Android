@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Interfaces.ItemClickListener
 import com.example.nopstationcart.Services.Model.OrderDetailsItem
+import com.example.nopstationcart.Services.Model.ShoppingCart.productCartItems
 import com.example.nopstationcart.databinding.FragmentOrderDetailsBinding
 import com.example.nopstationcart.view.Adapters.OrderDetailsAdapter
 import kotlinx.coroutines.launch
@@ -67,7 +68,8 @@ class Order_Details : Fragment() {
                 override fun onItemClick(position: Int) {
                     val currentItem = orderList[position]
                     Toast.makeText(requireContext(), "${orderList[position].orderId} is clicked", Toast.LENGTH_LONG).show()
-                    val action = Order_DetailsDirections.actionOrderDetailsToOrderDetailsInfo(currentItem.name,currentItem.orderId,currentItem.email,currentItem.totalProducts,currentItem.orderStatus,currentItem.orderDate,currentItem.orderTotal,currentItem.phone,currentItem.fax,currentItem.billingAddress,currentItem.country,currentItem.city,currentItem.existingAddress)
+                    val products = currentItem.products
+                    val action = Order_DetailsDirections.actionOrderDetailsToOrderDetailsInfo(currentItem.name,currentItem.orderId,currentItem.email,currentItem.totalProducts,currentItem.orderStatus,currentItem.orderDate,currentItem.orderTotal,currentItem.phone,currentItem.fax,currentItem.billingAddress,currentItem.country,currentItem.city,currentItem.existingAddress,products.toTypedArray())
                     findNavController().navigate(action)
                 }
 
