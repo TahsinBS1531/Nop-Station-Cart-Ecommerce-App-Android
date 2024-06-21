@@ -314,7 +314,7 @@ class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
                             cartAmount = it.Data.Cart.Items.size
                             it.Data.Cart.Items.forEach {
                                 //println("Product Name: ${it.ProductName}")
-                                val product = productCartItems(it.ProductName,it.UnitPrice,it.Picture.ImageUrl,it.Quantity,it.ProductId)
+                                val product = productCartItems(it.ProductName,it.UnitPrice,it.Picture.ImageUrl,it.Quantity,it.ProductId,it.SubTotalValue.toString())
                                 list.add(product)
                             }
                         }

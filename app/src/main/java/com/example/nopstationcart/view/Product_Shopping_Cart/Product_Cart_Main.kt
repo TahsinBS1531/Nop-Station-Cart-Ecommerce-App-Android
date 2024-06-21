@@ -201,10 +201,9 @@ class Product_Cart_Main : Fragment() {
                         val price = it.UnitPrice
                         val quantity = it.Quantity
                         val productId = it.Id
+                        val orderTotal = it.SubTotalValue?:0.00
                         println(quantity)
-                        val item = productCartItems(tittle = title, imageResID = image, price = price, quantity = quantity,
-                            productId = productId
-                        )
+                        val item = productCartItems(tittle = title, imageResID = image, price = price, quantity = quantity, productId = productId, orderTotal = orderTotal.toString() )
                         productsList.add(item)
                         //stopping shimmer
                         ob.stopShimmer(binding.shimmerLayoutProductCart,binding.productCartRecycle)

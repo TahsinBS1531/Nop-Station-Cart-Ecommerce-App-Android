@@ -61,6 +61,9 @@ class Order_Details : Fragment() {
                     val listItem = OrderDetailsItem(name, orderId, email, totalProducts.toString(),it.orderStatus,it.orderDate,it.orderTotal,it.phone_number,it.fax_number,it.billing_address,it.country,it.city,it.existing_address,it.state, products)
                     orderList.add(listItem)
                 }
+                if(orderList.size ==0){
+                    Toast.makeText(requireContext(),"Your Order List is Empty",Toast.LENGTH_LONG).show()
+                }
                 adapter.notifyDataSetChanged()
             }
 
@@ -76,6 +79,8 @@ class Order_Details : Fragment() {
                 override fun onCartBtnClick(position: Int) {
                 }
             })
+
+
         }else{
             Toast.makeText(requireContext(), "User Not Logged in to see Details",Toast.LENGTH_LONG).show()
         }

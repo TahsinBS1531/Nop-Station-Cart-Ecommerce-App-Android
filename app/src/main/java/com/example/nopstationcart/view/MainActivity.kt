@@ -51,6 +51,8 @@ class MainActivity : AppCompatActivity() {
 
         if (token != null) {
             Toast.makeText(this, "User already Logged In", Toast.LENGTH_LONG).show()
+        }else{
+            Toast.makeText(this, "Guest User", Toast.LENGTH_SHORT).show()
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -65,8 +67,6 @@ class MainActivity : AppCompatActivity() {
                     val sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
                     val token = sharedPreferences.getString("TOKEN", null)
                     if (token != null) {
-                        //navController.navigate(R.id.home_Page)
-                        //navController.navigate(R.id.logOutMain)
                         println("User already has token: $token")
                         Toast.makeText(this, "User already Logged In", Toast.LENGTH_LONG).show()
                     } else {
@@ -81,5 +81,18 @@ class MainActivity : AppCompatActivity() {
                 else -> bottomNav.visibility = View.VISIBLE
             }
         }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        val navController = findNavController(R.id.fragmentContainer)
+        if (!navController.popBackStack()) {
+            super.onBackPressed()
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.fragmentContainer)
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }

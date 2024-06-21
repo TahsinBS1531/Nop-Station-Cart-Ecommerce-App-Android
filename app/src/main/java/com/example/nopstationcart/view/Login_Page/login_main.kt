@@ -47,7 +47,6 @@ class login_main : Fragment(R.layout.fragment_login_main) {
                 println("Email From login page : $userName")
                 editor.putString("Email",userName)
                 editor.apply()
-
                 binding.progressBar.visibility = View.VISIBLE
                 loginViewModel.login(userName, userPassword)
             } else {

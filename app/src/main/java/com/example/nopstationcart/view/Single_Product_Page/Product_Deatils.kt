@@ -32,7 +32,8 @@ class Product_Deatils : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_product__deatils, container, false)
         binding = FragmentProductDeatilsBinding.bind(view)
-        binding.productPageOldPrice.paintFlags = binding.productPageOldPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+//        binding.productPageOldPrice.paintFlags = binding.productPageOldPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+//        binding.productPageOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         getProductsDetails(view)
         handleBackBtn(view)
         handleCartAmount()
@@ -64,13 +65,13 @@ class Product_Deatils : Fragment() {
         val imageResId = args.productImage
         val itemTitle = args.productTittile
         val itemPrice = args.productPrice
-        val oldPrice = args.oldPrice
+        val oldPrice = args.oldPrice.toFloatOrNull()?:0.0f
         val productId = args.productId
         val shortDes = args.shortDescription
         val longDes = args.fullDescription
 
         binding.productPageTitle.text = itemTitle
-        binding.productPageOldPrice.text = oldPrice
+        binding.productPageOldPrice.paintFlags = oldPrice.toInt() or Paint.STRIKE_THRU_TEXT_FLAG
         binding.productPagePrice.text = itemPrice
 
         binding.productPageShortDes.text = Html.fromHtml(shortDes, Html.FROM_HTML_MODE_LEGACY)
