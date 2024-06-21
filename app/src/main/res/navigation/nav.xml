@@ -182,10 +182,22 @@
         <argument
             android:name="ExistingAddress"
             app:argType="string" />
+        <argument
+            android:name="Products"
+            app:argType="com.example.nopstationcart.Services.Model.ShoppingCart.productCartItems[]" />
     </fragment>
     <fragment
         android:id="@+id/search_Page"
         android:name="com.example.nopstationcart.view.Search_Page.Search_Page"
         android:label="fragment_search__page"
-        tools:layout="@layout/fragment_search__page" />
+        tools:layout="@layout/fragment_search__page" >
+        <action
+            android:id="@+id/action_search_Page_to_product_Deatils"
+            app:destination="@id/product_Deatils" />
+    </fragment>
+    <fragment
+        android:id="@+id/practiceUI"
+        android:name="com.example.nopstationcart.view.Checkout.PracticeUI"
+        android:label="fragment_practice_u_i"
+        tools:layout="@layout/fragment_practice_u_i" />
 </navigation>

@@ -1,6 +1,8 @@
 package com.example.nopstationcart.di
 
 import com.example.nopstationcart.Services.Model.Home_Page.Slider.sliderAuthInterceptor
+import com.example.nopstationcart.Services.Netwrok.ProductSearchApiInterface
+import com.example.nopstationcart.Services.Netwrok.ProductSearchAuthIntercept
 import com.example.nopstationcart.Services.Netwrok.sliderApiInterface
 import com.example.nopstationcart.Services.SliderApiClient
 import dagger.Module
@@ -21,10 +23,11 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun providesRetrofit():Retrofit{
+    fun providesRetrofit(client:OkHttpClient):Retrofit{
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
             .build()
     }
 
@@ -32,16 +35,17 @@ object NetworkModule {
     @Singleton
     fun providesOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(sliderAuthInterceptor())
+            .addInterceptor(ProductSearchAuthIntercept())
             .build()
     }
 
+
     @Provides
     @Singleton
-    fun providesSliderApiClient(retrofit: Retrofit, okHttpClient: OkHttpClient): sliderApiInterface {
+    fun providesProductSearchApiClient(retrofit: Retrofit, okHttpClient: OkHttpClient): ProductSearchApiInterface {
         return retrofit.newBuilder()
             .client(okHttpClient)
             .build()
-            .create(sliderApiInterface::class.java)
+            .create(ProductSearchApiInterface::class.java)
     }
 }
