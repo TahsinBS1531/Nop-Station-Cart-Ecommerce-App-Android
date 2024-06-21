@@ -9,12 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.nopstationcart.R
 import com.example.nopstationcart.databinding.FragmentLoginMainBinding
-import com.example.nopstationcart.viewmodel.LoginViewModel
 
 class login_main : Fragment(R.layout.fragment_login_main) {
 

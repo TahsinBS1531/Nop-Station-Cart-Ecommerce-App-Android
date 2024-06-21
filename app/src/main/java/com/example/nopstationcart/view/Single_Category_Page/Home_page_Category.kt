@@ -18,9 +18,8 @@ import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Interfaces.categoryDetailsOnClicklistener
 import com.example.nopstationcart.Services.Model.CategoryList.Product
 import com.example.nopstationcart.Services.Netwrok.InternetStatus
-import com.example.nopstationcart.databinding.FragmentHomePageCategoryBinding
-import com.example.nopstationcart.viewmodel.CartViewModel
-import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
+import com.example.nopstationcart.view.Product_Shopping_Cart.CartViewModel
+import com.example.nopstationcart.view.Product_Shopping_Cart.ShoppingCartViewModel
 
 
 class Home_page_Category : Fragment() {

@@ -56,16 +56,15 @@ import androidx.navigation.fragment.findNavController
 import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Local.OrderDetailsEntity
 import com.example.nopstationcart.Services.Model.ShoppingCart.productCartItems
-import com.example.nopstationcart.view.components.CustomButton
-import com.example.nopstationcart.view.components.CustomCheckBox
-import com.example.nopstationcart.view.components.billingAddress
-import com.example.nopstationcart.view.components.customText
-import com.example.nopstationcart.view.components.customTextField
-import com.example.nopstationcart.view.components.finalAmountBox
-import com.example.nopstationcart.viewmodel.CheckoutViewModel
-import com.example.nopstationcart.viewmodel.OrderDetailsViewModel
-import com.example.nopstationcart.viewmodel.RemoveCartViewModel
-import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
+import com.example.nopstationcart.view.Checkout.Components.CustomButton
+import com.example.nopstationcart.view.Checkout.Components.CustomCheckBox
+import com.example.nopstationcart.view.Checkout.Components.billingAddress
+import com.example.nopstationcart.view.Checkout.Components.customText
+import com.example.nopstationcart.view.Checkout.Components.customTextField
+import com.example.nopstationcart.view.Checkout.Components.finalAmountBox
+import com.example.nopstationcart.view.Order_Details.OrderDetailsViewModel
+import com.example.nopstationcart.view.Product_Shopping_Cart.RemoveCartViewModel
+import com.example.nopstationcart.view.Product_Shopping_Cart.ShoppingCartViewModel
 import java.util.Date
 
 class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
@@ -292,9 +291,9 @@ class Checkout_main<PaddingValues> : Fragment(R.layout.fragment_checkout_main) {
                     Spacer(modifier = Modifier.height(16.dp))
                     billingAddress(value = "Payment Information")
                     val viewModel: CheckoutViewModel by viewModels()
-                    val shoppingCartViewModel:ShoppingCartViewModel by viewModels()
+                    val shoppingCartViewModel: ShoppingCartViewModel by viewModels()
                     val orderDeatilsViewModel: OrderDetailsViewModel by viewModels()
-                    val removeCartViewModel:RemoveCartViewModel by viewModels()
+                    val removeCartViewModel: RemoveCartViewModel by viewModels()
                     val action = Checkout_mainDirections.actionCheckoutMainToHomePage()
 
                     val sharedpreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)

@@ -26,12 +26,9 @@ import com.example.nopstationcart.Services.Model.Home_Page.Featured_Products.fea
 import com.example.nopstationcart.Services.Netwrok.InternetStatus
 import com.example.nopstationcart.databinding.HomePageFragmentBinding
 import com.example.nopstationcart.view.Adapters.featuredProductsAdapter
-import com.example.nopstationcart.viewmodel.CartViewModel
-import com.example.nopstationcart.viewmodel.CategoryListViewModel
-import com.example.nopstationcart.viewmodel.FeaturedProductsViewModel
-import com.example.nopstationcart.viewmodel.LogOutViewModel
-import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
-import com.example.nopstationcart.viewmodel.SliderViewModel
+import com.example.nopstationcart.view.Product_Shopping_Cart.CartViewModel
+import com.example.nopstationcart.view.Account.LogOutViewModel
+import com.example.nopstationcart.view.Product_Shopping_Cart.ShoppingCartViewModel
 import com.facebook.shimmer.ShimmerFrameLayout
 
 class Home_Page : Fragment(){
@@ -46,8 +43,8 @@ class Home_Page : Fragment(){
     private val featuredViewModel: FeaturedProductsViewModel by viewModels()
     private val categoryListViewModel: CategoryListViewModel by viewModels()
     private val cartPageViewModel: CartViewModel by viewModels()
-    private val logOutViewModel:LogOutViewModel by viewModels()
-    private val shoppingCartViewModel:ShoppingCartViewModel by viewModels()
+    private val logOutViewModel: LogOutViewModel by viewModels()
+    private val shoppingCartViewModel: ShoppingCartViewModel by viewModels()
     lateinit var totallCartProducts:String
     private lateinit var binding:HomePageFragmentBinding
 

@@ -1,4 +1,4 @@
-package com.example.nopstationcart.view.components
+package com.example.nopstationcart.view.Checkout.Components
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -22,7 +22,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -62,10 +61,10 @@ import com.example.nopstationcart.Services.Model.Remove_Cart.FormValue
 import com.example.nopstationcart.Services.Model.Remove_Cart.RemoveCartRequest
 import com.example.nopstationcart.Services.Model.ShoppingCart.CartProductsResponse
 import com.example.nopstationcart.Services.Model.ShoppingCart.productCartItems
-import com.example.nopstationcart.viewmodel.CheckoutViewModel
-import com.example.nopstationcart.viewmodel.OrderDetailsViewModel
-import com.example.nopstationcart.viewmodel.RemoveCartViewModel
-import com.example.nopstationcart.viewmodel.ShoppingCartViewModel
+import com.example.nopstationcart.view.Checkout.CheckoutViewModel
+import com.example.nopstationcart.view.Order_Details.OrderDetailsViewModel
+import com.example.nopstationcart.view.Product_Shopping_Cart.RemoveCartViewModel
+import com.example.nopstationcart.view.Product_Shopping_Cart.ShoppingCartViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.Date

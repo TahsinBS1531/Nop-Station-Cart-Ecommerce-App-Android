@@ -16,10 +16,7 @@ import com.example.nopstationcart.Services.Interfaces.ItemClickListener
 import com.example.nopstationcart.Services.Model.OrderDetailsItem
 import com.example.nopstationcart.databinding.FragmentOrderDetailsBinding
 import com.example.nopstationcart.view.Adapters.OrderDetailsAdapter
-import com.example.nopstationcart.viewmodel.OrderDetailsViewModel
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class Order_Details : Fragment() {
 
