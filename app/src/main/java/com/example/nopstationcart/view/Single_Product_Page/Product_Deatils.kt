@@ -14,16 +14,26 @@ import com.bumptech.glide.Glide
 import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Netwrok.InternetStatus
 import com.example.nopstationcart.databinding.FragmentProductDeatilsBinding
+import com.example.nopstationcart.utils.NetworkResult
 import com.example.nopstationcart.view.Product_Shopping_Cart.CartViewModel
 import com.example.nopstationcart.view.Product_Shopping_Cart.ShoppingCartViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class Product_Deatils : Fragment() {
     lateinit var binding : FragmentProductDeatilsBinding
     private val cartPageViewModel: CartViewModel by viewModels()
     private val shoppingCartViewModel: ShoppingCartViewModel by viewModels()
+    var flag:Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initObserver()
     }
 
     override fun onCreateView(
@@ -65,13 +75,16 @@ class Product_Deatils : Fragment() {
         val imageResId = args.productImage
         val itemTitle = args.productTittile
         val itemPrice = args.productPrice
-        val oldPrice = args.oldPrice.toFloatOrNull()?:0.0f
+        val oldPrice = args.oldPrice.toFloat()
         val productId = args.productId
         val shortDes = args.shortDescription
         val longDes = args.fullDescription
 
         binding.productPageTitle.text = itemTitle
-        binding.productPageOldPrice.paintFlags = oldPrice.toInt() or Paint.STRIKE_THRU_TEXT_FLAG
+
+        val formattedOldPrice = String.format("$%.2f", oldPrice)
+        binding.productPageOldPrice.text = formattedOldPrice
+        binding.productPageOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         binding.productPagePrice.text = itemPrice
 
         binding.productPageShortDes.text = Html.fromHtml(shortDes, Html.FROM_HTML_MODE_LEGACY)
@@ -91,27 +104,39 @@ class Product_Deatils : Fragment() {
         }
     }
 
+    private fun initObserver(){
+        cartPageViewModel.responseLiveData.observe(viewLifecycleOwner){result->
+            when(result){
+                is NetworkResult.Loading ->{
+                    println("Loading Data")
+                }
+                is NetworkResult.Error -> if(flag){
+                    Toast.makeText(requireContext(),"Error on adding the cart",Toast.LENGTH_SHORT).show()
+                    flag =false
+                }
+                is NetworkResult.Success -> {
+                    if(flag){
+                        Toast.makeText(requireContext(),"Item is added on the cart",Toast.LENGTH_SHORT).show()
+                        flag=false
+                    }
+                    handleCartAmount()
+                }
+            }
+
+
+        }
+    }
+
     private var cartAmount = 1
 
     fun handleCartBtn(id: String) {
         binding?.apply {
             ProductDetailsAddToCart.setOnClickListener {
                 if(InternetStatus.isOnline(requireContext())){
-                    println("Cart Amount From the Details page : $cartAmount")
-                    cartPageViewModel.getCartResponse(id.toInt(), requireContext(), cartAmount.toString())
-                    cartPageViewModel.result.observe(viewLifecycleOwner) { response ->
-                        response.onSuccess {
-                            handleCartAmount()
-                            println("Total Cart Items: ${it.Data.TotalShoppingCartProducts}")
-                            println("Amount: $cartAmount")
-                            Toast.makeText(requireContext(), it.Message, Toast.LENGTH_LONG).show()
-                        }.onFailure {
-                            Toast.makeText(requireContext(), "${it.cause?.cause}", Toast.LENGTH_LONG).show()
-                            println(it.cause?.message)
-                        }
-                    }
+                    cartPageViewModel.addToCart(id.toInt(),"1")
+                    flag = true
                 }else{
-                    Toast.makeText(requireContext(), "No Internet Connection. Please Connect to a Network", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(),"No Internet Connection. Please Connect to a network.",Toast.LENGTH_SHORT).show()
                 }
 
             }

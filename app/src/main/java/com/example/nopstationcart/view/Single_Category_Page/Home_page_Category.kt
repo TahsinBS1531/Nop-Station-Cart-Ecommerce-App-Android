@@ -18,10 +18,12 @@ import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Interfaces.categoryDetailsOnClicklistener
 import com.example.nopstationcart.Services.Model.CategoryList.Product
 import com.example.nopstationcart.Services.Netwrok.InternetStatus
+import com.example.nopstationcart.utils.NetworkResult
 import com.example.nopstationcart.view.Product_Shopping_Cart.CartViewModel
 import com.example.nopstationcart.view.Product_Shopping_Cart.ShoppingCartViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class Home_page_Category : Fragment() {
     lateinit var backBtn: Toolbar
     private val cartPageViewModel: CartViewModel by viewModels()
@@ -80,21 +82,22 @@ class Home_page_Category : Fragment() {
                     if(InternetStatus.isOnline(requireContext())){
                         val currentItem = items[position]
                         val productId = currentItem.Id
-                        cartPageViewModel.getCartResponse(productId,requireContext(),"1")
+                        cartPageViewModel.responseLiveData.observe(viewLifecycleOwner){result->
+                            when(result){
+                                is NetworkResult.Loading ->{
+                                    println("Loading Data")
+                                }
+                                is NetworkResult.Error -> Toast.makeText(requireContext(),"Error on adding the cart",Toast.LENGTH_SHORT).show()
+                                is NetworkResult.Success -> {
+                                    Toast.makeText(requireContext(),"item is added on the cart",Toast.LENGTH_SHORT).show()
+                                    handleCartAmount(view)
+                                }
 
-                        cartPageViewModel.result.removeObservers(viewLifecycleOwner)
-                        cartPageViewModel.result.observe(viewLifecycleOwner){
-                            it.onSuccess {response->
-                                Toast.makeText(requireContext(),"${response.Message}", Toast.LENGTH_SHORT).show()
-                                handleCartAmount(view)
-                            }.onFailure {response->
-                                Toast.makeText(requireContext(),"${response.cause?.cause}", Toast.LENGTH_SHORT).show()
-                                println(response.cause?.message)
                             }
                         }
-
+                        cartPageViewModel.addToCart(productId,"1")
                     }else{
-                        Toast.makeText(requireContext(),"No Internet Connection. Please Connect to a Network",Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(),"No Internet Connection. Please Connect to a network.",Toast.LENGTH_SHORT).show()
                     }
                 }
 
@@ -107,6 +110,8 @@ class Home_page_Category : Fragment() {
 
         return view
     }
+
+
 
     private fun handleCartBtn(view:View){
         val btn:ImageView = view.findViewById(R.id.singleCategoryCartBtn)

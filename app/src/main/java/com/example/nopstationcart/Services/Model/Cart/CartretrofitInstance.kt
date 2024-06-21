@@ -19,7 +19,6 @@ object CartretrofitInstance {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        //val addToCartApi = retrofit.create(AddToCartApiInterface::class.java)
         return retrofit
     }
 

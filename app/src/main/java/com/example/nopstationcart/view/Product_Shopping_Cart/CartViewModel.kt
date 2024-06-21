@@ -4,26 +4,41 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.nopstationcart.Services.Model.Cart.CartBodyRequest
 import com.example.nopstationcart.Services.Model.Cart.CartResponse
 import com.example.nopstationcart.Services.Model.Cart.FormValue
+import com.example.nopstationcart.Services.Model.Product_Search.ProductSearchResponse
 import com.example.nopstationcart.Services.Repository.CartPageRepository
+import com.example.nopstationcart.utils.NetworkResult
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CartViewModel():ViewModel(){
+
+@HiltViewModel
+class CartViewModel @Inject constructor (private val repository: CartPageRepository):ViewModel(){
     lateinit var form: List<FormValue>
 
-
-    private val _response = MutableLiveData<Result<CartResponse>>()
-    val result:LiveData<Result<CartResponse>> = _response
-
-    fun getCartResponse(id:Int,context:Context,quantity:String){
+    val responseLiveData: LiveData<NetworkResult<CartResponse>>
+        get() = repository.responseLiveData
+    fun addToCart(id:Int,quantity:String){
         form = listOf(FormValue("addtocart_${id}.EnteredQuantity",quantity),
             FormValue("addtocart_${id}.EnteredGender","Male"))
-        val requestBody = CartBodyRequest(form)
-        var repository = CartPageRepository(id)
 
-        val result = repository.addProductCart(requestBody,context)
-        result.observeForever { _response.postValue(it) }
+        val requestBody = CartBodyRequest(form)
+        viewModelScope.launch {
+            repository.addProductToCart(requestBody,id)
+        }
     }
+
+//    fun getCartResponse(id:Int,quantity:String){
+//        form = listOf(FormValue("addtocart_${id}.EnteredQuantity",quantity),
+//            FormValue("addtocart_${id}.EnteredGender","Male"))
+//
+//        val requestBody = CartBodyRequest(form)
+//        val result = repository.addProductCart(requestBody,id)
+//        result.observeForever { _response.postValue(it) }
+//    }
 
 }

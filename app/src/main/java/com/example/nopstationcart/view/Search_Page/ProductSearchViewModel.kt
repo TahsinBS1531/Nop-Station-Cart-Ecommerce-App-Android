@@ -14,7 +14,6 @@ import javax.inject.Inject
 class ProductSearchViewModel @Inject constructor(private val repository:ProductSearchRepository):ViewModel() {
     val responseLiveData:LiveData<NetworkResult<ProductSearchResponse>>
         get() = repository.responseLiveData
-
     fun searchProducts(query:String){
         viewModelScope.launch {
             repository.productSearch(query)

@@ -25,12 +25,15 @@ import com.example.nopstationcart.Services.Model.CategoryList.CategorySingleItem
 import com.example.nopstationcart.Services.Model.Home_Page.Featured_Products.featuredProductsItem2
 import com.example.nopstationcart.Services.Netwrok.InternetStatus
 import com.example.nopstationcart.databinding.HomePageFragmentBinding
+import com.example.nopstationcart.utils.NetworkResult
 import com.example.nopstationcart.view.Adapters.featuredProductsAdapter
 import com.example.nopstationcart.view.Product_Shopping_Cart.CartViewModel
 import com.example.nopstationcart.view.Account.LogOutViewModel
 import com.example.nopstationcart.view.Product_Shopping_Cart.ShoppingCartViewModel
 import com.facebook.shimmer.ShimmerFrameLayout
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class Home_Page : Fragment(){
 
     lateinit var myRecycleView:RecyclerView
@@ -47,6 +50,7 @@ class Home_Page : Fragment(){
     private val shoppingCartViewModel: ShoppingCartViewModel by viewModels()
     lateinit var totallCartProducts:String
     private lateinit var binding:HomePageFragmentBinding
+    var flag:Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +60,8 @@ class Home_Page : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initObserver()
     }
 
     override fun onCreateView(
@@ -82,6 +88,29 @@ class Home_Page : Fragment(){
         handleLogOut(view)
 
         return binding.root
+    }
+
+    private fun initObserver(){
+        cartPageViewModel.responseLiveData.observe(viewLifecycleOwner){result->
+            when(result){
+                is NetworkResult.Loading ->{
+                    println("Loading Data")
+                }
+                is NetworkResult.Error ->if(flag) {
+                    Toast.makeText(requireContext(),"Error on adding the cart",Toast.LENGTH_SHORT).show()
+                    flag = false
+                }
+                is NetworkResult.Success -> {
+                    if(flag==true){
+                        Toast.makeText(requireContext(),"Item is added on the cart",Toast.LENGTH_SHORT).show()
+                        flag=false
+                    }
+                    setShoppingCart()
+                }
+            }
+
+
+        }
     }
 
     fun startShimmer(shimmer: ShimmerFrameLayout,view : RecyclerView){
@@ -193,25 +222,10 @@ class Home_Page : Fragment(){
                 if(InternetStatus.isOnline(requireContext())){
                     val currentItem = featuredList[position]
                     val productId = currentItem.id
-                    cartPageViewModel.getCartResponse(productId,requireContext(),"1")
-
-                    cartPageViewModel.result.removeObservers(viewLifecycleOwner)
-
-                    cartPageViewModel.result.observe(viewLifecycleOwner){
-                        it.onSuccess {response->
-                            println("Add to cart : ${response.Message}")
-                            Toast.makeText(requireContext(),"${response.Message}",Toast.LENGTH_SHORT).show()
-                            setShoppingCart()
-                        }.onFailure {response->
-                            println("Failed")
-                            Toast.makeText(requireContext(),"${response.cause?.cause}",Toast.LENGTH_SHORT).show()
-                            println(response.cause?.message)
-                        }
-                    }
-                    println(productId)
-                    println(currentItem.tittle)
+                    cartPageViewModel.addToCart(productId,"1")
+                    flag = true
                 }else{
-                    Toast.makeText(requireContext(),"No Internet Connection. Please Connect to a network.",Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(),"No Internet Connection. Please Connect to a network.",Toast.LENGTH_SHORT).show()
                 }
 
             }
