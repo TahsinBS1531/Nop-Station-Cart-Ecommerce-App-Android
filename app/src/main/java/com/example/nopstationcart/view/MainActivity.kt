@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import android.window.OnBackInvokedDispatcher
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
@@ -21,6 +22,7 @@ import com.example.nopstationcart.view.Home_Page.Home_Page
 import com.example.nopstationcart.view.Home_Page.Home_PageDirections
 import com.example.nopstationcart.view.Login_Page.login_main
 import com.example.nopstationcart.view.Login_Page.login_mainDirections
+import com.example.nopstationcart.view.Search_Page.ProductSearchViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var binding: ActivityMainBinding
+    private val productSearchViewModel: ProductSearchViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,11 +62,15 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.home_Page -> {
                     bottomNav.visibility = View.VISIBLE
+                    clearSearchState()
                 }
                 R.id.product_Deatils ->{
                     bottomNav.visibility = View.GONE
+                    clearSearchState()
                 }
+                R.id.search_Page->clearSearchState()
                 R.id.logOutMain -> {
+                    clearSearchState()
                     val sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
                     val token = sharedPreferences.getString("TOKEN", null)
                     if (token != null) {
@@ -76,11 +83,25 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.login_main->{
                     bottomNav.visibility = View.GONE
+                    clearSearchState()
                 }
-                R.id.home_page_Category -> bottomNav.visibility = View.GONE
+                R.id.home_page_Category -> {
+                    bottomNav.visibility = View.GONE
+                    clearSearchState()
+                }
+                R.id.category_Fragment ->{
+                    clearSearchState()
+                }
+                R.id.order_Details-> clearSearchState()
+
                 else -> bottomNav.visibility = View.VISIBLE
             }
         }
+    }
+
+    private fun clearSearchState(){
+        productSearchViewModel.clearSuggestion()
+        productSearchViewModel.clearSearchResult()
     }
 
     @Deprecated("Deprecated in Java")

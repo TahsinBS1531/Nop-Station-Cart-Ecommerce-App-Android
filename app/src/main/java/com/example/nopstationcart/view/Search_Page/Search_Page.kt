@@ -5,11 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -22,6 +26,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,8 +35,15 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import coil.compose.AsyncImage
+import com.example.nopstationcart.Services.Model.Product_Search.AutocompleteSuggestionResponse
 import com.example.nopstationcart.Services.Model.Product_Search.Product
+import com.example.nopstationcart.utils.KhandFont
 import com.example.nopstationcart.utils.NetworkResult
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class Search_Page<PaddingValues> : Fragment() {
     private val viewModel by activityViewModels<ProductSearchViewModel>()
@@ -54,6 +66,9 @@ class Search_Page<PaddingValues> : Fragment() {
         var productSize by remember { mutableStateOf("") }
         
         val products by viewModel.responseLiveData.observeAsState()
+        val autocompleData by viewModel.autoSuggestionLiveData.observeAsState()
+
+        var searchJob: Job?=null
 
         Column(
             modifier = Modifier
@@ -62,21 +77,54 @@ class Search_Page<PaddingValues> : Fragment() {
         ) {
             TextField(
                 value = textState,
-                onValueChange = { textState = it },
+                onValueChange = {newText->
+                    textState = newText
+                    searchJob?.cancel()
+                    searchJob = CoroutineScope(Dispatchers.Main).launch {
+                        delay(500)
+                        viewModel.getAutoSuggestion(newText.text)
+                    }
+                                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
-                    .clip(RoundedCornerShape(25.dp)),
+                    .padding(16.dp),
                 placeholder = {
-                    Text(text = "Search...")
+                    Text(text = "Search...", style = TextStyle(fontFamily = KhandFont, fontSize = 16.sp))
                 },
                 singleLine = true,
                 trailingIcon = {
-                    IconButton(onClick = { viewModel.searchProducts(textState.text) }) {
+                    IconButton(onClick = { viewModel.searchProducts(textState.text)
+                    viewModel.clearSuggestion()}) {
                         Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.Green)
                     }
                 }
             )
+
+            if(autocompleData is NetworkResult.Success){
+                val suggestions = (autocompleData as NetworkResult.Success<AutocompleteSuggestionResponse>).data
+                val suggestionList = suggestions?.Data?.map { it.label } ?: emptyList()
+
+                LazyColumn(){
+                    items(suggestionList.size){
+                        Row(horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically,modifier = Modifier.fillMaxWidth().padding(start = 16.dp,end=16.dp)
+                            .clickable {
+                                val data = suggestionList[it]
+                                textState = TextFieldValue(data)
+                                viewModel.clearSuggestion()
+                                viewModel.searchProducts(data)
+                            }) {
+                            Text(suggestionList[it], modifier = Modifier.weight(0.8f), style = TextStyle(fontFamily = KhandFont, fontSize = 16.sp))
+                            IconButton(onClick = { textState = TextFieldValue(suggestionList[it])
+                            viewModel.clearSuggestion()}) {
+                                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Use suggestion", tint = Color.Green)
+                            }
+
+                        }
+
+                    }
+                }
+            }
+
             Text(text = productSize, modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 15.dp), color = Color.Green
@@ -106,7 +154,6 @@ class Search_Page<PaddingValues> : Fragment() {
                             }
                         }
                     } else {
-                        productSize = "0 Results Found"
                         Box(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
@@ -146,8 +193,6 @@ class Search_Page<PaddingValues> : Fragment() {
     fun previewSingleItem() {
 
     }
-
-
 
 
     @Composable

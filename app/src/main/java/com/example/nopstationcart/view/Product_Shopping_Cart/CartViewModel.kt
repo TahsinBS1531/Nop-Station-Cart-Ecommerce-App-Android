@@ -22,6 +22,8 @@ class CartViewModel @Inject constructor (private val repository: CartPageReposit
 
     val responseLiveData: LiveData<NetworkResult<CartResponse>>
         get() = repository.responseLiveData
+
+
     fun addToCart(id:Int,quantity:String){
         form = listOf(FormValue("addtocart_${id}.EnteredQuantity",quantity),
             FormValue("addtocart_${id}.EnteredGender","Male"))
@@ -31,14 +33,5 @@ class CartViewModel @Inject constructor (private val repository: CartPageReposit
             repository.addProductToCart(requestBody,id)
         }
     }
-
-//    fun getCartResponse(id:Int,quantity:String){
-//        form = listOf(FormValue("addtocart_${id}.EnteredQuantity",quantity),
-//            FormValue("addtocart_${id}.EnteredGender","Male"))
-//
-//        val requestBody = CartBodyRequest(form)
-//        val result = repository.addProductCart(requestBody,id)
-//        result.observeForever { _response.postValue(it) }
-//    }
 
 }

@@ -18,6 +18,7 @@ import com.example.nopstationcart.R
 import com.example.nopstationcart.Services.Interfaces.categoryDetailsOnClicklistener
 import com.example.nopstationcart.Services.Model.CategoryList.Product
 import com.example.nopstationcart.Services.Netwrok.InternetStatus
+import com.example.nopstationcart.databinding.FragmentHomePageCategoryBinding
 import com.example.nopstationcart.utils.NetworkResult
 import com.example.nopstationcart.view.Product_Shopping_Cart.CartViewModel
 import com.example.nopstationcart.view.Product_Shopping_Cart.ShoppingCartViewModel
@@ -28,6 +29,8 @@ class Home_page_Category : Fragment() {
     lateinit var backBtn: Toolbar
     private val cartPageViewModel: CartViewModel by viewModels()
     private val shoppingCartViewModel: ShoppingCartViewModel by viewModels()
+    lateinit var binding:FragmentHomePageCategoryBinding
+    var flag:Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,6 +41,7 @@ class Home_page_Category : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.single_category_page, container, false)
+        initObserver(view)
         handleCartAmount(view)
         handleCartBtn(view)
 
@@ -82,33 +86,41 @@ class Home_page_Category : Fragment() {
                     if(InternetStatus.isOnline(requireContext())){
                         val currentItem = items[position]
                         val productId = currentItem.Id
-                        cartPageViewModel.responseLiveData.observe(viewLifecycleOwner){result->
-                            when(result){
-                                is NetworkResult.Loading ->{
-                                    println("Loading Data")
-                                }
-                                is NetworkResult.Error -> Toast.makeText(requireContext(),"Error on adding the cart",Toast.LENGTH_SHORT).show()
-                                is NetworkResult.Success -> {
-                                    Toast.makeText(requireContext(),"item is added on the cart",Toast.LENGTH_SHORT).show()
-                                    handleCartAmount(view)
-                                }
-
-                            }
-                        }
                         cartPageViewModel.addToCart(productId,"1")
+                        flag = true
                     }else{
                         Toast.makeText(requireContext(),"No Internet Connection. Please Connect to a network.",Toast.LENGTH_SHORT).show()
                     }
                 }
 
             })
-
-
             handleBackBtn(view)
-
         }
 
         return view
+    }
+
+    private fun initObserver(view:View){
+        cartPageViewModel.responseLiveData.observe(viewLifecycleOwner){result->
+            when(result){
+                is NetworkResult.Loading ->{
+                    println("Loading Data")
+                }
+                is NetworkResult.Error -> if(flag){
+                    Toast.makeText(requireContext(),"Error on adding the cart",Toast.LENGTH_SHORT).show()
+                    flag =false
+                }
+                is NetworkResult.Success -> {
+                    if(flag){
+                        Toast.makeText(requireContext(),"Item is added on the cart",Toast.LENGTH_SHORT).show()
+                        flag=false
+                    }
+                    handleCartAmount(view)
+                }
+            }
+
+
+        }
     }
 
 

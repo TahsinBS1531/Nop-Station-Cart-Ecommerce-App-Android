@@ -54,6 +54,7 @@ object NetworkModule {
             .create(ProductSearchApiInterface::class.java)
     }
 
+
     @Provides
     @Singleton
     fun provideContext(application:Application):Context{

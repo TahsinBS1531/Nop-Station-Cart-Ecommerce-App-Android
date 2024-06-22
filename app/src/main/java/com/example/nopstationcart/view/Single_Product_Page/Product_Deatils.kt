@@ -42,8 +42,6 @@ class Product_Deatils : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_product__deatils, container, false)
         binding = FragmentProductDeatilsBinding.bind(view)
-//        binding.productPageOldPrice.paintFlags = binding.productPageOldPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-//        binding.productPageOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         getProductsDetails(view)
         handleBackBtn(view)
         handleCartAmount()
@@ -129,8 +127,8 @@ class Product_Deatils : Fragment() {
 
     private var cartAmount = 1
 
-    fun handleCartBtn(id: String) {
-        binding?.apply {
+    private fun handleCartBtn(id: String) {
+        binding.apply {
             ProductDetailsAddToCart.setOnClickListener {
                 if(InternetStatus.isOnline(requireContext())){
                     cartPageViewModel.addToCart(id.toInt(),"1")
