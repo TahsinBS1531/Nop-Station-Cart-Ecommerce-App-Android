@@ -18,12 +18,26 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:background="@drawable/top_bar_banner"
-            android:paddingTop="20dp"
-            app:navigationIcon="@drawable/baseline_menu_24">
+            android:paddingTop="20dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/logOutBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="37dp"
+                    android:layout_marginEnd="35dp"
+                    android:text="Log Out"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/cart_btn"
+                    app:layout_constraintHorizontal_bias="0.888"
+                    app:layout_constraintStart_toEndOf="@+id/imageView2"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.39" />
 
                 <ImageView
                     android:id="@+id/imageView2"
@@ -34,7 +48,7 @@
                     android:textAlignment="gravity"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.364"
+                    app:layout_constraintHorizontal_bias="0.413"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -46,11 +60,13 @@
                     android:src="@drawable/checkout"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.942"
+                    app:layout_constraintHorizontal_bias="0.81"
                     app:layout_constraintStart_toEndOf="@+id/imageView2"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.38" />
 
                 <TextView
+                    android:id="@+id/home_page_cartBtn"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:background="@drawable/badge"
@@ -119,6 +135,29 @@
                     android:fontFamily="@font/khand"
                     android:textFontWeight="600" />
 
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmer_layout_categories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:shimmer_auto_start="true"
+                    app:shimmer_duration="1500"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp">
+
+                        <!-- Placeholder views for shimmer effect -->
+                        <include layout="@layout/single_item_recycle_shimmer_category"/>
+                        <include layout="@layout/single_item_recycle_shimmer_category"/>
+
+                        <!-- Add more placeholder views as needed -->
+                    </LinearLayout>
+
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/categoryrecycleView"
                     android:layout_width="match_parent"
@@ -126,36 +165,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp">
-
-                <!-- Your existing content after the ImageSlider -->
-
-                <TextView
-                    android:id="@+id/bestSelling"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="BEST SELLING"
-                    android:textColor="#2B2E43"
-                    android:textSize="22sp"
-                    android:lineHeight="33sp"
-                    android:fontFamily="@font/khand"
-                    android:textFontWeight="600" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/bestSellingrecycleView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="15dp"
-                    android:paddingBottom="15dp" />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -178,42 +187,40 @@
                     android:lineHeight="33sp"
                     android:fontFamily="@font/khand"
                     android:textFontWeight="600" />
+                <!-- ShimmerFrameLayout for Featured Products -->
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmer_layout_featured"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:shimmer_auto_start="true"
+                    app:shimmer_duration="1500"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp">
+
+                        <!-- Placeholder views for shimmer effect -->
+                        <include layout="@layout/featured_products_single_item_shimmer"/>
+                        <include layout="@layout/featured_products_single_item_shimmer"/>
+
+                        <!-- Add more placeholder views as needed -->
+                    </LinearLayout>
+
+                </com.facebook.shimmer.ShimmerFrameLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/featuredRecycle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp">
-
-                <!-- Your existing content after the ImageSlider -->
-
-                <TextView
-                    android:id="@+id/women_heel"
-                    android:layout_width="match_parent"
+                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
-                    android:text="WOMEN HEEL"
-                    android:textColor="#2B2E43"
-                    android:textSize="22sp"
-                    android:lineHeight="33sp"
-                    android:fontFamily="@font/khand"
-                    android:textFontWeight="600" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/women_heel_recycle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    tools:listitem="@layout/featured_products_single_item"/>
 
             </LinearLayout>
+
 
             <!-- Add more content here if needed -->
 

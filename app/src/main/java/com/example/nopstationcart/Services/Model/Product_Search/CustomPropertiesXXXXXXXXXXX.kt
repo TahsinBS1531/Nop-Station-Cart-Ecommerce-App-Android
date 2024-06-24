@@ -1,0 +1,3 @@
+package com.example.nopstationcart.Services.Model.Product_Search
+
+class CustomPropertiesXXXXXXXXXXX

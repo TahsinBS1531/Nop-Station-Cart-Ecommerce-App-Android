@@ -2,4 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="blue">#001844</color>
+    <color name="hint_color">#7D828B</color>
+    <color name="MainBackground">#06154d</color>
+    <color name="BoxColor">#566793</color>
+    <color name="BoxActive">#505cf2</color>
+    <color name="thirdColBackgroundColor">#fc869a</color>
+    <color name="greenColor">#10cb3c</color>
 </resources>
