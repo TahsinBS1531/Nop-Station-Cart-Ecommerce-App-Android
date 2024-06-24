@@ -2,9 +2,6 @@ Nop station cart is an Ecommerce app for Android. Here user can see products on 
 
 Direct Apk File Download Link : [Download Link](https://drive.google.com/file/d/16qNCshDrKFlmPUDz2uwtOATa2Jip6gq3/view?usp=sharing)
 
-App Preview : 
-![Nop Statio Cart Video Gif](https://github.com/TahsinBS1531/Nop-Station-Cart-Ecommerce-App-Android/assets/167995381/7c2e53fa-5011-48d6-93ab-d81394cde26d)
-
 App Features:
 
 :white_check_mark: User can get the products categorywise.
@@ -19,3 +16,6 @@ App Features:
 
 > [!IMPORTANT]
 > Credentials for log in - Email : admin@yourstore.com  Password : admin
+
+
+![Nop Statio Cart Video Gif](https://github.com/TahsinBS1531/Nop-Station-Cart-Ecommerce-App-Android/assets/167995381/7c2e53fa-5011-48d6-93ab-d81394cde26d)
