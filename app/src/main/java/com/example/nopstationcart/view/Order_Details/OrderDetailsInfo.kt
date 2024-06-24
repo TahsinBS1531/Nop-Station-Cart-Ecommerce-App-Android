@@ -6,8 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.nopstationcart.R
+import com.example.nopstationcart.Services.Model.ShoppingCart.productCartItems
 import com.example.nopstationcart.databinding.FragmentOrderDetailsInfoBinding
+import com.example.nopstationcart.view.Adapters.OrderDetailsInfoAdapter
 import com.example.nopstationcart.view.Single_Category_Page.Home_page_CategoryArgs
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -26,11 +29,20 @@ class OrderDetailsInfo : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentOrderDetailsInfoBinding.inflate(inflater,container,false)
         displayOrderDetails()
+        showProducts()
         return binding.root
 
+    }
+
+    private fun showProducts(){
+        val recycle = binding.orderDetailsInfoRecycle
+        recycle.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
+        val bundle = arguments
+        val args = OrderDetailsInfoArgs.fromBundle(requireArguments())
+        val products = args.Products
+        recycle.adapter = OrderDetailsInfoAdapter(products)
     }
 
     private fun displayOrderDetails() {

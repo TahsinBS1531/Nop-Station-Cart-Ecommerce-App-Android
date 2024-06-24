@@ -407,7 +407,8 @@ private fun addOrderData(
                     list.clear()
                     removeList.clear()
                     data.Data.Cart.Items.forEach { item ->
-                        val product = productCartItems(item.ProductName, item.UnitPrice, item.Picture.ImageUrl, item.Quantity, item.ProductId)
+
+                        val product = productCartItems(item.ProductName, item.UnitPrice, item.Picture.ImageUrl, item.Quantity, item.ProductId,item.SubTotalValue.toString())
                         list.add(product)
                         val productId = item.Id.toString()
                         val formValue = FormValue("removefromcart", productId)

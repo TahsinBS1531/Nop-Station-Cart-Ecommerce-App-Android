@@ -25,28 +25,27 @@ import com.example.nopstationcart.Services.Model.CategoryList.CategorySingleItem
 import com.example.nopstationcart.Services.Model.Home_Page.Featured_Products.featuredProductsItem2
 import com.example.nopstationcart.Services.Netwrok.InternetStatus
 import com.example.nopstationcart.databinding.HomePageFragmentBinding
+import com.example.nopstationcart.utils.NetworkResult
 import com.example.nopstationcart.view.Adapters.featuredProductsAdapter
 import com.example.nopstationcart.view.Product_Shopping_Cart.CartViewModel
 import com.example.nopstationcart.view.Account.LogOutViewModel
 import com.example.nopstationcart.view.Product_Shopping_Cart.ShoppingCartViewModel
 import com.facebook.shimmer.ShimmerFrameLayout
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class Home_Page : Fragment(){
 
     lateinit var myRecycleView:RecyclerView
-    lateinit var myRecyclerView2: RecyclerView
     lateinit var myRecyclerView3: RecyclerView
-    lateinit var myRecyclerView4: RecyclerView
-    lateinit var addToCartBtn:TextView
-    var cartCount =0;
     private val sliderViewModel: SliderViewModel by viewModels()
     private val featuredViewModel: FeaturedProductsViewModel by viewModels()
     private val categoryListViewModel: CategoryListViewModel by viewModels()
     private val cartPageViewModel: CartViewModel by viewModels()
     private val logOutViewModel: LogOutViewModel by viewModels()
     private val shoppingCartViewModel: ShoppingCartViewModel by viewModels()
-    lateinit var totallCartProducts:String
     private lateinit var binding:HomePageFragmentBinding
+    var flag:Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +55,8 @@ class Home_Page : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initObserver()
     }
 
     override fun onCreateView(
@@ -66,9 +67,7 @@ class Home_Page : Fragment(){
         binding = HomePageFragmentBinding.bind(view)
         initializeImageSlider(view)
         categoryListRecycleView(view)
-        //bestSellingRecycleView(view)
         featuredRecycleView(view)
-        //womenHeelRecycleView(view)
         setShoppingCart()
         handleCartBtn()
         val sharedpreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
@@ -82,6 +81,145 @@ class Home_Page : Fragment(){
         handleLogOut(view)
 
         return binding.root
+    }
+
+    private fun initObserver(){
+        cartPageViewModel.responseLiveData.observe(viewLifecycleOwner){result->
+            when(result){
+                is NetworkResult.Loading ->{
+                    println("Loading Data")
+                }
+                is NetworkResult.Error ->if(flag) {
+                    Toast.makeText(requireContext(),"Error on adding the cart",Toast.LENGTH_SHORT).show()
+                    flag = false
+                }
+                is NetworkResult.Success -> {
+                    if(flag==true){
+                        Toast.makeText(requireContext(),"Item is added on the cart",Toast.LENGTH_SHORT).show()
+                        flag=false
+                    }
+                    setShoppingCart()
+                }
+            }
+
+        }
+    }
+
+
+    private fun featuredRecycleView(view: View?) {
+        startShimmer(binding.shimmerLayoutFeatured,binding.featuredRecycle)
+
+        if (view != null) {
+            myRecyclerView3 = view.findViewById(R.id.featuredRecycle)
+        }
+        myRecyclerView3.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+
+        featuredViewModel.getFeaturedProducts(requireContext())
+        var featuredList = arrayListOf<featuredProductsItem2>()
+        val adapter = featuredProductsAdapter(featuredList)
+        myRecyclerView3.adapter = adapter
+        featuredViewModel.featuredProductsResult.observe(viewLifecycleOwner){ it ->
+            featuredList.clear()
+            it.onSuccess {response ->
+                response.forEach {
+                    val name = it.name
+                    val price = it.price?:"0.0"
+                    val image = it.imageUrl?:"No Image Found"
+                    var rating = 0f
+                    val shortDes = it.shortDescription
+                    val longDes = it.longDescription
+                    val oldPrice = it.oldPrice?:"0.0"
+                    val id = it.id
+                    rating = it.rating
+
+                    val data = featuredProductsItem2(name,price, image = image,rating,shortDes,longDes,oldPrice, id = id)
+                    featuredList.add(data)
+                }
+
+                adapter.notifyDataSetChanged()
+                stopShimmer(binding.shimmerLayoutFeatured,binding.featuredRecycle)
+
+            }.onFailure {
+                Toast.makeText(requireContext(),"Image data Api call failed",Toast.LENGTH_LONG).show()
+            }
+        }
+
+
+        adapter.setOnItemClick(object: ItemClickListener {
+            override fun onItemClick(position: Int) {
+                val currentItem = featuredList[position]
+                val action = Home_PageDirections.actionHomePageToProductDeatils(currentItem.tittle,currentItem.image,currentItem.price,currentItem.shortDes, currentItem.longDes,currentItem.oldPrice,currentItem.id.toString())
+                findNavController().navigate(action)
+            }
+
+            override fun onCartBtnClick(position: Int) {
+                if(InternetStatus.isOnline(requireContext())){
+                    val currentItem = featuredList[position]
+                    val productId = currentItem.id
+                    cartPageViewModel.addToCart(productId,"1")
+                    flag = true
+                }else{
+                    Toast.makeText(requireContext(),"No Internet Connection. Please Connect to a network.",Toast.LENGTH_SHORT).show()
+                }
+
+            }
+
+        })
+    }
+
+    private fun categoryListRecycleView(view: View?) {
+        startShimmer(binding.shimmerLayoutCategories,binding.categoryrecycleView)
+
+        if (view != null) {
+            myRecycleView = view.findViewById(R.id.categoryrecycleView)
+        }
+        myRecycleView.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+
+        val categoryListApi = ArrayList<CategorySingleItem>()
+
+        val myAdapter = CategoryAdapter(categoryListApi, object : CategoryAdapter.OnItemClickListener {
+            override fun onItemClick(category: CategorySingleItem) {
+                val action = Home_PageDirections.actionHomePageToHomePageCategory(category.imageRes,category.products.toTypedArray(),category.tittle)
+                view?.findNavController()?.navigate(action)
+            }
+        })
+
+        categoryListViewModel.getCategoryList(requireContext())
+        categoryListViewModel.result.observe(viewLifecycleOwner){result->
+            categoryListApi.clear()
+            result.onSuccess {
+                it.Data.forEach {
+                    val data = CategorySingleItem(it.Id,it.Name,it.Products[0].PictureModels[0].ImageUrl,it.Products)
+                    categoryListApi.add(data)
+                }
+                myAdapter.notifyDataSetChanged()
+                stopShimmer(binding.shimmerLayoutCategories,binding.categoryrecycleView)
+            }.onFailure {
+                Toast.makeText(requireContext(),"Category List Api call failed",Toast.LENGTH_LONG).show()
+            }
+            myRecycleView.adapter = myAdapter
+        }
+
+    }
+
+    private fun initializeImageSlider(view: View?) {
+        val imageList = ArrayList<SlideModel>() // Create image list
+        val bannerDao = AppDatabase.getDatabase(requireContext()).bannerDao()
+        sliderViewModel.getSlider(requireContext(),bannerDao)
+        sliderViewModel.sliderResult.observe(viewLifecycleOwner){
+            it.onSuccess {response ->
+                response.map {slider->
+                    imageList.add(SlideModel(slider.ImageUrl,ScaleTypes.FIT))
+                }
+                view?.findViewById<ImageSlider>(R.id.image_slider)?.apply {
+                    setImageList(imageList)
+                    setSlideAnimation(AnimationTypes.ZOOM_OUT)
+                }
+            }.onFailure {
+                Toast.makeText(requireContext(),"Failed to load images", Toast.LENGTH_LONG).show()
+            }
+        }
+
     }
 
     fun startShimmer(shimmer: ShimmerFrameLayout,view : RecyclerView){
@@ -129,154 +267,6 @@ class Home_Page : Fragment(){
     private fun navigateToLogin() {
         val action = Home_PageDirections.actionHomePageToLoginMain()
         findNavController().navigate(action)
-    }
-
-
-
-    private fun featuredRecycleView(view: View?) {
-        startShimmer(binding.shimmerLayoutFeatured,binding.featuredRecycle)
-
-        if (view != null) {
-            myRecyclerView3 = view.findViewById(R.id.featuredRecycle)
-        }
-        myRecyclerView3.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
-
-        featuredViewModel.getFeaturedProducts(requireContext())
-        var featuredList = arrayListOf<featuredProductsItem2>()
-        val adapter = featuredProductsAdapter(featuredList)
-        myRecyclerView3.adapter = adapter
-        featuredViewModel.featuredProductsResult.observe(viewLifecycleOwner){ it ->
-            featuredList.clear()
-            it.onSuccess {response ->
-                response.forEach {
-                    val name = it.name
-                    val price = it.price?:"0.0"
-                    val image = it.imageUrl?:"No Image Found"
-                    var rating = 0f
-                    val shortDes = it.shortDescription
-                    val longDes = it.longDescription
-                    val oldPrice = it.oldPrice?:"0.0"
-                    val id = it.id
-                    rating = it.rating
-
-                    val data = featuredProductsItem2(name,price, image = image,rating,shortDes,longDes,oldPrice, id = id)
-                    featuredList.add(data)
-                }
-
-                adapter.notifyDataSetChanged()
-                stopShimmer(binding.shimmerLayoutFeatured,binding.featuredRecycle)
-
-            }.onFailure {
-                Toast.makeText(requireContext(),"Image data Api call failed",Toast.LENGTH_LONG).show()
-            }
-        }
-
-
-        adapter.setOnItemClick(object: ItemClickListener {
-            override fun onItemClick(position: Int) {
-                val currentItem = featuredList[position]
-                val image = currentItem.image
-                val title = currentItem.tittle
-                val shortDes = currentItem.shortDes
-                val longDes = currentItem.longDes
-                val price = currentItem.price
-                val oldPrice = currentItem.oldPrice
-                val productId = currentItem.id
-
-                //Toast.makeText(requireContext(),"This is a $title",Toast.LENGTH_LONG).show()
-                val action = Home_PageDirections.actionHomePageToProductDeatils(title,image,price,shortDes, longDes,oldPrice,productId.toString())
-                findNavController().navigate(action)
-
-            }
-
-            override fun onCartBtnClick(position: Int) {
-                if(InternetStatus.isOnline(requireContext())){
-                    val currentItem = featuredList[position]
-                    val productId = currentItem.id
-                    cartPageViewModel.getCartResponse(productId,requireContext(),"1")
-
-                    cartPageViewModel.result.removeObservers(viewLifecycleOwner)
-
-                    cartPageViewModel.result.observe(viewLifecycleOwner){
-                        it.onSuccess {response->
-                            println("Add to cart : ${response.Message}")
-                            Toast.makeText(requireContext(),"${response.Message}",Toast.LENGTH_SHORT).show()
-                            setShoppingCart()
-                        }.onFailure {response->
-                            println("Failed")
-                            Toast.makeText(requireContext(),"${response.cause?.cause}",Toast.LENGTH_SHORT).show()
-                            println(response.cause?.message)
-                        }
-                    }
-                    println(productId)
-                    println(currentItem.tittle)
-                }else{
-                    Toast.makeText(requireContext(),"No Internet Connection. Please Connect to a network.",Toast.LENGTH_LONG).show()
-                }
-
-            }
-
-        })
-    }
-
-    private fun categoryListRecycleView(view: View?) {
-        startShimmer(binding.shimmerLayoutCategories,binding.categoryrecycleView)
-
-        if (view != null) {
-            myRecycleView = view.findViewById(R.id.categoryrecycleView)
-        }
-        myRecycleView.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
-
-        val categoryListApi = ArrayList<CategorySingleItem>()
-
-        val myAdapter = CategoryAdapter(categoryListApi, object : CategoryAdapter.OnItemClickListener {
-            override fun onItemClick(category: CategorySingleItem) {
-                val action = Home_PageDirections.actionHomePageToHomePageCategory(category.imageRes,category.products.toTypedArray(),category.tittle)
-                view?.findNavController()?.navigate(action)
-            }
-        })
-
-        categoryListViewModel.getCategoryList(requireContext())
-        categoryListViewModel.result.observe(viewLifecycleOwner){result->
-            categoryListApi.clear()
-            result.onSuccess {
-                it.Data.forEach {
-                    val name = it.Name.toString()
-                    val image = it.Products[0].PictureModels[0].FullSizeImageUrl
-                    val id = it.Id
-                    val products = it.Products
-                    val data = CategorySingleItem(id,name,image,products)
-                    categoryListApi.add(data)
-                }
-                myAdapter.notifyDataSetChanged()
-                stopShimmer(binding.shimmerLayoutCategories,binding.categoryrecycleView)
-            }.onFailure {
-                Toast.makeText(requireContext(),"Category List Api call failed",Toast.LENGTH_LONG).show()
-            }
-            myRecycleView.adapter = myAdapter
-        }
-
-    }
-
-    private fun initializeImageSlider(view: View?) {
-        val imageList = ArrayList<SlideModel>() // Create image list
-        val bannerDao = AppDatabase.getDatabase(requireContext()).bannerDao()
-        //val sliderRepo = SliderRespository(bannerDao,requireContext())
-        sliderViewModel.getSlider(requireContext(),bannerDao)
-        sliderViewModel.sliderResult.observe(viewLifecycleOwner){
-            it.onSuccess {response ->
-                response.map {slider->
-                    imageList.add(SlideModel(slider.ImageUrl,ScaleTypes.FIT))
-                }
-                view?.findViewById<ImageSlider>(R.id.image_slider)?.apply {
-                    setImageList(imageList)
-                    setSlideAnimation(AnimationTypes.ZOOM_OUT)
-                }
-            }.onFailure {
-                Toast.makeText(requireContext(),"Failed to load images", Toast.LENGTH_LONG).show()
-            }
-        }
-
     }
 
     private fun setShoppingCart(){
