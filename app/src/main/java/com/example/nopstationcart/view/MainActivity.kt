@@ -68,7 +68,10 @@ class MainActivity : AppCompatActivity() {
                     bottomNav.visibility = View.GONE
                     clearSearchState()
                 }
-                R.id.search_Page->clearSearchState()
+                R.id.search_Page->{
+                    bottomNav.visibility = View.VISIBLE
+                    clearSearchState()
+                }
                 R.id.logOutMain -> {
                     clearSearchState()
                     val sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
@@ -90,6 +93,7 @@ class MainActivity : AppCompatActivity() {
                     clearSearchState()
                 }
                 R.id.category_Fragment ->{
+                    bottomNav.visibility = View.VISIBLE
                     clearSearchState()
                 }
                 R.id.order_Details-> clearSearchState()

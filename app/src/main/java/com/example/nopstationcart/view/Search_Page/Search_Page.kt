@@ -252,13 +252,13 @@ class Search_Page<PaddingValues> : Fragment() {
 
     private fun handleNavigation(product: Product) {
         println("Search product is clicked")
-        val name = product.Name ?: "N/A"
+        val name = product.Name
         val imageUrl = product.PictureModels.getOrNull(0)?.ImageUrl ?: ""
-        val price = product.ProductPrice.Price ?: "N/A"
-        val shortDescription = product.ShortDescription ?: "N/A"
-        val fullDescription = product.FullDescription ?: "N/A"
-        val oldPrice = product.ProductPrice.OldPrice?.toString() ?: "N/A"
-        val id = product.Id.toString() ?: "N/A"
+        val price = product.ProductPrice.Price
+        val shortDescription = product.ShortDescription
+        val fullDescription = product.FullDescription
+        val oldPrice = product.ProductPrice.OldPrice?.toString()?:"0"
+        val id = product.Id.toString()
         val action = Search_PageDirections.actionSearchPageToProductDeatils(name,imageUrl,price,shortDescription,fullDescription, oldPrice, id)
         findNavController().navigate(action)
     }

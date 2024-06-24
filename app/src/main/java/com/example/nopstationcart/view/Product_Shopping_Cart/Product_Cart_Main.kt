@@ -29,6 +29,7 @@ class Product_Cart_Main : Fragment() {
     private lateinit var binding: FragmentProductCartMainBinding
     private val productsList = ArrayList<productCartItems>()
     private lateinit var adapter: productCartAdapter
+    private var increaseFlag:Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,11 +42,10 @@ class Product_Cart_Main : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_product__cart__main, container, false)
         binding = FragmentProductCartMainBinding.bind(view)
-
+        initObserver()
         binding.productCartRecycle.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         adapter = productCartAdapter(productsList,removeCartViewModel)
         binding.productCartRecycle.adapter = adapter
-
         fetchData()
         handleBackBtn(view)
         handleCartBtn(adapter,productsList)
@@ -98,12 +98,13 @@ class Product_Cart_Main : Fragment() {
         adapter.setOnItemClick(object:OnCartClickListener{
 
             override fun onRemoveCart(position: Int, productId: String) {
+                increaseFlag = true
                 removeFromCart(position,productId,productList)
             }
 
             override fun onIncreaseCart(position: Int, productId: String, quantity:String) {
+                increaseFlag = true
                 updateCartQuantity(position,productId,quantity)
-
             }
 
             override fun onDecreasecart(position: Int, productId: String,quantity:String) {
@@ -127,16 +128,24 @@ class Product_Cart_Main : Fragment() {
             val formValue = FormValue("itemquantity${productId}",quantity)
             val request = UpdateCartRequest(listOf(formValue))
             updateCartViewModel.getApiCall(request,requireContext())
-            updateCartViewModel.response.observe(viewLifecycleOwner) {response->
-                response.onSuccess {
+        }
+    }
+
+    private fun initObserver(){
+        updateCartViewModel.response.observe(viewLifecycleOwner) {response->
+            response.onSuccess {
+                if(increaseFlag){
                     Toast.makeText(requireContext(),"Cart value updated",Toast.LENGTH_SHORT).show()
                     handlePrices(it.Data.OrderTotals.SubTotal,it.Data.OrderTotals.OrderTotal,it.Data.OrderTotals.Shipping)
-                    //fetchDataAndUpdatePrices()
-                }.onFailure {
-                    Toast.makeText(requireContext(),"Cart value update failed",Toast.LENGTH_SHORT).show()
+                    increaseFlag = false
                 }
+            }.onFailure {
+                Toast.makeText(requireContext(),"Cart value update failed",Toast.LENGTH_SHORT).show()
+                increaseFlag =false
             }
         }
+
+
     }
 
     private fun stopLoader(){
@@ -151,6 +160,7 @@ class Product_Cart_Main : Fragment() {
         val formValue = com.example.nopstationcart.Services.Model.Remove_Cart.FormValue("removefromcart",productId)
         val request = RemoveCartRequest(listOf(formValue))
         removeCartViewModel.getTheCartRemoved(request,requireContext())
+
         removeCartViewModel.response.observe(viewLifecycleOwner){response->
             response.onSuccess {removeResponse->
                 stopLoader()
@@ -159,7 +169,6 @@ class Product_Cart_Main : Fragment() {
                     handlePrices(removeResponse.Data.OrderTotals.SubTotal,removeResponse.Data.OrderTotals.OrderTotal,removeResponse.Data.OrderTotals.Shipping)
                     binding.CartPageItems.text = "${removeResponse.Data.Cart.Items.size.toString()} Items"
                     binding.cartPageCartAmount.text =removeResponse.Data.Cart.Items.size.toString()
-
                     productList.remove(removedItem)
                     adapter.notifyDataSetChanged()
                     if (productList.isEmpty()) {

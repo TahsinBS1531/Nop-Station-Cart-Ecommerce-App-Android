@@ -131,7 +131,7 @@ class Product_Deatils : Fragment() {
         binding.apply {
             ProductDetailsAddToCart.setOnClickListener {
                 if(InternetStatus.isOnline(requireContext())){
-                    cartPageViewModel.addToCart(id.toInt(),"1")
+                    cartPageViewModel.addToCart(id.toInt(),cartAmount.toString())
                     flag = true
                 }else{
                     Toast.makeText(requireContext(),"No Internet Connection. Please Connect to a network.",Toast.LENGTH_SHORT).show()
